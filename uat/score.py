@@ -391,7 +391,7 @@ def main():
         i = args.index("--require")
         require = set(filter(None, args[i + 1].split(",")))
         del args[i:i + 2]
-    run, FIXTURE = args
+    run, FIXTURE = (os.path.abspath(a) for a in args)
     expected = json.load(open(os.path.join(FIXTURE, "expected.json")))
     defects = resolve_defects(FIXTURE, expected)
     diff = hunks(read(os.path.join(run, "fixture.patch"), ""))

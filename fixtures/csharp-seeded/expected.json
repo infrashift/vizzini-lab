@@ -1,5 +1,5 @@
 {
-  "description": "Ground truth for the seeded C# fixture. A defect is caught when a finding in the same file overlaps any anchor line (the first line containing the anchor text in change/) within +/- tolerance lines.",
+  "description": "Ground truth for the seeded C# fixture. asyncvoid, syncwait and dispose also accept Architecture: the fixture's ADR-0002 governs them. A defect is caught when a finding in the same file overlaps any anchor line (the first line containing the anchor text in change/) within +/- tolerance lines.",
   "tolerance": 2,
   "defects": [
     {"id": "sqli", "file": "src/Controllers/OrdersController.cs", "anchors": ["LIKE '\" + customerPrefix"], "categories": ["Security", "Architecture"], "must_catch": true,
@@ -7,10 +7,10 @@
     {"id": "md5", "file": "src/Services/PasswordHasher.cs", "anchors": ["MD5.HashData", "DateTime.UtcNow.ToString(\"yyyyMMdd\")"], "categories": ["Security"], "must_catch": true},
     {"id": "secret", "file": "src/Data/Db.cs", "anchors": ["Password=Sh0p!Prod#2026"], "categories": ["Security"], "must_catch": true},
     {"id": "nullderef", "file": "src/Controllers/OrdersController.cs", "anchors": ["return order.Total;", "FirstOrDefault(o => o.Id == orderId)"], "categories": ["Logic"], "must_catch": true},
-    {"id": "asyncvoid", "file": "src/Services/ImportService.cs", "anchors": ["public async void ImportAsync"], "categories": ["Logic", "Maintainability"], "must_catch": false},
-    {"id": "syncwait", "file": "src/Services/RateService.cs", "anchors": [".Result;"], "categories": ["Performance", "Logic"], "must_catch": false},
+    {"id": "asyncvoid", "file": "src/Services/ImportService.cs", "anchors": ["public async void ImportAsync"], "categories": ["Logic", "Maintainability", "Architecture"], "must_catch": false},
+    {"id": "syncwait", "file": "src/Services/RateService.cs", "anchors": [".Result;"], "categories": ["Performance", "Logic", "Architecture"], "must_catch": false},
     {"id": "offbyone", "file": "src/Util/Paging.cs", "anchors": ["i <= start + size"], "categories": ["Logic"], "must_catch": false},
-    {"id": "dispose", "file": "*", "anchors_by_file": {"src/Services/ImportService.cs": ["var reader = new StreamReader(csvPath);"], "src/Services/RateService.cs": ["var client = new HttpClient();"]}, "categories": ["Performance", "Maintainability", "Logic"], "must_catch": false},
+    {"id": "dispose", "file": "*", "anchors_by_file": {"src/Services/ImportService.cs": ["var reader = new StreamReader(csvPath);"], "src/Services/RateService.cs": ["var client = new HttpClient();"]}, "categories": ["Performance", "Maintainability", "Logic", "Architecture"], "must_catch": false},
     {"id": "race", "file": "src/Services/ImportService.cs", "anchors": ["TotalsByCustomer[customer] =", "Parallel.ForEach(", "private static readonly Dictionary"], "categories": ["Logic", "Performance"], "must_catch": false}
   ],
   "decoys": ["src/Util/Names.cs"],
