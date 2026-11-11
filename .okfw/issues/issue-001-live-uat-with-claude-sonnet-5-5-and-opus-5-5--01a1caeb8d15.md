@@ -47,3 +47,6 @@ description: "Run the full UAT against both models through LiteLLM and an Azure 
 - The risk score's complexity term is Go-only: C# files report `complexity_delta: 0`.
 - Knowledge grounding matches only Go `package` clauses. C# namespaces need `x.paths` globs.
 - Before mrman's branch can merge, Vizzini must be pushed and mrman's `go.mod` bumped.
+
+## TypeScript fixture (2026-11-11, run 20261111T150647Z)
+The seeded TypeScript fixture (Vizzini ISSUE-018) passed **46/46 hard checks**. Sonnet 5.5 and Opus 5.5 each caught 10/10 defects with 0 decoy findings, posting 11 and 15 ADO threads (PRs #6 and #7). Results are in `results/2026-11-11-live-typescript-sonnet-opus-5-5.md`.
