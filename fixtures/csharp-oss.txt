@@ -1,0 +1,9 @@
+# Real-world C# commits reviewed in the UAT's OSS stage (Vizzini + garmr only).
+# Format: label  repository-url  commit
+# Only these pins are in this repository; run.sh fetches the commits at run
+# time. A label starting with "large" must be reviewed in more than one chunk.
+#
+# serilog/serilog is Apache-2.0; App-vNext/Polly is BSD-3-Clause.
+small-serilog-alignment-overflow   https://github.com/serilog/serilog.git     bebc7719004f76187ae72e64ce138ec2540f2070
+medium-polly-registry-cleanup      https://github.com/App-vNext/Polly.git     97acd91b52541664f961888d7655ba9b92ba6252
+large-serilog-failure-listeners    https://github.com/serilog/serilog.git     3da09792b5fd3854c687e4eec305d1cae75f0db1

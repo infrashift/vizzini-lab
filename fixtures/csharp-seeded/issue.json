@@ -1,0 +1,5 @@
+{
+  "title": "Export a customer's orders as CSV",
+  "body": "Support needs to download every order for one customer as a CSV file (id, placed_at, total) from the orders controller. Large customers have tens of thousands of orders, so stream the rows instead of loading them all. Must follow our data-access and async rules.",
+  "labels": ["feature", "orders"]
+}

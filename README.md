@@ -1,0 +1,81 @@
+# vizzini-uat
+
+End-to-end and user-acceptance tests that run one C# pull request through all four infrashift tools, with live Claude models:
+
+| tool | role in the UAT |
+|---|---|
+| [Vizzini](../vizzini-pr-reviewer) | AI review, describe, improve and plan, grounded in Roslyn SARIF and an OKF knowledge base |
+| [garmr](../garmr-policy-agent) | local policy evaluation of each review with Vizzini's policy pack |
+| [okf-wiki](../okf-wiki) (`okfw`) | the fixture's knowledge base, validated and used to ground reviews |
+| [mrman](../mrman) | opens the Azure DevOps PR, shows Vizzini's findings, posts them as review threads |
+
+The models are `claude-sonnet-5-5` and `claude-opus-5-5`, reached through a LiteLLM proxy running in podman.
+
+## Quick start
+
+```sh
+make build        # clone the four tools at their pinned SHAs (versions.env), build into .cache/bin
+make uat-stub     # token-free dry run of the whole harness against Vizzini's stub model
+```
+
+### Live models
+
+Create the Anthropic key as a podman secret **in your own terminal**, so the key never lands in a file or in shell history:
+
+```sh
+read -rs K && printf %s "$K" | podman secret create vizzini-anthropic-key - && unset K
+make litellm-up litellm-smoke
+make uat-vizzini  # Vizzini + garmr + okfw on the seeded fixture and the real-world commits
+```
+
+### Full UAT with Azure DevOps and mrman
+
+```sh
+mkdir -p ~/.config/vizzini-uat
+echo 'ADO_REPO_URL=https://dev.azure.com/ORG/PROJECT/_git/REPO' > ~/.config/vizzini-uat/ado.env
+read -rs P && install -m600 /dev/null ~/.config/vizzini-uat/ado.pat && printf %s "$P" > ~/.config/vizzini-uat/ado.pat && unset P
+make ado-check
+make uat          # attended: it pauses for you to grant mrman's submit (see below)
+make ado-down     # abandon the UAT's PRs and delete its branches
+```
+
+The PAT needs **Code (Read & Write)**. For each model the UAT pushes the fixture as `uat/<model>-<stamp>`, opens a PR into `uat-base`, and checks that mrman sees every Vizzini finding. It then pauses and asks you to run `mrman pr <url> --vizzini-report ... --auto` yourself. mrman only grants submit to an interactive session, and the UAT will not fake one ([ADR-0002](.okfw/decisions/)). While your TUI is open, the harness posts the findings as comment threads and checks them over the ADO REST API.
+
+## What gets checked
+
+`uat/score.py` writes `summary.md` (the Sonnet vs Opus comparison) and `scores.json` into `.cache/runs/<UTC>/`.
+
+**Hard checks** fail the run:
+- the report envelope is valid
+- every finding is anchored to the diff
+- the schema repair loop never gives up
+- the must-catch planted defects are found: SQL injection, MD5 reset token, hardcoded credential, null dereference
+- the SQL injection's file cites the data-access ADR
+- only the relevant OKF documents reach the model
+- exactly the changed-line Roslyn diagnostics are injected
+- garmr denies on Critical/Major (VZ-001) with the right exit code
+- describe, improve and plan answers are schema-valid
+- the large real-world commit is reviewed in several chunks
+- in the forge leg: mrman carries every finding, and ADO threads sit on the must-catch defects
+
+**Metrics** are reported but never fail the run, because models differ and a finding the ground truth does not list may still be right:
+- recall over all 9 planted defects
+- category agreement
+- findings on the clean decoy file, and unmatched findings
+- severities and risk scores
+- wall time per mode
+
+## Layout
+
+| path | |
+|---|---|
+| `versions.env` | pinned tool SHAs, LiteLLM and .NET images, models |
+| `uat/build.sh` | build the tools from their pins |
+| `uat/run.sh` | the UAT (`--stub`, `--no-forge`, `--no-oss`, `--models`) |
+| `uat/fixture.sh` | materialize the seeded fixture, patch and Roslyn SARIF |
+| `uat/ado.sh` | Azure DevOps branches, PRs and threads |
+| `uat/score.py` | hard checks, metrics, `summary.md` |
+| `litellm/` | proxy config and `litellm.sh up/down/status/env/smoke` |
+| `fixtures/csharp-seeded/` | `base/` + `change/` overlay, `expected.json` ground truth, `issue.json` for plan mode |
+| `fixtures/csharp-oss.txt` | pinned real-world commits (serilog, Polly) |
+| `.okfw/` | this repo's decisions and open issues |

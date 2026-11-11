@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Shop</RootNamespace>
+    <!-- CA2100, CA5351 and the other security rules are off by default. -->
+    <AnalysisLevelSecurity>latest-all</AnalysisLevelSecurity>
+    <ErrorLog>roslyn.sarif,version=2.1</ErrorLog>
+  </PropertyGroup>
+</Project>

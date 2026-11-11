@@ -1,0 +1,31 @@
+# LiteLLM proxy for the UAT. Vizzini talks to it with go-openai
+# (VIZZINI_LITELLM_URL=http://127.0.0.1:4000/v1), so the model_name values
+# below are what VIZZINI_MODEL names.
+#
+# The Anthropic key arrives as the env var ANTHROPIC_API_KEY from the podman
+# secret vizzini-anthropic-key; it is never in this file or on a command line.
+model_list:
+  - model_name: claude-sonnet-5-5
+    litellm_params:
+      model: anthropic/claude-sonnet-5-5
+      api_key: os.environ/ANTHROPIC_API_KEY
+      # Vizzini never sends max_tokens. Anthropic requires one, and LiteLLM
+      # v1.99.4 does not know the 5.5 models, so it would fall back to
+      # DEFAULT_ANTHROPIC_CHAT_MAX_TOKENS (4096), too small for a large review.
+      max_tokens: 16384
+  - model_name: claude-opus-5-5
+    litellm_params:
+      model: anthropic/claude-opus-5-5
+      api_key: os.environ/ANTHROPIC_API_KEY
+      max_tokens: 16384
+
+litellm_settings:
+  # Drop OpenAI parameters Anthropic does not accept instead of failing.
+  drop_params: true
+  request_timeout: 600
+  telemetry: false
+
+general_settings:
+  # A local random key (litellm.sh keeps it in .cache/litellm/master.key and
+  # hands it to podman as a secret); Vizzini sends it as VIZZINI_API_KEY.
+  master_key: os.environ/LITELLM_MASTER_KEY
