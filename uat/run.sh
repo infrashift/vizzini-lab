@@ -131,7 +131,7 @@ for model in $MODELS; do
 	timed "$d/garmr" "$bin/garmr" eval --policy-dir "$policies" --input "$d/review.json" -n vizzini -o json
 
 	if ((forge)); then
-		# shellcheck source=uat/forge.sh disable=SC1091 # forge.sh arrives with the mrman leg
+		# shellcheck source=uat/forge.sh
 		source "$root/uat/forge.sh"
 		forge_leg "$model" "$d"
 	fi
