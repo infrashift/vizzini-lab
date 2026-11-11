@@ -36,7 +36,9 @@ checkout() {
 	else
 		git -C "$dir" remote set-url origin "$from"
 	fi
-	git -C "$dir" fetch -q --tags origin '+refs/heads/*:refs/remotes/origin/*'
+	# --force: the cache mirrors the source, so a tag moved there (as v0.1.3
+	# was, before its release published) moves here too instead of failing.
+	git -C "$dir" fetch -q --tags --force origin '+refs/heads/*:refs/remotes/origin/*'
 	# Prefer the source's own branch of that name; then any commit-ish.
 	local commit
 	commit="$(git -C "$dir" rev-parse -q --verify "origin/$rev^{commit}" 2>/dev/null ||
