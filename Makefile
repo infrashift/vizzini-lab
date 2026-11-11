@@ -1,4 +1,4 @@
-.PHONY: help build litellm-up litellm-down litellm-smoke uat uat-vizzini uat-stub uat-bot uat-bot-stub ado-check ado-down lint clean
+.PHONY: help build litellm-up litellm-down litellm-smoke uat uat-vizzini uat-stub uat-bot uat-bot-stub uat-ci-github ado-check ado-down lint clean
 
 help: ## List targets
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-14s %s\n", $$1, $$2}'
@@ -29,6 +29,9 @@ uat-bot: build ## Unattended leg: vizzini-bot posts on an ADO PR under a garmr p
 
 uat-bot-stub: build ## The unattended leg against stubllm (no tokens; still posts on ADO)
 	uat/bot.sh --stub
+
+uat-ci-github: build ## Vizzini's GitHub Actions template, live on a throwaway PR here (stubllm as the model)
+	uat/ci-github.sh
 
 ado-check: ## Check the PAT and ADO repository
 	uat/ado.sh check
