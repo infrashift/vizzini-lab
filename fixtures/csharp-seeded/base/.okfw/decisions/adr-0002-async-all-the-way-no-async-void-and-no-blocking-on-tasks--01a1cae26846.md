@@ -9,7 +9,7 @@ created: "2026-11-11T07:53:17-06:00"
 timestamp: "2026-11-11T07:53:17-06:00"
 description: "Asynchronous code returns Task, is awaited end to end, and never blocks with .Result or .Wait()."
 x:
-  paths: ["src/Services/**", "src/Controllers/**"]
+  domain: ["Shop.Services", "Shop.Controllers"]
 ---
 
 # ADR-0002: Async all the way, no async void and no blocking on tasks

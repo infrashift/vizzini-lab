@@ -10,7 +10,7 @@ created: "2026-11-11T07:53:17-06:00"
 timestamp: "2026-11-11T07:53:17-06:00"
 description: "All SQL lives in src/Repositories and is parameterized; controllers and services never build or run SQL."
 x:
-  paths: ["src/**/*.cs"]
+  domain: "Shop"
 ---
 
 # ADR-0001: Data access only through repositories with parameterized queries
