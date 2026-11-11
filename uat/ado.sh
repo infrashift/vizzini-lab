@@ -10,6 +10,8 @@
 #   ado.sh push REPO_DIR PR_URL  push REPO_DIR's uat-head to the PR's source branch
 #   ado.sh comment PR_URL THREAD TEXT
 #                                post TEXT in THREAD as the PAT's user; print its id
+#   ado.sh status PR_URL THREAD STATUS
+#                                set THREAD's status (active, fixed, wontFix, byDesign, closed)
 #   ado.sh threads PR_URL        print the PR's comment threads as JSON
 #   ado.sh whoami                print the PAT owner's identity (the requester)
 #   ado.sh down                  abandon open "vizzini-uat" PRs, delete uat/* branches
@@ -127,6 +129,11 @@ import json,sys
 print(json.dumps({"parentCommentId": 1, "content": sys.argv[1], "commentType": "text"}))' "$3")" | json 'd["id"]'
 }
 
+cmd_status() {
+	api PATCH "$ADO_API/pullRequests/$(pr_id "$1")/threads/$2?api-version=7.1" "{\"status\":\"$3\"}" >/dev/null
+	echo "ado: thread $2 is $3"
+}
+
 cmd_threads() {
 	api GET "$ADO_API/pullRequests/$(pr_id "$1")/threads?api-version=7.1"
 }
@@ -162,8 +169,9 @@ base) [[ $# -eq 3 ]] || die "usage: $0 base REPO_DIR NAME"; cmd_base "$2" "$3" ;
 up) [[ $# -eq 4 ]] || die "usage: $0 up REPO_DIR LABEL NAME"; cmd_up "$2" "$3" "$4" ;;
 push) [[ $# -eq 3 ]] || die "usage: $0 push REPO_DIR PR_URL"; cmd_push "$2" "$3" ;;
 comment) [[ $# -eq 4 ]] || die "usage: $0 comment PR_URL THREAD TEXT"; cmd_comment "$2" "$3" "$4" ;;
+status) [[ $# -eq 4 && $4 =~ ^(active|fixed|wontFix|byDesign|closed|pending)$ ]] || die "usage: $0 status PR_URL THREAD active|fixed|wontFix|byDesign|closed|pending"; cmd_status "$2" "$3" "$4" ;;
 threads) [[ $# -eq 2 ]] || die "usage: $0 threads PR_URL"; cmd_threads "$2" ;;
 whoami) cmd_whoami ;;
 down) cmd_down ;;
-*) sed -n '2,23p' "$0" >&2; exit 2 ;;
+*) sed -n '2,25p' "$0" >&2; exit 2 ;;
 esac

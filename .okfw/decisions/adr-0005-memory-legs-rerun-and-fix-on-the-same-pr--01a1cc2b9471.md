@@ -55,3 +55,12 @@ Two more legs follow the fix leg:
 
   In live runs, every command-mode request in LiteLLM's spend logs must name the command run and the PR.
 - **command-again:** a second run answers nothing again.
+
+## Update 2026-11-11: suppression from dismissal (Vizzini ISSUE-024 slice 5)
+Two final legs follow:
+- **dismiss:** as the PAT's user, the harness resolves one of the bot's threads as won't fix (`ado.sh status`). It prefers the hardcoded-secret thread on `src/Data/Db.cs`. The bot must reply once, in that thread, with a rule for that file and category.
+- **suppress:** the harness commits the suggested rule, as it stands, to `.vizzini/suppressions.yaml` on the **base** branch (`uat-base`, pushed). The bot then runs with `--full`. The finding must:
+  - come back suppressed by that rule's id;
+  - not be posted again.
+
+  There must be no second suggestion, and the dismissed thread must stay won't fix.

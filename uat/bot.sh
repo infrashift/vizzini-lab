@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# bot.sh: the unattended leg (Vizzini ISSUE-024 slices 1-4, ADR-0016).
+# bot.sh: the unattended leg (Vizzini ISSUE-024 slices 1-5, ADR-0016).
 #
 #   uat/bot.sh [--stub] [--fixture NAME] [--model MODEL]
 #
 # vizzini-bot reviews a seeded fixture's PR on Azure DevOps the way a CI step
 # would (from the checkout: git diff uat-base...uat-head) and posts through
 # mrman, which submits only when garmr allows it. No person is involved.
-# One PR, up to seven legs, each with its own mrman data directory (as each
+# One PR, up to nine legs, each with its own mrman data directory (as each
 # CI run has):
 #
 #   deny   the committed default policy (mrman's policies/garmr/mrman). It
@@ -32,6 +32,13 @@
 #          bot's threads; the bot (head unchanged: no review) answers both in
 #          the thread, the second with usage.
 #   command-again  the same: both are answered already, nothing is posted.
+#   dismiss  (slice 5) as the PAT's user, the harness resolves the bot's
+#          hardcoded-secret thread (src/Data/Db.cs) as won't fix; the bot
+#          answers once with a suppression rule to commit.
+#   suppress  the harness commits that suggested rule to the BASE branch
+#          (.vizzini/suppressions.yaml on uat-base) and the bot runs with
+#          --full: the secret finding comes back suppressed, not posted, and
+#          no second suggestion is made.
 #
 # The generated allow policy holds your forge display name; it stays in the
 # run directory under .cache (never committed), and logs show only its first
@@ -216,6 +223,53 @@ echo "   comments $ask (explain) and $bad (malformed)"
 leg command "$allow"
 leg command-again "$allow"
 
+# Dismissal and suppression (slice 5): a person dismisses the bot's
+# hardcoded-secret thread; the bot suggests a rule; the rule is merged into
+# the base branch; the finding is suppressed from then on.
+# The secret thread when the model raised it (live runs), else any open bot
+# thread (stubllm only echoes linter diagnostics, none of them in Db.cs).
+python3 -I - "$run/command-again/threads.json" >"$run/dismissed-thread" <<'EOF'
+import json, re, sys
+ts = []
+for t in json.load(open(sys.argv[1]))["value"]:
+    body = (t.get("comments") or [{}])[0].get("content") or ""
+    m = re.search(r"<!-- vizzini:fp=\S+ run=\S+ head=\S+ lines=\S+ cat=(\S+) -->", body)
+    if t.get("status") == "active" and m:
+        ts.append((str(t["id"]), t["threadContext"]["filePath"].lstrip("/"), m.group(1)))
+# Models file the secret as Security or (citing the data-access ADR) Architecture.
+secret = [x for x in ts if x[1] == "src/Data/Db.cs"]
+if secret or ts:
+    print("\t".join((secret or ts)[0]))
+EOF
+if [[ -s $run/dismissed-thread ]]; then
+	IFS=$'\t' read -r secret secret_path secret_cat <"$run/dismissed-thread"
+	say "dismiss thread $secret on $secret_path ($secret_cat) as won't fix"
+	"$root/uat/ado.sh" status "$pr" "$secret" wontFix
+	leg dismiss "$allow"
+	python3 -I - "$run/dismiss/threads.json" "$secret" >"$run/suggested-rule.yaml" <<'EOF'
+import json, re, sys
+for t in json.load(open(sys.argv[1]))["value"]:
+    if str(t["id"]) != sys.argv[2]:
+        continue
+    for c in t.get("comments", []):
+        m = re.search(r"```yaml\n(.*?)```", c.get("content") or "", re.S)
+        if m and "vizzini:suggested-suppression" in c.get("content", ""):
+            print(m.group(1), end="")
+EOF
+	if [[ -s $run/suggested-rule.yaml ]]; then
+		say "merge the suggested rule into the base branch"
+		sed 's/^/   /' "$run/suggested-rule.yaml"
+		git -C "$run/repo" checkout -q uat-base
+		mkdir -p "$run/repo/.vizzini"
+		cp "$run/suggested-rule.yaml" "$run/repo/.vizzini/suppressions.yaml"
+		git -C "$run/repo" add .vizzini
+		git -C "$run/repo" -c user.name=vizzini-uat -c user.email=uat@example.invalid commit -qm "suppress: dismissed hardcoded secret [skip ci]"
+		git -C "$run/repo" checkout -q uat-head
+		"$root/uat/ado.sh" base "$run/repo" "$fixture"
+		leg suppress "$allow" --full
+	fi
+fi
+
 # The command's model calls must be attributed like the review's (ADR-0015):
 # every command-mode request since the command leg started names its run
 # and this pull request.
@@ -281,7 +335,7 @@ def duplicates(new, old):
             if o["status"] == "active" and n["id"] != o["id"] and n["path"] == o["path"] and n["cat"] == o["cat"]
             and n["start"] <= o["end"] and n["end"] >= o["start"]]
 
-print("# vizzini-bot UAT (ISSUE-024 slices 1-4)\n")
+print("# vizzini-bot UAT (ISSUE-024 slices 1-5)\n")
 code, audit, marked, findings, _ = leg("deny")
 print("## deny: committed default policy\n")
 check(code == 3, f"bot exit 3 (policy denied), got {code}")
@@ -384,6 +438,38 @@ if os.path.exists(attr):
     parts = open(attr).read().split()
     named, total = (int(parts[0]), int(parts[1])) if len(parts) == 2 else (0, 0)
     check(total > 0 and named == total, f"every command request is attributed to its run and PR ({named} of {total})")
+
+r = leg("dismiss")
+if r:
+    code, audit, marked, findings, result = r
+    dismissed, dpath, dcat = open(os.path.join(run, "dismissed-thread")).read().strip().split("\t")
+    print(f"\n## dismiss: a person resolves the bot's thread on {dpath} ({dcat}) as won't fix\n")
+    check(code == 0, f"bot exit 0, got {code}")
+    check(result.get("suggested") == [dismissed], f"one suggestion, in the dismissed thread ({result.get('suggested')})")
+    raw = json.load(open(os.path.join(run, "dismiss", "threads.json")))["value"]
+    t = next((t for t in raw if str(t["id"]) == dismissed), {})
+    sugg = [c for c in t.get("comments", []) if "vizzini:suggested-suppression" in (c.get("content") or "")]
+    check(len(sugg) == 1 and f'paths: ["{dpath}"]' in sugg[0]["content"] and f"categories: [{dcat}]" in sugg[0]["content"],
+          f"the suggestion is a rule for {dpath}, {dcat}")
+    check(t.get("status") == "wontFix", f"the thread stays won't fix ({t.get('status')})")
+    rule = open(os.path.join(run, "suggested-rule.yaml")).read() if os.path.exists(os.path.join(run, "suggested-rule.yaml")) else ""
+    check("suppressions:" in rule and "reason:" in rule, "the suggested rule was extracted")
+
+r = leg("suppress")
+if r:
+    code, audit, marked, findings, result = r
+    dismissed, dpath, dcat = open(os.path.join(run, "dismissed-thread")).read().strip().split("\t")
+    rid = re.search(r"id: (\S+)", open(os.path.join(run, "suggested-rule.yaml")).read()).group(1)
+    print("\n## suppress: the rule is merged into the base branch\n")
+    check(code == 0, f"bot exit 0, got {code}")
+    hits = [s for s in result.get("suppressed", []) if s.startswith(rid + " " + dpath + ":")]
+    check(hits, f"the dismissed finding was suppressed by {rid} ({result.get('suppressed')})")
+    new = [t for t in marked if t["run"] == result.get("run_id") and t["path"] == dpath and t["cat"] == dcat]
+    check(not new, f"no {dcat} thread was posted on {dpath} ({len(new)})")
+    check(not result.get("suggested"), f"no second suggestion ({result.get('suggested')})")
+    raw = json.load(open(os.path.join(run, "suppress", "threads.json")))["value"]
+    t = next((t for t in raw if str(t["id"]) == dismissed), {})
+    check(t.get("status") == "wontFix", f"the dismissed thread is left as it was ({t.get('status')})")
 
 r = leg("command-again")
 if r:

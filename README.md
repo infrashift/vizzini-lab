@@ -54,13 +54,15 @@ make uat-bot       # live (needs litellm-up); make uat-bot-stub runs without tok
 
 Both decisions are read back from mrman's audit log.
 
-When the fixture has a `fix/` overlay, more legs run on the same PR ([ADR-0005](.okfw/decisions/)) to test thread memory, incremental review and in-thread commands:
+When the fixture has a `fix/` overlay, more legs run on the same PR ([ADR-0005](.okfw/decisions/)) to test thread memory, incremental review, in-thread commands and suppression:
 
 3. **Idle.** The bot runs again at the same head, incrementally. Nothing changed, so it must make no review at all.
 4. **Rerun.** The bot runs at the same head with `--full` and reads its threads back. It must duplicate nothing and resolve nothing.
 5. **Fix.** A commit fixing the MD5 reset token is pushed to the PR. Only the changed file is reviewed, and the open threads on other files are carried untouched. Only threads on the changed lines whose finding is gone are resolved, each with a reply.
 6. **Command.** As your PAT's user, the harness writes `/vizzini explain …` and a malformed `/vizzini …` in one of the bot's threads. The bot answers both in the thread, the second with usage. In live runs, the command's model call must be attributed to its run and PR.
 7. **Command again.** Nothing is answered twice.
+8. **Dismiss.** As your PAT's user, the harness resolves one of the bot's threads as *won't fix*. The bot replies once with a suppression rule to commit.
+9. **Suppress.** The harness merges that rule into the base branch's `.vizzini/suppressions.yaml`, and the bot runs with `--full`. The finding is suppressed, not posted again, and there is no second suggestion.
 
 ## What gets checked
 
