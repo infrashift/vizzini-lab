@@ -128,7 +128,7 @@ for fixture in $FIXTURES; do
 		(
 			cd "$f/repo"
 			timed "$d/review" "$bin/pr-review" --mode review --patch-file "$f/repo.patch" \
-				--lint-json "$f/repo.sarif" --knowledge .okfw --format json
+				--lint-json "$f/repo.sarif" --knowledge .okfw --repo . --format json
 			if ((!stub)); then
 				timed "$d/describe" "$bin/pr-review" --mode describe --patch-file "$f/repo.patch" --format json
 				timed "$d/improve" "$bin/pr-review" --mode improve --patch-file "$f/repo.patch" --format json
