@@ -1,0 +1,23 @@
+# A throwaway Azure Pipelines agent for uat/ci-ado.sh: the org has no hosted
+# parallelism for private projects, but one free self-hosted job.
+FROM docker.io/library/ubuntu:24.04@sha256:fe81560990fae86dc4743202b2cb4d3df98d0bcf949173cecef15ce1127ef852
+
+ARG AGENT_VERSION=5.281.1
+# From the release notes of microsoft/azure-pipelines-agent v5.281.1.
+ARG AGENT_SHA256=c9579f76fd71a013e3b9010155454e20592d935134e4fcd04adc5283a820167e
+
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
+      ca-certificates curl git jq libicu74 tar xz-utils \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN useradd -m agent && mkdir -p /azp && chown agent /azp
+USER agent
+WORKDIR /azp
+RUN curl -fsSL --retry 3 -o agent.tar.gz \
+      "https://download.agent.dev.azure.com/agent/${AGENT_VERSION}/vsts-agent-linux-x64-${AGENT_VERSION}.tar.gz" \
+ && echo "${AGENT_SHA256}  agent.tar.gz" | sha256sum -c --quiet - \
+ && tar -xzf agent.tar.gz && rm agent.tar.gz
+
+COPY --chown=agent start.sh /azp/start.sh
+ENTRYPOINT ["/azp/start.sh"]
