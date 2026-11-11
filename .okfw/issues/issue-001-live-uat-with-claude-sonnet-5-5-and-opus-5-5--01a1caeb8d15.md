@@ -66,3 +66,13 @@ Both fixtures, both models, the forge leg and the real-world commits, with Vizzi
 - **ISSUE-021:** the C# ADRs were selected through namespace grounding only (`x.domain`).
 - **Transient fault:** the C# + Sonnet submit hit `connection reset by peer` from dev.azure.com on its first request, so nothing was posted. I retried it by hand while the grant was still active, and all 11 threads posted. The first error is kept in `submit.first-attempt.err`. `forge.sh` now retries a submit that fails with mrman's "network error", and the thread fetch, up to 3 times each.
 - **Answer key:** the C# `secret` defect also accepts Architecture, because both models cite ADR-0001 ("connection strings come from configuration").
+
+## Cost attribution (2026-11-11, run 20261111T175706Z)
+LiteLLM now runs with Postgres 17 in a podman pod, with prices for the 5.5 models (Vizzini ISSUE-025). Every request's attribution lands in `LiteLLM_SpendLogs`, and Vizzini's `deploy/litellm/views.sql` rolls it up. Live, both fixtures, both models, no forge (72/72):
+
+| | C# Sonnet | C# Opus | TS Sonnet | TS Opus |
+|---|---|---|---|---|
+| Review cost | $0.0503 | $0.0765 | $0.0389 | $0.0577 |
+| Cost per finding | $0.0056 | $0.0070 | $0.0035 | $0.0052 |
+
+Per "PR", review + describe + improve + plan for both models: C# $0.366, TypeScript $0.326 (including one earlier probe run). Report `cost_usd` matched LiteLLM's spend for every run.

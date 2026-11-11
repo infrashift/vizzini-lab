@@ -252,6 +252,7 @@ def score_model(ck, fdir, expected, defects, diff, model, require):
             "chunks": r["chunks"],
             "review_seconds": time_of(os.path.join(d, "review")),
             "exit": code_of(os.path.join(d, "review")),
+            "usage": r.get("usage") or {},
         })
         m["garmr"] = check_garmr(ck, scope, os.path.join(d, "garmr"), r)
     check_mode(ck, scope, os.path.join(d, "describe"), "describe", ("title", "type", "summary", "changes"))
@@ -348,6 +349,9 @@ def fixture_md(fx):
             ("garmr", lambda m: f"{m['garmr']['decision']} {','.join(m['garmr']['failed'])}" if m.get("garmr") else "–"),
             ("review / describe / improve / plan", lambda m: " / ".join(fmt_s(m.get(k)) for k in ("review_seconds", "describe_seconds", "improve_seconds", "plan_seconds"))),
             ("ADO inline threads", lambda m: m.get("ado_threads", "–")),
+            ("review tokens in/out (cached)", lambda m: "{}/{} ({})".format(m["usage"].get("input_tokens", "–"), m["usage"].get("output_tokens", "–"), m["usage"].get("cached_input_tokens", 0)) if m["usage"] else "–"),
+            ("review cost (proxy-reported)", lambda m: "${:.4f}".format(m["usage"]["cost_usd"]) if m["usage"].get("cost_usd") is not None else "–"),
+            ("review repairs / retries", lambda m: "{}/{}".format(m["usage"].get("repairs", 0), m["usage"].get("retries", 0)) if m["usage"] else "–"),
         ]
         for name, fn in rows:
             L.append(f"| {name} | " + " | ".join(str(fn(m)) for m in have) + " |")

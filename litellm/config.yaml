@@ -9,6 +9,13 @@ model_list:
     litellm_params:
       model: anthropic/claude-sonnet-5-5
       api_key: os.environ/ANTHROPIC_API_KEY
+      # Prices per token, so spend logs record dollars (ISSUE-025). LiteLLM
+      # v1.99.4 has no entry for the 5.5 models; without these, spend is 0.
+      # $2 / $10 per million input / output, $0.20 per million cached reads
+      # (from secondary sources citing Anthropic's pricing; verify there).
+      input_cost_per_token: 0.000002
+      output_cost_per_token: 0.00001
+      cache_read_input_token_cost: 0.0000002
       # Vizzini never sends max_tokens. Anthropic requires one, and LiteLLM
       # v1.99.4 does not know the 5.5 models, so it would fall back to
       # DEFAULT_ANTHROPIC_CHAT_MAX_TOKENS (4096), too small for a large review.
@@ -17,6 +24,10 @@ model_list:
     litellm_params:
       model: anthropic/claude-opus-5-5
       api_key: os.environ/ANTHROPIC_API_KEY
+      # $4 / $20 per million input / output, $0.20 per million cached reads.
+      input_cost_per_token: 0.000004
+      output_cost_per_token: 0.00002
+      cache_read_input_token_cost: 0.0000002
       max_tokens: 16384
 
 litellm_settings:
@@ -26,6 +37,8 @@ litellm_settings:
   telemetry: false
 
 general_settings:
+  # Spend logs keep tokens, cost and metadata, never prompts or diffs.
+  store_prompts_in_spend_logs: false
   # A local random key (litellm.sh keeps it in .cache/litellm/master.key and
   # hands it to podman as a secret); Vizzini sends it as VIZZINI_API_KEY.
   master_key: os.environ/LITELLM_MASTER_KEY

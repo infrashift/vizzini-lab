@@ -7,6 +7,16 @@
 #   litellm.sh env      print the VIZZINI_* exports for it (eval "$(litellm.sh env)")
 #   litellm.sh smoke    one JSON-mode request per model in $MODELS
 #   litellm.sh logs     the container's log
+#   litellm.sh psql [SQL|-] run SQL, SQL from stdin (-), or an interactive psql
+#                       in the spend-log database
+#   litellm.sh views    (re)create Vizzini's cost views (deploy/litellm/views.sql
+#                       in the pinned Vizzini clone)
+#   litellm.sh reset    down, and also delete the spend-log database volume
+#
+# LiteLLM runs in a podman pod with Postgres (ISSUE-025): every request's
+# spend, tokens and Vizzini metadata land in LiteLLM_SpendLogs. The database
+# lives in the volume vizzini-litellm-pg, so history survives down/up; its
+# password is generated into .cache/litellm/db.password (0600).
 #
 # The Anthropic key comes from the podman secret vizzini-anthropic-key. Create
 # it once, in your own terminal, so the key never lands in a file or in shell
@@ -22,6 +32,12 @@ root="$(cd "$(dirname "$0")/.." && pwd)"
 # shellcheck source=versions.env
 source "$root/versions.env"
 name=vizzini-litellm
+pod=vizzini-litellm-pod
+db=vizzini-litellm-db
+volume=vizzini-litellm-pg
+dbpass="$root/.cache/litellm/db.password"
+db_secret=vizzini-litellm-db-password
+dburl_secret=vizzini-litellm-db-url
 port="${LITELLM_PORT:-4000}"
 url="http://127.0.0.1:$port"
 keyfile="$root/.cache/litellm/master.key"
@@ -44,24 +60,37 @@ up() {
 		mkdir -p "$(dirname "$keyfile")"
 		(umask 077 && printf 'sk-uat-%s' "$(head -c 24 /dev/urandom | od -An -tx1 | tr -d ' \n')" >"$keyfile")
 	fi
-	# Recreate the secret so it always matches the key file.
-	podman secret rm "$master_secret" >/dev/null 2>&1 || true
+	[[ -s $dbpass ]] || (umask 077 && head -c 24 /dev/urandom | od -An -tx1 | tr -d ' \n' >"$dbpass")
+	# Recreate the secrets so they always match the files.
+	local sec
+	for sec in "$master_secret" "$db_secret" "$dburl_secret"; do podman secret rm "$sec" >/dev/null 2>&1 || true; done
 	podman secret create "$master_secret" "$keyfile" >/dev/null
-	podman rm -f "$name" >/dev/null 2>&1 || true
-	podman run -d --name "$name" \
-		-p "127.0.0.1:$port:4000" \
+	podman secret create "$db_secret" "$dbpass" >/dev/null
+	printf 'postgresql://litellm:%s@127.0.0.1:5432/litellm' "$(<"$dbpass")" | podman secret create "$dburl_secret" - >/dev/null
+	podman pod rm -f "$pod" >/dev/null 2>&1 || true
+	podman pod create --name "$pod" -p "127.0.0.1:$port:4000" >/dev/null
+	podman run -d --pod "$pod" --name "$db" -v "$volume:/var/lib/postgresql/data:Z" \
+		-e POSTGRES_USER=litellm -e POSTGRES_DB=litellm \
+		--secret "$db_secret,type=env,target=POSTGRES_PASSWORD" "$POSTGRES_IMAGE" >/dev/null
+	for _ in $(seq 60); do
+		podman exec "$db" pg_isready -q -U litellm -d litellm 2>/dev/null && break
+		sleep 1
+	done
+	podman exec "$db" pg_isready -q -U litellm -d litellm || { podman logs --tail 20 "$db" >&2; die "postgres did not start"; }
+	podman run -d --pod "$pod" --name "$name" \
 		-v "$root/litellm/config.yaml:/app/config.yaml:ro,Z" \
 		--secret "$anthropic_secret,type=env,target=ANTHROPIC_API_KEY" \
 		--secret "$master_secret,type=env,target=LITELLM_MASTER_KEY" \
+		--secret "$dburl_secret,type=env,target=DATABASE_URL" \
 		"$LITELLM_IMAGE" --config /app/config.yaml --port 4000 >/dev/null
-	for _ in $(seq 120); do
+	for _ in $(seq 240); do
 		healthy && { echo "litellm: up at $url ($LITELLM_IMAGE)"; return; }
 		podman container exists "$name" && [[ $(podman inspect -f '{{.State.Running}}' "$name") == true ]] ||
 			{ podman logs --tail 30 "$name" >&2 || true; die "container exited"; }
 		sleep 1
 	done
 	podman logs --tail 30 "$name" >&2
-	die "not healthy after 120s"
+	die "not healthy after 240s"
 }
 
 smoke() {
@@ -114,10 +143,31 @@ EOF
 
 case "${1:-}" in
 up) up ;;
-down)
-	podman rm -f "$name" >/dev/null 2>&1 || true
-	podman secret rm "$master_secret" >/dev/null 2>&1 || true
-	echo "litellm: down"
+down | reset)
+	podman pod rm -f "$pod" >/dev/null 2>&1 || true
+	podman rm -f "$name" >/dev/null 2>&1 || true # a pre-pod container from older runs
+	for sec in "$master_secret" "$db_secret" "$dburl_secret"; do podman secret rm "$sec" >/dev/null 2>&1 || true; done
+	if [[ $1 == reset ]]; then
+		podman volume rm -f "$volume" >/dev/null 2>&1 || true
+		rm -f "$dbpass"
+		echo "litellm: down, spend-log database deleted"
+	else
+		echo "litellm: down (spend-log database kept in volume $volume)"
+	fi
+	;;
+psql)
+	shift
+	if [[ ${1:-} == - ]]; then
+		podman exec -i "$db" psql -U litellm -d litellm -v ON_ERROR_STOP=1 -q -f -
+	elif [[ $# -gt 0 ]]; then
+		podman exec -i "$db" psql -U litellm -d litellm -v ON_ERROR_STOP=1 -P pager=off -c "$*"
+	else
+		podman exec -it "$db" psql -U litellm -d litellm
+	fi
+	;;
+views) # Vizzini's own views, from the pinned clone (uat/build.sh)
+	podman exec -i "$db" psql -U litellm -d litellm -v ON_ERROR_STOP=1 -q <"$root/.cache/src/vizzini/deploy/litellm/views.sql" &&
+		echo "litellm: views created"
 	;;
 status)
 	if healthy; then echo "litellm: up at $url"; else echo "litellm: not running"; exit 1; fi
@@ -128,5 +178,5 @@ env)
 	;;
 smoke) smoke ;;
 logs) podman logs "$name" ;;
-*) sed -n '2,17p' "$0" >&2; exit 2 ;;
+*) sed -n '2,26p' "$0" >&2; exit 2 ;;
 esac
