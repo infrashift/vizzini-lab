@@ -1,11 +1,11 @@
 {
-  "description": "Ground truth for the seeded C# fixture. asyncvoid, syncwait and dispose also accept Architecture: the fixture's ADR-0002 governs them. A defect is caught when a finding in the same file overlaps any anchor line (the first line containing the anchor text in change/) within +/- tolerance lines.",
+  "description": "Ground truth for the seeded C# fixture. asyncvoid, syncwait and dispose also accept Architecture (the fixture's ADR-0002 governs them), and so does secret (ADR-0001: connection strings come from configuration). A defect is caught when a finding in the same file overlaps any anchor line (the first line containing the anchor text in change/) within +/- tolerance lines.",
   "tolerance": 2,
   "defects": [
     {"id": "sqli", "file": "src/Controllers/OrdersController.cs", "anchors": ["LIKE '\" + customerPrefix"], "categories": ["Security", "Architecture"], "must_catch": true,
      "must_cite": "01a1cae2-6830-71f7-b6b5-4ab70d034cdb"},
     {"id": "md5", "file": "src/Services/PasswordHasher.cs", "anchors": ["MD5.HashData", "DateTime.UtcNow.ToString(\"yyyyMMdd\")"], "categories": ["Security"], "must_catch": true},
-    {"id": "secret", "file": "src/Data/Db.cs", "anchors": ["Password=Sh0p!Prod#2026"], "categories": ["Security"], "must_catch": true},
+    {"id": "secret", "file": "src/Data/Db.cs", "anchors": ["Password=Sh0p!Prod#2026"], "categories": ["Security", "Architecture"], "must_catch": true},
     {"id": "nullderef", "file": "src/Controllers/OrdersController.cs", "anchors": ["return order.Total;", "FirstOrDefault(o => o.Id == orderId)"], "categories": ["Logic"], "must_catch": true},
     {"id": "asyncvoid", "file": "src/Services/ImportService.cs", "anchors": ["public async void ImportAsync"], "categories": ["Logic", "Maintainability", "Architecture"], "must_catch": false},
     {"id": "syncwait", "file": "src/Services/RateService.cs", "anchors": [".Result;"], "categories": ["Performance", "Logic", "Architecture"], "must_catch": false},

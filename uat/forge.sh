@@ -109,8 +109,23 @@ PY
 		fi
 	done <"$d/post-plan.jsonl"
 	echo "   review add: $posted added, $failed failed"
-	timed "$d/submit" "$bin/mrman" review submit --session "$slug" --event comment
+	# A transient network failure (seen: a TLS reset from dev.azure.com on
+	# submit's first request) leaves the drafts unposted; retrying is safe
+	# because nothing reached the forge. Only mrman's "network error" retries.
+	local try
+	for try in 1 2 3; do
+		timed "$d/submit" "$bin/mrman" review submit --session "$slug" --event comment
+		if [[ $(<"$d/submit.code") == 0 ]] || ! grep -q 'network error' "$d/submit.err" || ((try == 3)); then
+			break
+		fi
+		cp "$d/submit.err" "$d/submit.attempt$try.err"
+		echo "   submit attempt $try hit a network error; retrying"
+		sleep $((try * 5))
+	done
 	sleep 2
-	"$root/uat/ado.sh" threads "$pr" >"$d/threads.json" || true
+	for try in 1 2 3; do
+		"$root/uat/ado.sh" threads "$pr" >"$d/threads.json" && break
+		sleep $((try * 5))
+	done
 	echo "   ADO threads: $(jq '[.value[] | select(.threadContext.filePath != null)] | length' "$d/threads.json" 2>/dev/null) inline"
 }

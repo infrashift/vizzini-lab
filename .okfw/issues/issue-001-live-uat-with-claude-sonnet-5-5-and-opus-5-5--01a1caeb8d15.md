@@ -50,3 +50,19 @@ description: "Run the full UAT against both models through LiteLLM and an Azure 
 
 ## TypeScript fixture (2026-11-11, run 20261111T150647Z)
 The seeded TypeScript fixture (Vizzini ISSUE-018) passed **46/46 hard checks**. Sonnet 5.5 and Opus 5.5 each caught 10/10 defects with 0 decoy findings, posting 11 and 15 ADO threads (PRs #6 and #7). Results are in `results/2026-11-11-live-typescript-sonnet-opus-5-5.md`.
+
+## Full rerun after the follow-ups (2026-11-11, run 20261111T161313Z)
+Both fixtures, both models, the forge leg and the real-world commits, with Vizzini `ffe8e03` (ISSUE-019, 020 and 021) and mrman `v0.1.1`: **132/132 hard checks passed**. Results are in `results/2026-11-11-live-full-both-fixtures-run2.md`.
+
+| | C# Sonnet | C# Opus | TS Sonnet | TS Opus |
+|---|---|---|---|---|
+| Seeded defects caught | 9/9 | 9/9 | 10/10 | 10/10 |
+| Findings (decoy hits) | 11 (0) | 9 (0) | 11 (0) | 11 (0) |
+| Base risk (complexity now counted) | 55 (was 49) | 55 | 57 (was 46) | 57 |
+| mrman v0.1.1 sees the report as stale | no | no | no | no |
+| ADO inline threads | 11 | 9 | 11 | 11 |
+
+- **ISSUE-019:** Opus gave one finding per problem on both fixtures (earlier today: 14 on C# and 15 on TypeScript). Sometimes it now folds two related defects into one finding whose span covers both, so recall still holds. `merged_findings` was 0 everywhere: the prompt rule alone was enough.
+- **ISSUE-021:** the C# ADRs were selected through namespace grounding only (`x.domain`).
+- **Transient fault:** the C# + Sonnet submit hit `connection reset by peer` from dev.azure.com on its first request, so nothing was posted. I retried it by hand while the grant was still active, and all 11 threads posted. The first error is kept in `submit.first-attempt.err`. `forge.sh` now retries a submit that fails with mrman's "network error", and the thread fetch, up to 3 times each.
+- **Answer key:** the C# `secret` defect also accepts Architecture, because both models cite ADR-0001 ("connection strings come from configuration").
