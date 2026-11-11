@@ -1,0 +1,5 @@
+{
+  "title": "Rate-limit the webhook endpoint per sender",
+  "body": "Webhook senders occasionally retry in tight loops. Limit each sender (by signature key id) to 60 requests per minute, return 429 with Retry-After when exceeded, and record throttling in the audit log. Must follow our rules on secrets and on never executing dynamic code.",
+  "labels": ["feature", "webhooks"]
+}

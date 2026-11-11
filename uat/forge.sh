@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # forge.sh: the Azure DevOps + mrman leg of the UAT, sourced by run.sh.
 #
-# forge_leg MODEL DIR, for one model whose review is DIR/review.json:
+# forge_leg MODEL DIR FIXTURE FDIR, for one model whose review of FIXTURE
+# (materialized at FDIR/repo) is DIR/review.json:
 #   1. open a PR for the fixture on Azure DevOps (uat/ado.sh up)
 #   2. mrman pr <url> --json --vizzini-report: headless session that must
 #      carry every finding (DIR/mrman.json)
@@ -42,10 +43,10 @@ sys.exit(1)' "$1"
 }
 
 forge_leg() {
-	local model=$1 d=$2 pr slug
+	local model=$1 d=$2 fixture=$3 f=$4 pr slug
 	forge_env
-	echo "   -- forge: $model"
-	pr="$("$root/uat/ado.sh" up "$run/fixture" "$model")"
+	echo "   -- forge: $fixture / $model"
+	pr="$("$root/uat/ado.sh" up "$f/repo" "$model" "$fixture")"
 	echo "$pr" >"$d/pr-url"
 	echo "   PR: $pr"
 
@@ -58,7 +59,7 @@ forge_leg() {
 
 	cat <<EOF
 
-   ┌─ YOUR TURN ($model) ─────────────────────────────────────────────────────
+   ┌─ YOUR TURN ($fixture / $model) ──────────────────────────────────────────
    │ In another terminal, open the PR in mrman with the submit grant:
    │
    │   XDG_DATA_HOME='$XDG_DATA_HOME' \\

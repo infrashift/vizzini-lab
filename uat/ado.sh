@@ -2,11 +2,15 @@
 # ado.sh: the UAT's pull requests on Azure DevOps.
 #
 #   ado.sh check                 verify the PAT and repository are reachable
-#   ado.sh base REPO_DIR         force-push REPO_DIR's uat-base branch
-#   ado.sh up REPO_DIR LABEL     push uat-head as uat/LABEL-<stamp>, open a PR
-#                                into uat-base, print its web URL
+#   ado.sh base REPO_DIR NAME    force-push REPO_DIR's uat-base branch as
+#                                uat/NAME/base (NAME: the fixture)
+#   ado.sh up REPO_DIR LABEL NAME
+#                                push uat-head as uat/NAME/LABEL-<stamp>, open
+#                                a PR into uat/NAME/base, print its web URL
 #   ado.sh threads PR_URL        print the PR's comment threads as JSON
 #   ado.sh down                  abandon open "vizzini-uat" PRs, delete uat/* branches
+#                                (uat-base, the first run's base, stays: as the
+#                                first branch pushed it is the default branch)
 #
 # Configuration (nothing secret is ever passed on a command line):
 #   ADO_REPO_URL   https://dev.azure.com/ORG/PROJECT/_git/REPO
@@ -85,22 +89,22 @@ cmd_check() {
 }
 
 cmd_base() {
-	local dir=$1
-	g "$dir" push -q -f "$ADO_REPO_URL" "uat-base:refs/heads/uat-base"
-	echo "ado: pushed uat-base"
+	local dir=$1 name=$2
+	g "$dir" push -q -f "$ADO_REPO_URL" "uat-base:refs/heads/uat/$name/base"
+	echo "ado: pushed uat/$name/base"
 }
 
 cmd_up() {
-	local dir=$1 label=$2 stamp head title body id
+	local dir=$1 label=$2 name=$3 stamp head title body id
 	stamp="$(date -u +%Y%m%dT%H%M%SZ)"
-	head="uat/$label-$stamp"
+	head="uat/$name/$label-$stamp"
 	g "$dir" push -q "$ADO_REPO_URL" "uat-head:refs/heads/$head"
-	title="$TITLE_PREFIX $label $stamp"
-	body="Seeded C# fixture for the Vizzini + mrman + garmr + okf-wiki UAT ($label). Safe to abandon."
+	title="$TITLE_PREFIX $name $label $stamp"
+	body="Seeded fixture $name for the Vizzini + mrman + garmr + okf-wiki UAT ($label). Safe to abandon."
 	id="$(api POST "$ADO_API/pullrequests?api-version=7.1" "$(python3 -I -c '
 import json,sys
-print(json.dumps({"sourceRefName": "refs/heads/"+sys.argv[1], "targetRefName": "refs/heads/uat-base",
-                  "title": sys.argv[2], "description": sys.argv[3]}))' "$head" "$title" "$body")" | json 'd["pullRequestId"]')"
+print(json.dumps({"sourceRefName": "refs/heads/"+sys.argv[1], "targetRefName": "refs/heads/uat/"+sys.argv[4]+"/base",
+                  "title": sys.argv[2], "description": sys.argv[3]}))' "$head" "$title" "$body" "$name")" | json 'd["pullRequestId"]')"
 	echo "$ADO_REPO_URL/pullrequest/$id"
 }
 
@@ -131,8 +135,8 @@ print(json.dumps([{"name": sys.argv[1], "oldObjectId": sys.argv[2], "newObjectId
 load_config
 case "${1:-}" in
 check) cmd_check ;;
-base) [[ $# -eq 2 ]] || die "usage: $0 base REPO_DIR"; cmd_base "$2" ;;
-up) [[ $# -eq 3 ]] || die "usage: $0 up REPO_DIR LABEL"; cmd_up "$2" "$3" ;;
+base) [[ $# -eq 3 ]] || die "usage: $0 base REPO_DIR NAME"; cmd_base "$2" "$3" ;;
+up) [[ $# -eq 4 ]] || die "usage: $0 up REPO_DIR LABEL NAME"; cmd_up "$2" "$3" "$4" ;;
 threads) [[ $# -eq 2 ]] || die "usage: $0 threads PR_URL"; cmd_threads "$2" ;;
 down) cmd_down ;;
 *) sed -n '2,20p' "$0" >&2; exit 2 ;;

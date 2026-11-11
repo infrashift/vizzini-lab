@@ -1,18 +1,19 @@
 """Score a UAT run directory and write summary.md and scores.json into it.
 
-Usage: python3 -I uat/score.py RUN_DIR FIXTURE_DIR [--require mrman,ado] [--stub]
+Usage: python3 -I uat/score.py RUN_DIR [--require mrman,ado] [--stub]
 
 --stub (a run against Vizzini's stubllm) turns the model-quality checks
 (must-catch defects, ADR citations) into metrics: the stub only echoes lint.
 
-RUN_DIR layout (written by uat/run.sh):
-  fixture.patch, fixture.sarif, fixture/        the seeded repository
-  <model>/review.json|.code|.err|.time           pr-review --mode review
-  <model>/{describe,improve,plan}.json|.code|... the other modes
-  <model>/garmr.json|.code                       garmr eval of review.json
-  <model>/mrman.json|.code                       mrman headless session (optional)
-  <model>/threads.json                           ADO PR threads (optional)
-  oss/<model>/<label>/{review,describe,garmr}.*  real-world commits
+RUN_DIR layout (written by uat/run.sh), one directory per seeded fixture
+(scored against fixtures/<name>/expected.json):
+  <fixture>/repo.patch, repo.sarif, repo/                  the seeded repository
+  <fixture>/<model>/review.json|.code|.err|.time            pr-review --mode review
+  <fixture>/<model>/{describe,improve,plan}.json|.code|...  the other modes
+  <fixture>/<model>/garmr.json|.code                        garmr eval of review.json
+  <fixture>/<model>/mrman.json|.code                        mrman headless session (optional)
+  <fixture>/<model>/threads.json                            ADO PR threads (optional)
+  oss/<model>/<label>/{review,describe,garmr}.*             real-world commits
 
 Hard checks fail the run (exit 1). Metrics are reported, never fail it:
 models differ, and a finding the ground truth does not list may still be
@@ -136,12 +137,17 @@ def matches(f, defect, tol):
     return bool(lines) and any(f["start_line"] - tol <= ln <= f["end_line"] + tol for ln in lines)
 
 
+def suppressed(result):
+    """SARIF 3.35: a suppression with no status, or "accepted", is in effect."""
+    return any(x.get("status", "accepted") == "accepted" for x in result.get("suppressions") or [])
+
+
 def sarif_on_added(sarif, diff, root):
     prefix = "file://" + root.rstrip("/") + "/"
     n = 0
     for run in sarif.get("runs", []):
         for r in run.get("results", []):
-            if not r.get("locations"):
+            if not r.get("locations") or suppressed(r):
                 continue
             loc = r["locations"][0]["physicalLocation"]
             uri = loc["artifactLocation"]["uri"]
@@ -197,12 +203,13 @@ def check_mode(ck, scope, base, mode, keys):
     return d
 
 
-def score_model(ck, run, fixture_dir, expected, defects, diff, model, require):
-    scope = model
-    d = os.path.join(run, model)
-    print(f"== {model}")
+def score_model(ck, fdir, expected, defects, diff, model, require):
+    fixture = os.path.basename(fdir)
+    scope = f"{fixture}/{model}"
+    d = os.path.join(fdir, model)
+    print(f"== {scope}")
     r = check_review(ck, scope, os.path.join(d, "review"), diff)
-    m = {"model": model}
+    m = {"model": model, "fixture": fixture}
     if r:
         tol = expected.get("tolerance", 2)
         per = {}
@@ -228,9 +235,9 @@ def score_model(ck, run, fixture_dir, expected, defects, diff, model, require):
                not kd & set(kn.get("irrelevant", [])), str(sorted(kd)))
         ck.add(scope, "knowledge: the relevant ADRs were given to the model",
                set(kn.get("relevant", [])) <= kd, str(sorted(kd)))
-        sarif = read_json(os.path.join(run, "fixture.sarif")) or {}
-        want_diag = sarif_on_added(sarif, diff, os.path.join(run, "fixture"))
-        ck.add(scope, f"exactly the {want_diag} changed-line Roslyn diagnostic(s) injected",
+        sarif = read_json(os.path.join(fdir, "repo.sarif")) or {}
+        want_diag = sarif_on_added(sarif, diff, os.path.join(fdir, "repo"))
+        ck.add(scope, f"exactly the {want_diag} changed-line lint diagnostic(s) injected",
                r.get("diagnostics") == want_diag, f"diagnostics={r.get('diagnostics')}")
         m.update({
             "per_defect": per,
@@ -314,31 +321,20 @@ def fmt_s(x):
     return "–" if x is None else f"{x:.0f}s"
 
 
-def summary_md(run, models, results, oss, ck, manifest):
-    L = [f"# UAT run {os.path.basename(run.rstrip('/'))}", ""]
-    if manifest:
-        L += ["| tool | version | commit |", "|---|---|---|"]
-        for t, v in manifest.get("tools", {}).items():
-            L.append(f"| {t} | {v['describe']} | `{v['commit'][:12]}` |")
-        L += ["", f"Go: {manifest.get('go', '')}", ""]
-    L += [f"**Hard checks:** {len(ck.rows) - len(ck.failed)}/{len(ck.rows)} passed" +
-          (" — **FAILED**" if ck.failed else ""), ""]
-    if ck.failed:
-        L += ["| scope | check | detail |", "|---|---|---|"]
-        L += [f"| {s} | {n} | {d[:160]} |" for s, n, _, d in ck.failed]
-        L.append("")
-    have = [m for m in results if "per_defect" in m]
+def fixture_md(fx):
+    have = [m for m in fx["models"] if "per_defect" in m]
+    L = [f"## Fixture: {fx['name']} ({fx['language']})", ""]
     if have:
-        L += ["## Seeded defects", "", "| defect | must catch | " + " | ".join(m["model"] for m in have) + " |",
+        L += ["### Seeded defects", "", "| defect | must catch | " + " | ".join(m["model"] for m in have) + " |",
               "|---|---|" + "---|" * len(have)]
         for did in have[0]["per_defect"]:
-            mc = next((d.get("must_catch") for d in json.load(open(os.path.join(FIXTURE, "expected.json")))["defects"] if d["id"] == did), False)
+            mc = next((d.get("must_catch") for d in fx["expected"]["defects"] if d["id"] == did), False)
             cells = []
             for m in have:
                 p = m["per_defect"][did]
                 cells.append(f"✅ {p['severity']}{'' if p['category_ok'] else ' (category?)'}" if p["caught"] else "❌")
             L.append(f"| {did} | {'yes' if mc else ''} | " + " | ".join(cells) + " |")
-        L += ["", "## Per model", "", "| metric | " + " | ".join(m["model"] for m in have) + " |",
+        L += ["", "### Per model", "", "| metric | " + " | ".join(m["model"] for m in have) + " |",
               "|---|" + "---|" * len(have)]
         rows = [
             ("recall", lambda m: f"{m['recall']:.0%}"),
@@ -358,9 +354,27 @@ def summary_md(run, models, results, oss, ck, manifest):
         L.append("")
         for m in have:
             if m["unmatched"]:
-                L += [f"### Unmatched findings: {m['model']}", "", "Not in the ground truth; judge by hand.", ""]
+                L += [f"#### Unmatched findings: {m['model']}", "", "Not in the ground truth; judge by hand.", ""]
                 L += [f"- {u}" for u in m["unmatched"]]
                 L.append("")
+    return L
+
+
+def summary_md(run, fixtures, oss, ck, manifest):
+    L = [f"# UAT run {os.path.basename(run.rstrip('/'))}", ""]
+    if manifest:
+        L += ["| tool | version | commit |", "|---|---|---|"]
+        for t, v in manifest.get("tools", {}).items():
+            L.append(f"| {t} | {v['describe']} | `{v['commit'][:12]}` |")
+        L += ["", f"Go: {manifest.get('go', '')}", ""]
+    L += [f"**Hard checks:** {len(ck.rows) - len(ck.failed)}/{len(ck.rows)} passed" +
+          (" — **FAILED**" if ck.failed else ""), ""]
+    if ck.failed:
+        L += ["| scope | check | detail |", "|---|---|---|"]
+        L += [f"| {s} | {n} | {d[:160]} |" for s, n, _, d in ck.failed]
+        L.append("")
+    for fx in fixtures:
+        L += fixture_md(fx)
     if any(oss.values()):
         L += ["## Real-world commits", "", "| model | commit | findings | C/M/m/T | chunks | risk | garmr | review |",
               "|---|---|---|---|---|---|---|---|"]
@@ -376,12 +390,12 @@ def summary_md(run, models, results, oss, ck, manifest):
     return "\n".join(L)
 
 
-FIXTURE = None
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STUB = False
 
 
 def main():
-    global FIXTURE, STUB
+    global STUB
     args = sys.argv[1:]
     if "--stub" in args:
         STUB = True
@@ -391,21 +405,32 @@ def main():
         i = args.index("--require")
         require = set(filter(None, args[i + 1].split(",")))
         del args[i:i + 2]
-    run, FIXTURE = (os.path.abspath(a) for a in args)
-    expected = json.load(open(os.path.join(FIXTURE, "expected.json")))
-    defects = resolve_defects(FIXTURE, expected)
-    diff = hunks(read(os.path.join(run, "fixture.patch"), ""))
-    models = sorted(m for m in os.listdir(run)
-                    if os.path.isdir(os.path.join(run, m)) and os.path.exists(os.path.join(run, m, "review.code")))
+    (run,) = (os.path.abspath(a) for a in args)
     ck = Checks()
-    if not models:
-        ck.add("run", "at least one model was run", False)
-    results = [score_model(ck, run, FIXTURE, expected, defects, diff, m, require) for m in models]
+    fixtures = []
+    for name in sorted(os.listdir(run)):
+        fdir = os.path.join(run, name)
+        if not os.path.exists(os.path.join(fdir, "repo.patch")):
+            continue
+        fixture_dir = os.path.join(ROOT, "fixtures", name)
+        expected = json.load(open(os.path.join(fixture_dir, "expected.json")))
+        env = dict(l.strip().split("=", 1) for l in open(os.path.join(fixture_dir, "fixture.env")) if "=" in l)
+        defects = resolve_defects(fixture_dir, expected)
+        diff = hunks(read(os.path.join(fdir, "repo.patch"), ""))
+        models = sorted(m for m in os.listdir(fdir)
+                        if os.path.isdir(os.path.join(fdir, m)) and os.path.exists(os.path.join(fdir, m, "review.code")))
+        if not models:
+            ck.add(name, "at least one model was run", False)
+        fixtures.append({"name": name, "language": env.get("LANGUAGE", ""), "expected": expected,
+                         "models": [score_model(ck, fdir, expected, defects, diff, m, require) for m in models]})
+    if not fixtures:
+        ck.add("run", "at least one fixture was run", False)
     oss = {m: score_oss(ck, run, m) for m in sorted(os.listdir(os.path.join(run, "oss")))} if os.path.isdir(os.path.join(run, "oss")) else {}
     manifest = read_json(os.path.join(run, "build-manifest.json"))
-    md = summary_md(run, models, results, oss, ck, manifest)
+    md = summary_md(run, fixtures, oss, ck, manifest)
     open(os.path.join(run, "summary.md"), "w").write(md + "\n")
-    json.dump({"models": results, "oss": oss, "checks": [dict(zip(("scope", "name", "ok", "detail"), r)) for r in ck.rows]},
+    json.dump({"fixtures": [{k: v for k, v in f.items() if k != "expected"} for f in fixtures], "oss": oss,
+               "checks": [dict(zip(("scope", "name", "ok", "detail"), r)) for r in ck.rows]},
               open(os.path.join(run, "scores.json"), "w"), indent=2)
     print(f"\nsummary: {os.path.join(run, 'summary.md')}")
     print(f"hard checks: {len(ck.rows) - len(ck.failed)}/{len(ck.rows)} passed")

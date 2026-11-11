@@ -1,20 +1,23 @@
 #!/usr/bin/env bash
 # run.sh: the Vizzini + mrman + garmr + okf-wiki UAT.
 #
-#   uat/run.sh [--stub] [--models "m1 m2"] [--no-forge] [--no-oss]
+#   uat/run.sh [--stub] [--models "m1 m2"] [--fixtures "f1 f2"] [--no-forge] [--no-oss]
 #
 #   --stub       use Vizzini's stubllm instead of LiteLLM: no tokens, review
 #                mode only, model-quality checks become metrics. Implies
 #                --no-forge.
 #   --models     override $MODELS from versions.env
+#   --fixtures   override $FIXTURES (seeded fixtures under fixtures/)
 #   --no-forge   skip the Azure DevOps + mrman leg
 #   --no-oss     skip the real-world commits in fixtures/csharp-oss.txt
 #
 # Needs: uat/build.sh done; for live runs `litellm/litellm.sh up`; for the
 # forge leg the ADO settings described in uat/ado.sh.
 #
-# Each run writes .cache/runs/<UTC stamp>/, scored by uat/score.py into
-# summary.md and scores.json there; the exit status is score.py's.
+# Each run writes .cache/runs/<UTC stamp>/: one directory per fixture
+# (repo/, repo.patch, repo.sarif, then one directory per model) and oss/.
+# uat/score.py scores it into summary.md and scores.json there; the exit
+# status is score.py's.
 set -euo pipefail
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
@@ -22,7 +25,6 @@ root="$(cd "$(dirname "$0")/.." && pwd)"
 source "$root/versions.env"
 bin="$root/.cache/bin"
 src="$root/.cache/src"
-fx="$root/fixtures/csharp-seeded"
 policies="$src/vizzini/policies/garmr/vizzini"
 
 stub=0 forge=1 oss=1
@@ -30,9 +32,10 @@ while [[ $# -gt 0 ]]; do
 	case $1 in
 	--stub) stub=1 forge=0 ;;
 	--models) MODELS=$2; shift ;;
+	--fixtures) FIXTURES=$2; shift ;;
 	--no-forge) forge=0 ;;
 	--no-oss) oss=0 ;;
-	*) sed -n '2,18p' "$0" >&2; exit 2 ;;
+	*) sed -n '2,21p' "$0" >&2; exit 2 ;;
 	esac
 	shift
 done
@@ -86,15 +89,6 @@ else
 	echo "   LiteLLM at $VIZZINI_LITELLM_URL; models: $MODELS"
 fi
 
-say "seeded C# fixture"
-"$root/uat/fixture.sh" "$run/fixture"
-(cd "$run/fixture" && git ls-files >"$run/tree.txt")
-
-say "okf-wiki: the fixture's knowledge base"
-(cd "$run/fixture" && "$bin/okfw" validate --all && "$bin/okfw" validate --okf) >"$run/okfw.log" 2>&1 ||
-	{ cat "$run/okfw.log"; die "okfw validate failed on the fixture wiki"; }
-sed 's/^/   /' "$run/okfw.log" | grep -v '^ *$'
-
 say "garmr: Vizzini policy pack"
 "$bin/garmr" validate "$policies" >"$run/garmr-validate.log" 2>&1 || { cat "$run/garmr-validate.log"; die "garmr validate"; }
 for t in review-gate review-advisory; do
@@ -106,35 +100,45 @@ done
 if ((forge)); then
 	say "Azure DevOps"
 	"$root/uat/ado.sh" check
-	"$root/uat/ado.sh" base "$run/fixture"
+	# shellcheck source=uat/forge.sh
+	source "$root/uat/forge.sh"
 fi
 
-# Per model: every Vizzini mode on the fixture (from its root, so relative
-# paths match the SARIF and the knowledge base), garmr on the review, then
-# the forge leg.
-for model in $MODELS; do
-	export VIZZINI_MODEL=$model
-	d="$run/$model"
-	mkdir -p "$d"
-	say "Vizzini + garmr: $model"
-	(
-		cd "$run/fixture"
-		timed "$d/review" "$bin/pr-review" --mode review --patch-file "$run/fixture.patch" \
-			--lint-json "$run/fixture.sarif" --knowledge .okfw --format json
-		if ((!stub)); then
-			timed "$d/describe" "$bin/pr-review" --mode describe --patch-file "$run/fixture.patch" --format json
-			timed "$d/improve" "$bin/pr-review" --mode improve --patch-file "$run/fixture.patch" --format json
-			timed "$d/plan" "$bin/pr-review" --mode plan --issue "$fx/issue.json" --tree "$run/tree.txt" \
-				--okf-index .okfw/index.md --format json
-		fi
-	)
-	timed "$d/garmr" "$bin/garmr" eval --policy-dir "$policies" --input "$d/review.json" -n vizzini -o json
+# Per fixture, per model: every Vizzini mode on the fixture (from its root,
+# so relative paths match the SARIF and the knowledge base), garmr on the
+# review, then the forge leg.
+for fixture in $FIXTURES; do
+	[[ $fixture != oss ]] || die "a fixture cannot be named oss"
+	fx="$root/fixtures/$fixture"
+	f="$run/$fixture"
+	mkdir -p "$f"
+	say "fixture $fixture"
+	"$root/uat/fixture.sh" "$fixture" "$f/repo"
+	(cd "$f/repo" && git ls-files >"$f/tree.txt")
+	(cd "$f/repo" && "$bin/okfw" validate --all && "$bin/okfw" validate --okf) >"$f/okfw.log" 2>&1 ||
+		{ cat "$f/okfw.log"; die "okfw validate failed on the $fixture wiki"; }
+	sed 's/^/   okfw: /' "$f/okfw.log" | grep -v '^ *okfw: *$'
+	if ((forge)); then "$root/uat/ado.sh" base "$f/repo" "$fixture"; fi
 
-	if ((forge)); then
-		# shellcheck source=uat/forge.sh
-		source "$root/uat/forge.sh"
-		forge_leg "$model" "$d"
-	fi
+	for model in $MODELS; do
+		export VIZZINI_MODEL=$model
+		d="$f/$model"
+		mkdir -p "$d"
+		say "Vizzini + garmr: $fixture / $model"
+		(
+			cd "$f/repo"
+			timed "$d/review" "$bin/pr-review" --mode review --patch-file "$f/repo.patch" \
+				--lint-json "$f/repo.sarif" --knowledge .okfw --format json
+			if ((!stub)); then
+				timed "$d/describe" "$bin/pr-review" --mode describe --patch-file "$f/repo.patch" --format json
+				timed "$d/improve" "$bin/pr-review" --mode improve --patch-file "$f/repo.patch" --format json
+				timed "$d/plan" "$bin/pr-review" --mode plan --issue "$fx/issue.json" --tree "$f/tree.txt" \
+					--okf-index .okfw/index.md --format json
+			fi
+		)
+		timed "$d/garmr" "$bin/garmr" eval --policy-dir "$policies" --input "$d/review.json" -n vizzini -o json
+		if ((forge)); then forge_leg "$model" "$d" "$fixture" "$f"; fi
+	done
 done
 
 if ((oss)); then
@@ -158,7 +162,7 @@ if ((oss)); then
 fi
 
 say "score"
-args=("$run" "$fx")
+args=("$run")
 ((stub)) && args+=(--stub)
 ((forge)) && args+=("--require" "mrman,ado")
 python3 -I "$root/uat/score.py" "${args[@]}"

@@ -1,0 +1,23 @@
+{
+  "description": "Ground truth for the seeded TypeScript fixture. A defect is caught when a finding in the same file overlaps any anchor line (the first line containing the anchor text in change/) within +/- tolerance lines. Rules from the fixture's ADRs also accept Architecture.",
+  "tolerance": 2,
+  "defects": [
+    {"id": "cmdinj", "file": "src/export.ts", "anchors": ["execSync(\"pdf-render"], "categories": ["Security", "Architecture"], "must_catch": true,
+     "must_cite": "01a1cb22-3889-7604-b838-d3abb064d485"},
+    {"id": "eval", "file": "src/calc.ts", "anchors": ["eval(formula)"], "categories": ["Security", "Architecture"], "must_catch": true},
+    {"id": "secret", "file": "src/config.ts", "anchors": ["tok_live_"], "categories": ["Security", "Architecture"], "must_catch": true},
+    {"id": "protopollution", "file": "src/config.ts", "anchors": ["target[key] ??= {}", "for (const key of Object.keys(source))", "target[key] = value;"], "categories": ["Security", "Logic"], "must_catch": true},
+    {"id": "timing", "file": "src/webhook.ts", "anchors": ["return expected === signature;"], "categories": ["Security", "Architecture"], "must_catch": false},
+    {"id": "redos", "file": "src/webhook.ts", "anchors": ["@example\\.com$/.test(input)"], "categories": ["Security", "Performance", "Logic"], "must_catch": false},
+    {"id": "floating", "file": "src/users.ts", "anchors": ["saveAudit({ actor"], "categories": ["Logic", "Maintainability"], "must_catch": false},
+    {"id": "returnawait", "file": "src/users.ts", "anchors": ["return fetchProfile(id);"], "categories": ["Logic"], "must_catch": false},
+    {"id": "offbyone", "file": "src/users.ts", "anchors": ["i <= list.length"], "categories": ["Logic"], "must_catch": false},
+    {"id": "race", "file": "src/users.ts", "anchors": ["reserved.add(name);", "await checkProfanity(name);", "if (reserved.has(name))"], "categories": ["Logic", "Performance"], "must_catch": false}
+  ],
+  "decoys": ["src/util/slug.ts"],
+  "knowledge": {
+    "relevant": ["01a1cb22-3889-7604-b838-d3abb064d485", "01a1cb22-389c-7d56-bb22-00d672f96dec"],
+    "irrelevant": ["01a1cb22-38af-76ee-acaa-aa825c8297c0"]
+  },
+  "preexisting_lint": {"file": "src/users.ts", "rule": "@typescript-eslint/no-unused-vars"}
+}
