@@ -7,6 +7,7 @@
 #   ado.sh up REPO_DIR LABEL NAME
 #                                push uat-head as uat/NAME/LABEL-<stamp>, open
 #                                a PR into uat/NAME/base, print its web URL
+#   ado.sh push REPO_DIR PR_URL  push REPO_DIR's uat-head to the PR's source branch
 #   ado.sh threads PR_URL        print the PR's comment threads as JSON
 #   ado.sh whoami                print the PAT owner's identity (the requester)
 #   ado.sh down                  abandon open "vizzini-uat" PRs, delete uat/* branches
@@ -111,6 +112,13 @@ print(json.dumps({"sourceRefName": "refs/heads/"+sys.argv[1], "targetRefName": "
 
 pr_id() { [[ $1 =~ /pullrequest/([0-9]+)$ ]] || die "not a PR URL: $1"; echo "${BASH_REMATCH[1]}"; }
 
+cmd_push() {
+	local dir=$1 ref
+	ref="$(api GET "$ADO_API/pullrequests/$(pr_id "$2")?api-version=7.1" | json 'd["sourceRefName"]')"
+	g "$dir" push -q "$ADO_REPO_URL" "uat-head:$ref"
+	echo "ado: pushed uat-head to ${ref#refs/heads/}"
+}
+
 cmd_threads() {
 	api GET "$ADO_API/pullRequests/$(pr_id "$1")/threads?api-version=7.1"
 }
@@ -144,8 +152,9 @@ case "${1:-}" in
 check) cmd_check ;;
 base) [[ $# -eq 3 ]] || die "usage: $0 base REPO_DIR NAME"; cmd_base "$2" "$3" ;;
 up) [[ $# -eq 4 ]] || die "usage: $0 up REPO_DIR LABEL NAME"; cmd_up "$2" "$3" "$4" ;;
+push) [[ $# -eq 3 ]] || die "usage: $0 push REPO_DIR PR_URL"; cmd_push "$2" "$3" ;;
 threads) [[ $# -eq 2 ]] || die "usage: $0 threads PR_URL"; cmd_threads "$2" ;;
 whoami) cmd_whoami ;;
 down) cmd_down ;;
-*) sed -n '2,20p' "$0" >&2; exit 2 ;;
+*) sed -n '2,21p' "$0" >&2; exit 2 ;;
 esac

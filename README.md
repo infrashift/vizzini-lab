@@ -54,6 +54,11 @@ make uat-bot       # live (needs litellm-up); make uat-bot-stub runs without tok
 
 Both decisions are read back from mrman's audit log.
 
+When the fixture has a `fix/` overlay, two more legs run on the same PR ([ADR-0005](.okfw/decisions/)) to test thread memory:
+
+3. **Rerun.** The bot runs again at the same head and reads its threads back. It must duplicate nothing and resolve nothing.
+4. **Fix.** A commit fixing the MD5 reset token is pushed to the PR. Only threads on the changed lines whose finding is gone are resolved, each with a reply. Threads elsewhere stay as they were.
+
 ## What gets checked
 
 `uat/score.py` writes `summary.md` (the Sonnet vs Opus comparison) and `scores.json` into `.cache/runs/<UTC>/`.
