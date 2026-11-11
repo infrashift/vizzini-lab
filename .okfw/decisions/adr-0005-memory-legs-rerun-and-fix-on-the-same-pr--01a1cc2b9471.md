@@ -39,3 +39,9 @@ New threads that come from model variance, and threads kept open, are reported a
 ## Consequences
 - A run makes four reviews, about $0.22 with Sonnet 5.5.
 - The SARIF has to be rebuilt after the fix. Otherwise its diagnostics would point at lines that no longer hold the code they describe, and the model would report the fixed defect again.
+
+## Update 2026-11-11: incremental review (Vizzini ISSUE-024 slice 3)
+The bot now reviews only what changed since the last reviewed head, so the legs change as follows:
+- **New `idle` leg:** the same head, run incrementally. It must make no review at all.
+- **`rerun` now runs with `--full`:** that keeps testing duplicate detection under rewording and variance.
+- **`fix` runs incrementally:** it must review only the changed file and carry every open thread on the other files.

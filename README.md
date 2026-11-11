@@ -54,10 +54,11 @@ make uat-bot       # live (needs litellm-up); make uat-bot-stub runs without tok
 
 Both decisions are read back from mrman's audit log.
 
-When the fixture has a `fix/` overlay, two more legs run on the same PR ([ADR-0005](.okfw/decisions/)) to test thread memory:
+When the fixture has a `fix/` overlay, three more legs run on the same PR ([ADR-0005](.okfw/decisions/)) to test thread memory and incremental review:
 
-3. **Rerun.** The bot runs again at the same head and reads its threads back. It must duplicate nothing and resolve nothing.
-4. **Fix.** A commit fixing the MD5 reset token is pushed to the PR. Only threads on the changed lines whose finding is gone are resolved, each with a reply. Threads elsewhere stay as they were.
+3. **Idle.** The bot runs again at the same head, incrementally. Nothing changed, so it must make no review at all.
+4. **Rerun.** The bot runs at the same head with `--full` and reads its threads back. It must duplicate nothing and resolve nothing.
+5. **Fix.** A commit fixing the MD5 reset token is pushed to the PR. Only the changed file is reviewed, and the open threads on other files are carried untouched. Only threads on the changed lines whose finding is gone are resolved, each with a reply.
 
 ## What gets checked
 

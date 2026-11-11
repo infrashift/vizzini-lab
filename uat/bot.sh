@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# bot.sh: the unattended leg (Vizzini ISSUE-024 slices 1 and 2, ADR-0016).
+# bot.sh: the unattended leg (Vizzini ISSUE-024 slices 1-3, ADR-0016).
 #
 #   uat/bot.sh [--stub] [--fixture NAME] [--model MODEL]
 #
 # vizzini-bot reviews a seeded fixture's PR on Azure DevOps the way a CI step
 # would (from the checkout: git diff uat-base...uat-head) and posts through
 # mrman, which submits only when garmr allows it. No person is involved.
-# One PR, up to four legs, each with its own mrman data directory (as each
+# One PR, up to five legs, each with its own mrman data directory (as each
 # CI run has):
 #
 #   deny   the committed default policy (mrman's policies/garmr/mrman). It
@@ -17,13 +17,16 @@
 #          never from configuration). Stands in for a repository that lists
 #          its bot account. Bot exit 0, one thread per finding, each carrying
 #          the hidden marker <!-- vizzini:fp=… -->.
-#   rerun  (slice 2) the same head again: the bot reads its threads back and
-#          duplicates none of them, and resolves nothing (no code changed).
-#   fix    (slice 2, fixtures with a fix/ overlay) a commit fixing one
-#          defect is pushed to the PR and the bot runs on the new head: the
-#          threads it raised on the changed lines whose finding is gone are
-#          resolved, with a reply; no thread elsewhere is resolved or
-#          duplicated.
+#   idle   (slice 3) the same head, incrementally: nothing changed since the
+#          last reviewed head, so no review is made at all.
+#   rerun  (slice 2) the same head again with --full: the bot reviews
+#          everything, reads its threads back and duplicates none of them,
+#          and resolves nothing (no code changed).
+#   fix    (slices 2-3, fixtures with a fix/ overlay) a commit fixing one
+#          defect is pushed to the PR and the bot runs incrementally on the
+#          new head: only the changed file is reviewed; the threads it raised
+#          on the changed lines whose finding is gone are resolved, with a
+#          reply; threads on other files are carried untouched.
 #
 # The generated allow policy holds your forge display name; it stays in the
 # run directory under .cache (never committed), and logs show only its first
@@ -111,9 +114,11 @@ pat_file="${ADO_PAT_FILE:-${XDG_CONFIG_HOME:-$HOME/.config}/vizzini-uat/ado.pat}
 # The linter report the bot explains, built at the head under review.
 lint=(--lint-json "$run/repo.sarif")
 
-# leg NAME POLICY_DIR: one vizzini-bot run, as a CI step would make it.
+# leg NAME POLICY_DIR [BOT_ARGS...]: one vizzini-bot run, as a CI step
+# would make it.
 leg() {
 	local name=$1 policy=$2 d="$run/$1" t0 code
+	shift 2
 	mkdir -p "$d/mrman-data"
 	say "leg $name: vizzini-bot --grant-policy $(basename "$(dirname "$policy")")/$(basename "$policy")"
 	t0=$(date +%s)
@@ -123,7 +128,7 @@ leg() {
 		AZURE_DEVOPS_EXT_PAT="$(<"$pat_file")" XDG_DATA_HOME="$d/mrman-data" \
 			"$bin/vizzini-bot" --repo . --base uat-base --head uat-head --pr-url "$pr" \
 			--grant-policy "$policy" --mrman "$bin/mrman" --garmr "$bin/garmr" \
-			--knowledge .okfw "${lint[@]}" --out "$d/review.json"
+			--knowledge .okfw "${lint[@]}" --out "$d/review.json" "$@"
 	) >"$d/bot.json" 2>"$d/bot.err"
 	code=$?
 	set -e
@@ -161,7 +166,8 @@ EOF
 leg allow "$allow"
 
 if [[ -d $root/fixtures/$fixture/fix ]]; then
-	leg rerun "$allow"
+	leg idle "$allow"
+	leg rerun "$allow" --full
 
 	say "push a fix to the PR"
 	cp -a "$root/fixtures/$fixture/fix/." "$run/repo/"
@@ -235,7 +241,7 @@ def duplicates(new, old):
             if o["status"] == "active" and n["id"] != o["id"] and n["path"] == o["path"] and n["cat"] == o["cat"]
             and n["start"] <= o["end"] and n["end"] >= o["start"]]
 
-print("# vizzini-bot UAT (ISSUE-024 slices 1 and 2)\n")
+print("# vizzini-bot UAT (ISSUE-024 slices 1-3)\n")
 code, audit, marked, findings, _ = leg("deny")
 print("## deny: committed default policy\n")
 check(code == 3, f"bot exit 3 (policy denied), got {code}")
@@ -258,10 +264,19 @@ if audit:
 allow_threads = marked
 rerun_threads = marked
 
+r = leg("idle")
+if r:
+    code, audit, marked, findings, result = r
+    print("\n## idle: same head, incremental\n")
+    check(code == 0, f"bot exit 0, got {code}")
+    check(result.get("mode") == "unchanged", f"nothing changed since the last reviewed head: no review (mode {result.get('mode')})")
+    check(findings is None, "no review report was written")
+    check(not audit, "nothing was submitted or resolved")
+
 r = leg("rerun")
 if r:
     code, audit, marked, findings, result = r
-    print("\n## rerun: same head, the bot reads its threads back\n")
+    print("\n## rerun: same head with --full, the bot reads its threads back\n")
     check(code == 0, f"bot exit 0, got {code}")
     new = [t for t in marked if t["run"] == result.get("run_id")]
     dup = duplicates(new, allow_threads)
@@ -279,6 +294,11 @@ if r:
     print("\n## fix: a commit fixes the MD5 reset token\n")
     fixed = "src/Services/PasswordHasher.cs"
     check(code == 0, f"bot exit 0, got {code}")
+    check(result.get("mode") == "incremental" and result.get("reviewed_files") == [fixed],
+          f"only the changed file was reviewed (mode {result.get('mode')}, files {result.get('reviewed_files')})")
+    open_elsewhere = {t["id"] for t in rerun_threads if t["path"] != fixed and t["status"] == "active"}
+    check(open_elsewhere and set(result.get("carried", [])) == open_elsewhere,
+          f"every open thread on another file was carried ({len(result.get('carried', []))} of {len(open_elsewhere)})")
     resolved = [t for t in marked if t["status"] != "active" and any("Resolved by vizzini-bot" in x for x in t["replies"])]
     check(resolved, f"the bot resolved threads ({len(resolved)}: {sorted(t['id'] for t in resolved)})")
     check(sorted(t["id"] for t in resolved) == sorted(result.get("resolved", [])),
