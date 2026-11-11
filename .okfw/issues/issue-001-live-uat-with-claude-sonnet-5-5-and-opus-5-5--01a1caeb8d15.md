@@ -17,8 +17,8 @@ description: "Run the full UAT against both models through LiteLLM and an Azure 
 ## Acceptance criteria
 - [x] Harness: pinned builds, LiteLLM in podman, seeded C# fixture with ground truth, Roslyn SARIF, okfw, garmr, real-world commits, scoring
 - [x] `make uat-stub` passes all hard checks
-- [ ] Vizzini `pkg/risk` exposes typed findings (Vizzini ISSUE-017)
-- [ ] mrman shows Vizzini findings and can promote one to a draft comment (`--vizzini-report`)
-- [ ] Forge leg: ADO PR per model, mrman headless session, human-granted submit, threads verified over REST
+- [x] Vizzini `pkg/risk` exposes typed findings (Vizzini ISSUE-017, b8c014e)
+- [x] mrman shows Vizzini findings and can promote one to a draft comment (`--vizzini-report`, mrman 836f5b3 on feature/vizzini-findings)
+- [x] Forge leg scripted (uat/forge.sh); [ ] run against ADO: PR per model, mrman headless session, human-granted submit, threads verified over REST
 - [ ] `litellm.sh smoke` passes for both models
 - [ ] `make uat` passes all hard checks for Sonnet 5.5 and Opus 5.5; the comparison is recorded here
