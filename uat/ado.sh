@@ -8,6 +8,7 @@
 #                                push uat-head as uat/NAME/LABEL-<stamp>, open
 #                                a PR into uat/NAME/base, print its web URL
 #   ado.sh threads PR_URL        print the PR's comment threads as JSON
+#   ado.sh whoami                print the PAT owner's identity (the requester)
 #   ado.sh down                  abandon open "vizzini-uat" PRs, delete uat/* branches
 #                                (uat-base, the first run's base, stays: as the
 #                                first branch pushed it is the default branch)
@@ -114,6 +115,12 @@ cmd_threads() {
 	api GET "$ADO_API/pullRequests/$(pr_id "$1")/threads?api-version=7.1"
 }
 
+cmd_whoami() {
+	# shellcheck disable=SC2016 # "$value" is an ADO JSON key, not a shell variable
+	api GET "https://dev.azure.com/$ORG/_apis/connectionData" |
+		json '((d.get("authenticatedUser") or {}).get("properties", {}).get("Account", {}).get("$value")) or d["authenticatedUser"]["providerDisplayName"]'
+}
+
 cmd_down() {
 	local id ref oid
 	for id in $(api GET "$ADO_API/pullrequests?searchCriteria.status=active&api-version=7.1" |
@@ -138,6 +145,7 @@ check) cmd_check ;;
 base) [[ $# -eq 3 ]] || die "usage: $0 base REPO_DIR NAME"; cmd_base "$2" "$3" ;;
 up) [[ $# -eq 4 ]] || die "usage: $0 up REPO_DIR LABEL NAME"; cmd_up "$2" "$3" "$4" ;;
 threads) [[ $# -eq 2 ]] || die "usage: $0 threads PR_URL"; cmd_threads "$2" ;;
+whoami) cmd_whoami ;;
 down) cmd_down ;;
 *) sed -n '2,20p' "$0" >&2; exit 2 ;;
 esac

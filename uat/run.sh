@@ -105,6 +105,10 @@ if ((forge)); then
 	"$root/uat/ado.sh" check
 	# shellcheck source=uat/forge.sh
 	source "$root/uat/forge.sh"
+	# The requester is the human behind the PAT (Vizzini ISSUE-025).
+	VIZZINI_REQUESTER="$("$root/uat/ado.sh" whoami)"
+	export VIZZINI_REQUESTER
+	echo "   requester: ${VIZZINI_REQUESTER:0:3}… (redacted; it is in the reports and spend logs)"
 fi
 
 # Per fixture, per model: every Vizzini mode on the fixture (from its root,
@@ -133,6 +137,7 @@ for fixture in $FIXTURES; do
 		d="$f/$model"
 		mkdir -p "$d"
 		say "Vizzini + garmr: $fixture / $model"
+		if ((forge)); then forge_open "$model" "$d" "$fixture" "$f"; fi
 		(
 			cd "$f/repo"
 			timed "$d/review" "$bin/pr-review" --mode review --patch-file "$f/repo.patch" \
@@ -171,51 +176,7 @@ fi
 
 if ((!stub)); then
 	say "cost attribution"
-	# LiteLLM batches spend-log writes; wait until every request the reports
-	# counted is in the database, then record the runs' facts and summarize.
-	want="$(python3 -I -c '
-import json, os, sys
-n = 0
-for d, _, fs in os.walk(sys.argv[1]):
-    for name in fs:
-        if name.endswith(".json") and name[:-5] in ("review", "describe", "improve", "plan"):
-            try:
-                n += (json.load(open(os.path.join(d, name))).get("usage") or {}).get("requests", 0)
-            except (ValueError, AttributeError):
-                pass
-print(n)' "$run")"
-	ids="$(grep -rhoE '"run_id": "[0-9a-f-]{36}"' "$run" --include=review.json | cut -d'"' -f4 | sort -u | paste -sd, - | sed "s/[^,][^,]*/'&'/g")"
-	if [[ -n $ids ]] && "$root/litellm/litellm.sh" views >/dev/null 2>&1; then
-		for _ in $(seq 18); do
-			got="$("$root/litellm/litellm.sh" psql "SELECT count(*) FROM vizzini_requests WHERE run_id IN ($ids)" | sed -n 3p | tr -d ' ')"
-			((got >= want)) && break
-			sleep 10
-		done
-		# Describe, improve and plan reports carry no usage block, so wait
-		# until this run's commits stop gaining rows (two equal polls).
-		iters="$(grep -rhoE '"iteration": "[0-9a-f]{40}"' "$run" --include=review.json | cut -d'"' -f4 | sort -u | paste -sd, - | sed "s/[^,][^,]*/'&'/g")"
-		prev=-1
-		for _ in $(seq 12); do
-			all="$("$root/litellm/litellm.sh" psql "SELECT count(*) FROM vizzini_requests WHERE iteration IN ($iters)" | sed -n 3p | tr -d ' ')"
-			[[ $all == "$prev" ]] && break
-			prev=$all
-			sleep 15
-		done
-		python3 -I "$root/uat/record_runs.py" "$run" | "$root/litellm/litellm.sh" psql - || true
-		{
-			echo "# Cost attribution for run $(basename "$run")"
-			echo
-			echo "Reviews counted $want request(s) in their usage blocks; LiteLLM recorded $got for the review runs."
-			echo
-			echo '```'
-			"$root/litellm/litellm.sh" psql "SELECT f.fixture, f.model, v.requests, v.input_tokens AS in_tok, v.output_tokens AS out_tok, v.cost_usd, v.wasted_on_repairs_and_retries_usd AS wasted_usd, v.findings, v.cost_per_finding_usd AS per_finding FROM vizzini_runs v JOIN vizzini_run_facts f USING (run_id) WHERE v.run_id IN ($ids) ORDER BY f.fixture, f.model"
-			"$root/litellm/litellm.sh" psql "SELECT pr_key, iterations, runs, requests, cost_usd FROM vizzini_pr_costs WHERE pr_key IN (SELECT DISTINCT pr_key FROM vizzini_requests WHERE run_id IN ($ids)) ORDER BY pr_key"
-			echo '```'
-		} >"$run/costs.md" 2>&1 || true
-		sed 's/^/   /' "$run/costs.md"
-	else
-		echo "   LiteLLM's spend-log database is not reachable; skipped"
-	fi
+	"$root/uat/costs.sh" "$run" || echo "   cost attribution failed (rerun: uat/costs.sh $run)"
 fi
 
 say "score"

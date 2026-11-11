@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # forge.sh: the Azure DevOps + mrman leg of the UAT, sourced by run.sh.
 #
-# forge_leg MODEL DIR FIXTURE FDIR, for one model whose review of FIXTURE
-# (materialized at FDIR/repo) is DIR/review.json:
+# forge_open (before the review) and forge_leg (after it), for one model
+# whose review of FIXTURE (materialized at FDIR/repo) is DIR/review.json:
 #   1. open a PR for the fixture on Azure DevOps (uat/ado.sh up)
 #   2. mrman pr <url> --json --vizzini-report: headless session that must
 #      carry every finding (DIR/mrman.json)
@@ -13,7 +13,7 @@
 #      `mrman review submit --event comment`
 #   5. read the PR's threads back over REST (DIR/threads.json)
 #
-# mrman keeps its sessions under $run/mrman-data (XDG_DATA_HOME), so the UAT
+# mrman keeps its sessions under $run/mrman-data (its XDG_DATA_HOME), so the UAT
 # never touches your own review sessions; the command printed in step 3 sets
 # the same variable.
 
@@ -22,8 +22,8 @@
 GRANT_TIMEOUT="${GRANT_TIMEOUT:-1200}"
 
 forge_env() {
-	export XDG_DATA_HOME="$run/mrman-data"
-	mkdir -p "$XDG_DATA_HOME"
+	mrman_data="$run/mrman-data"
+	mkdir -p "$mrman_data"
 	if [[ -z ${AZURE_DEVOPS_EXT_PAT:-} ]]; then
 		local f="${ADO_PAT_FILE:-${XDG_CONFIG_HOME:-$HOME/.config}/vizzini-uat/ado.pat}"
 		AZURE_DEVOPS_EXT_PAT="$(<"$f")"
@@ -31,9 +31,15 @@ forge_env() {
 	fi
 }
 
+# mrman runs the pinned mrman with its sessions under $run/mrman-data. Only
+# mrman gets that XDG_DATA_HOME: exported to the whole run, it also moved
+# rootless podman's storage (fixture builds re-pulled images; the cost step
+# could not see the LiteLLM database).
+mrman() { XDG_DATA_HOME="$mrman_data" "$bin/mrman" "$@"; }
+
 # granted SLUG: true once SLUG's session carries a comment grant.
 granted() {
-	"$bin/mrman" review list --all 2>/dev/null | python3 -I -c '
+	mrman review list --all 2>/dev/null | python3 -I -c '
 import json, sys
 slug = sys.argv[1]
 for s in json.load(sys.stdin) or []:
@@ -42,15 +48,30 @@ for s in json.load(sys.stdin) or []:
 sys.exit(1)' "$1"
 }
 
+# forge_open MODEL DIR FIXTURE FDIR opens the fixture's PR for MODEL before
+# it is reviewed and records it in DIR/pr-url, so every request of the run
+# can name the real pull request (Vizzini ISSUE-025): it exports
+# VIZZINI_PR=ado:<host>/<org>/<project>/<repo>#<id>.
+forge_open() {
+	local model=$1 d=$2 fixture=$3 f=$4 pr rest
+	forge_env
+	pr="$("$root/uat/ado.sh" up "$f/repo" "$model" "$fixture")"
+	echo "$pr" >"$d/pr-url"
+	rest="${pr#https://}"
+	VIZZINI_PR="ado:${rest%%/_git/*}/$(basename "${rest%%/pullrequest/*}")#${pr##*/}"
+	export VIZZINI_PR
+	echo "   PR: $pr ($VIZZINI_PR)"
+}
+
+# forge_leg MODEL DIR FIXTURE FDIR: the PR (from forge_open) gets the
+# headless mrman check, the human grant, the posted findings.
 forge_leg() {
 	local model=$1 d=$2 fixture=$3 f=$4 pr slug
 	forge_env
 	echo "   -- forge: $fixture / $model"
-	pr="$("$root/uat/ado.sh" up "$f/repo" "$model" "$fixture")"
-	echo "$pr" >"$d/pr-url"
-	echo "   PR: $pr"
+	pr="$(<"$d/pr-url")"
 
-	timed "$d/mrman" "$bin/mrman" pr "$pr" --json --vizzini-report "$d/review.json"
+	timed "$d/mrman" mrman pr "$pr" --json --vizzini-report "$d/review.json"
 	slug="$(python3 -I -c 'import json,sys; print(json.load(open(sys.argv[1]))["slug"])' "$d/mrman.json" 2>/dev/null)" || {
 		echo "   mrman headless open failed: $(head -c 300 "$d/mrman.err")"
 		return 0
@@ -62,7 +83,7 @@ forge_leg() {
    ┌─ YOUR TURN ($fixture / $model) ──────────────────────────────────────────
    │ In another terminal, open the PR in mrman with the submit grant:
    │
-   │   XDG_DATA_HOME='$XDG_DATA_HOME' \\
+   │   XDG_DATA_HOME='$mrman_data' \\
    │   AZURE_DEVOPS_EXT_PAT="\$(cat ~/.config/vizzini-uat/ado.pat)" \\
    │   '$bin/mrman' pr '$pr' --vizzini-report '$d/review.json' --auto
    │
@@ -101,7 +122,7 @@ PY
 		body="$(jq -r .body <<<"$line")"
 		local range=()
 		((end > start)) && range=(--end-line "$end")
-		if "$bin/mrman" review add --session "$slug" --target-file "$file" --line "$start" "${range[@]}" \
+		if mrman review add --session "$slug" --target-file "$file" --line "$start" "${range[@]}" \
 			--side new "$body" >>"$d/review-add.log" 2>&1; then
 			posted=$((posted + 1))
 		else
@@ -114,7 +135,7 @@ PY
 	# because nothing reached the forge. Only mrman's "network error" retries.
 	local try
 	for try in 1 2 3; do
-		timed "$d/submit" "$bin/mrman" review submit --session "$slug" --event comment
+		timed "$d/submit" mrman review submit --session "$slug" --event comment
 		if [[ $(<"$d/submit.code") == 0 ]] || ! grep -q 'network error' "$d/submit.err" || ((try == 3)); then
 			break
 		fi
