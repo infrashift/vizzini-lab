@@ -45,3 +45,13 @@ The bot now reviews only what changed since the last reviewed head, so the legs 
 - **New `idle` leg:** the same head, run incrementally. It must make no review at all.
 - **`rerun` now runs with `--full`:** that keeps testing duplicate detection under rewording and variance.
 - **`fix` runs incrementally:** it must review only the changed file and carry every open thread on the other files.
+
+## Update 2026-11-11: in-thread commands (Vizzini ISSUE-024 slice 4)
+Two more legs follow the fix leg:
+- **command:** the harness writes, as the PAT's user, `/vizzini explain …` and a malformed `/vizzini dance` in one of the bot's threads (`ado.sh comment`). The bot must:
+  - answer both in that thread, the explain with a real answer as a reply to the command comment and the malformed one with usage;
+  - make no review, because the head is unchanged;
+  - have each reply authorized as event `reply`.
+
+  In live runs, every command-mode request in LiteLLM's spend logs must name the command run and the PR.
+- **command-again:** a second run answers nothing again.

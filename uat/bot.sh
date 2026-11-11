@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# bot.sh: the unattended leg (Vizzini ISSUE-024 slices 1-3, ADR-0016).
+# bot.sh: the unattended leg (Vizzini ISSUE-024 slices 1-4, ADR-0016).
 #
 #   uat/bot.sh [--stub] [--fixture NAME] [--model MODEL]
 #
 # vizzini-bot reviews a seeded fixture's PR on Azure DevOps the way a CI step
 # would (from the checkout: git diff uat-base...uat-head) and posts through
 # mrman, which submits only when garmr allows it. No person is involved.
-# One PR, up to five legs, each with its own mrman data directory (as each
+# One PR, up to seven legs, each with its own mrman data directory (as each
 # CI run has):
 #
 #   deny   the committed default policy (mrman's policies/garmr/mrman). It
@@ -27,6 +27,11 @@
 #          new head: only the changed file is reviewed; the threads it raised
 #          on the changed lines whose finding is gone are resolved, with a
 #          reply; threads on other files are carried untouched.
+#   command  (slice 4) as the PAT's user, the harness writes
+#          "/vizzini explain …" and a malformed "/vizzini …" in one of the
+#          bot's threads; the bot (head unchanged: no review) answers both in
+#          the thread, the second with usage.
+#   command-again  the same: both are answered already, nothing is posted.
 #
 # The generated allow policy holds your forge display name; it stays in the
 # run directory under .cache (never committed), and logs show only its first
@@ -190,6 +195,41 @@ if [[ -d $root/fixtures/$fixture/fix ]]; then
 	leg fix "$allow"
 fi
 
+# Commands people write in the PR (slice 4): one real, one malformed, in
+# the bot's thread on the SQL injection (or its first open thread).
+for last in "$run"/fix "$run"/rerun "$run"/allow; do [[ -d $last ]] && break; done
+thread="$(python3 -I - "$last/threads.json" <<'EOF'
+import json, sys
+ts = [t for t in json.load(open(sys.argv[1]))["value"]
+      if t.get("status") == "active" and t.get("threadContext")
+      and any("<!-- vizzini:fp=" in (c.get("content") or "") for c in t.get("comments", []))]
+sql = [t for t in ts if "SQL" in t["comments"][0].get("content", "")]
+print((sql or ts)[0]["id"] if ts else "")
+EOF
+)"
+[[ -n $thread ]] || die "no open bot thread to write a command in"
+say "commands in thread $thread"
+ask="$("$root/uat/ado.sh" comment "$pr" "$thread" "/vizzini explain Why is this dangerous, and what would an attacker send?")"
+bad="$("$root/uat/ado.sh" comment "$pr" "$thread" "/vizzini dance")"
+printf '%s\n%s\n' "$ask" "$bad" >"$run/command-ids"
+echo "   comments $ask (explain) and $bad (malformed)"
+leg command "$allow"
+leg command-again "$allow"
+
+# The command's model calls must be attributed like the review's (ADR-0015):
+# every command-mode request since the command leg started names its run
+# and this pull request.
+if ((!stub)); then
+	sleep 3 # LiteLLM writes spend logs asynchronously
+	cmd_run="$(python3 -I -c 'import json,sys; print(json.load(open(sys.argv[1]))["run_id"])' "$run/command/bot.json")"
+	"$root/litellm/litellm.sh" psql "SELECT count(*) FILTER (WHERE metadata->'spend_logs_metadata'->>'vizzini.run_id' = '$cmd_run'
+		AND metadata->'spend_logs_metadata'->>'vizzini.pr_key' = '$VIZZINI_PR'), count(*)
+		FROM \"LiteLLM_SpendLogs\" WHERE metadata->'spend_logs_metadata'->>'vizzini.mode' = 'command'
+		AND \"startTime\" >= (SELECT min(\"startTime\") FROM \"LiteLLM_SpendLogs\"
+		WHERE metadata->'spend_logs_metadata'->>'vizzini.run_id' = '$cmd_run')" 2>/dev/null |
+		sed -n 's/^ *\([0-9]*\) *| *\([0-9]*\) *$/\1 \2/p' >"$run/command-attribution"
+fi
+
 say "checks"
 python3 -I - "$run" <<'EOF' | tee "$run/summary.md"
 import json, os, re, sys
@@ -241,7 +281,7 @@ def duplicates(new, old):
             if o["status"] == "active" and n["id"] != o["id"] and n["path"] == o["path"] and n["cat"] == o["cat"]
             and n["start"] <= o["end"] and n["end"] >= o["start"]]
 
-print("# vizzini-bot UAT (ISSUE-024 slices 1-3)\n")
+print("# vizzini-bot UAT (ISSUE-024 slices 1-4)\n")
 code, audit, marked, findings, _ = leg("deny")
 print("## deny: committed default policy\n")
 check(code == 3, f"bot exit 3 (policy denied), got {code}")
@@ -313,6 +353,44 @@ if r:
     check(not dup, f"no thread duplicated on unchanged files ({len(dup)} duplicates)")
     print(f"\nmetrics: {len(new)} new thread(s), {len(result.get('already_posted', []))} already posted, "
           f"{len(result.get('kept_open', []))} kept open")
+
+r = leg("command")
+if r:
+    code, audit, marked, findings, result = r
+    ask, bad = open(os.path.join(run, "command-ids")).read().split()
+    print("\n## command: /vizzini in a PR thread\n")
+    check(code == 0, f"bot exit 0, got {code}")
+    check(result.get("mode") == "unchanged", f"no review was needed (mode {result.get('mode')})")
+    check(sorted(result.get("answered", [])) == sorted([ask, bad]), f"both commands answered ({result.get('answered')})")
+    raw = json.load(open(os.path.join(run, "command", "threads.json")))["value"]
+    replies = {}
+    for t in raw:
+        for c in t.get("comments", []):
+            m = re.search(r"<!-- vizzini:reply-to=(\S+) run=", c.get("content") or "")
+            if m:
+                replies.setdefault(m.group(1), []).append((t["id"], c.get("parentCommentId"), c.get("content") or ""))
+    a = replies.get(ask, [])
+    check(len(a) == 1 and "I could not run that" not in a[0][2] and len(a[0][2]) > 200,
+          f"the explain command got one real answer ({len(a)} replies, {len(a[0][2]) if a else 0} chars)")
+    check(a and a[0][1] == int(ask), "the answer is a reply to the command comment")
+    b = replies.get(bad, [])
+    check(len(b) == 1 and "I could not run that" in b[0][2], "the malformed command got one usage reply")
+    check(audit and all(x["input"]["event"] == "reply" and x["allowed"] for x in audit), f"each reply was authorized as event reply ({len(audit)})")
+    if a:
+        print("\n> " + a[0][2].split("<!--")[0].strip().replace("\n", "\n> ")[:1200])
+
+attr = os.path.join(run, "command-attribution")
+if os.path.exists(attr):
+    parts = open(attr).read().split()
+    named, total = (int(parts[0]), int(parts[1])) if len(parts) == 2 else (0, 0)
+    check(total > 0 and named == total, f"every command request is attributed to its run and PR ({named} of {total})")
+
+r = leg("command-again")
+if r:
+    code, audit, marked, findings, result = r
+    print("\n## command-again: nothing is answered twice\n")
+    check(code == 0 and not result.get("answered"), f"no command answered again ({result.get('answered')})")
+    check(not audit, "nothing was posted")
 
 print("\nresult: " + ("PASS" if ok else "FAIL"))
 sys.exit(0 if ok else 1)
