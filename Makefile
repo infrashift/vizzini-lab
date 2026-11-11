@@ -1,4 +1,4 @@
-.PHONY: help build litellm-up litellm-down litellm-smoke uat uat-vizzini uat-stub ado-check ado-down lint clean
+.PHONY: help build litellm-up litellm-down litellm-smoke uat uat-vizzini uat-stub uat-bot uat-bot-stub ado-check ado-down lint clean
 
 help: ## List targets
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-14s %s\n", $$1, $$2}'
@@ -23,6 +23,12 @@ uat-vizzini: build ## Live models without the forge leg (Vizzini + garmr + okfw,
 
 uat-stub: build ## Token-free dry run of the harness against Vizzini's stubllm
 	uat/run.sh --stub
+
+uat-bot: build ## Unattended leg: vizzini-bot posts on an ADO PR under a garmr policy (deny, then allow)
+	uat/bot.sh
+
+uat-bot-stub: build ## The unattended leg against stubllm (no tokens; still posts on ADO)
+	uat/bot.sh --stub
 
 ado-check: ## Check the PAT and ADO repository
 	uat/ado.sh check

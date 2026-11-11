@@ -41,6 +41,19 @@ make ado-down     # abandon the UAT's PRs and delete its branches
 
 The PAT needs **Code (Read & Write)**. For each model the UAT pushes the fixture as `uat/<model>-<stamp>`, opens a PR into `uat-base`, and checks that mrman sees every Vizzini finding. It then pauses and asks you to run `mrman pr <url> --vizzini-report ... --auto` yourself. mrman only grants submit to an interactive session, and the UAT will not fake one ([ADR-0002](.okfw/decisions/)). While your TUI is open, the harness posts the findings as comment threads and checks them over the ADO REST API.
 
+### Unattended: vizzini-bot under a garmr policy
+
+```sh
+make uat-bot       # live (needs litellm-up); make uat-bot-stub runs without tokens
+```
+
+`uat/bot.sh` reviews the fixture's PR the way a CI step would. `vizzini-bot` reviews `git diff uat-base...uat-head` from the checkout and posts through `mrman review submit --grant-policy`, with no person involved. The run has two legs ([ADR-0004](.okfw/decisions/)):
+
+1. **Deny.** mrman's committed default pack must deny your PAT's identity (MRM-002) and post nothing.
+2. **Allow.** A run-local copy listing the identity mrman verified with the forge must post one marked thread per finding.
+
+Both decisions are read back from mrman's audit log.
+
 ## What gets checked
 
 `uat/score.py` writes `summary.md` (the Sonnet vs Opus comparison) and `scores.json` into `.cache/runs/<UTC>/`.
@@ -72,6 +85,7 @@ The PAT needs **Code (Read & Write)**. For each model the UAT pushes the fixture
 | `versions.env` | pinned tool SHAs, LiteLLM and .NET images, models |
 | `uat/build.sh` | build the tools from their pins |
 | `uat/run.sh` | the UAT (`--stub`, `--no-forge`, `--no-oss`, `--models`) |
+| `uat/bot.sh` | the unattended leg: vizzini-bot, deny then allow (`--stub`, `--fixture`, `--model`) |
 | `uat/fixture.sh` | materialize the seeded fixture, patch and Roslyn SARIF |
 | `uat/ado.sh` | Azure DevOps branches, PRs and threads |
 | `uat/score.py` | hard checks, metrics, `summary.md` |

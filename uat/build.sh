@@ -48,7 +48,12 @@ checkout() {
 
 build_vizzini() {
 	checkout vizzini "$VIZZINI_SRC" "$VIZZINI_SHA"
-	(cd "$src/vizzini" && go build -trimpath -o "$bin/pr-review" ./cmd/pr-review)
+	(
+		cd "$src/vizzini"
+		go build -trimpath -o "$bin/pr-review" ./cmd/pr-review
+		# vizzini-bot exists from ISSUE-024 slice 1 on.
+		if [[ -d cmd/vizzini-bot ]]; then go build -trimpath -o "$bin/vizzini-bot" ./cmd/vizzini-bot; fi
+	)
 }
 
 build_mrman() {
