@@ -13,7 +13,7 @@ description: "The whole review workflow on one Azure DevOps PR: Vizzini reviews;
 
 # TS-WF: Full review workflow
 
-- **Command:** `make uat-workflow` (stubllm, no tokens).
+- **Command:** `make uat-workflow` (stubllm, no tokens). UAT-WF-020: `make uat-reconsider MODEL=<model>` (live model tokens).
 - **Attended:** No. UAT-WF-018 and UAT-WF-019 are manual.
 - **Plan:** [UAT test plan](/test-suites/uat-test-plan--01a1cf70a5f6.md)
 
@@ -32,6 +32,7 @@ The workflow from Vizzini ISSUE-027, -028 and -029 and ADR-0023. Vizzini reviews
 | Guardrails | any | agent | no resolve, no approve, no self-grant | UAT-WF-011..013 |
 | Own identity | `wf/nofix.go` | agent, own account | cannot resolve the bot's thread; can be excluded from commands | UAT-WF-014, -015 |
 | Other forges | | | GitHub, GitLab | UAT-WF-016, -017 |
+| Live reconsider | `wf/form.go`, `wf/login.go` | agent | a live model withdraws a false positive and keeps a real defect open | UAT-WF-020 |
 
 ## Test approach
 One PR on the scratch ADO repository, with a synthetic Go module, `wf/`. stubllm reports one finding for each linter diagnostic on a changed line, and each round writes its own golangci-lint JSON. A `/reconsider` is withdrawn only when the argument contains `[stub:withdraw]`. So each outcome is deterministic, and the suite tests the workflow, not a model.
@@ -53,6 +54,7 @@ The developer agent is a script. It acts only through mrman: `review threads --f
 | REQ-WF-10 | The workflow works on GitHub and GitLab too. | [UAT-WF-016](/test-suites/workflow/uat-wf-016-the-workflow-on-github--01a1cfa4f4e7.md), [UAT-WF-017](/test-suites/workflow/uat-wf-017-the-workflow-on-gitlab--01a1cfa4f4f1.md) |
 | REQ-WF-11 | Fix rounds and model cost are bounded. | [UAT-WF-018](/test-suites/workflow/uat-wf-018-fix-rounds-and-cost-are-bounded--01a1cfa4f4fd.md) |
 | REQ-WF-12 | Only a person merges. | [UAT-WF-019](/test-suites/workflow/uat-wf-019-only-a-person-merges--01a1cfa4f508.md) |
+| REQ-WF-13 | A live model answers `/vizzini reconsider` through the schema, once, and the bot acts on its verdict. | [UAT-WF-020](/test-suites/workflow/uat-wf-020-reconsider-with-a-live-model--01a1d0fca7cd.md) |
 
 ## Rounds
 1. **Round 0:** the review. A deny run under mrman's committed policy names the identity, then the bot posts five threads.
@@ -95,6 +97,7 @@ The developer agent is a script. It acts only through mrman: `review threads --f
 | [UAT-WF-017](/test-suites/workflow/uat-wf-017-the-workflow-on-gitlab--01a1cfa4f4f1.md) | The workflow on GitLab | Medium | Pending automation |
 | [UAT-WF-018](/test-suites/workflow/uat-wf-018-fix-rounds-and-cost-are-bounded--01a1cfa4f4fd.md) | Fix rounds and cost are bounded | Low | Manual |
 | [UAT-WF-019](/test-suites/workflow/uat-wf-019-only-a-person-merges--01a1cfa4f508.md) | Only a person merges | High | Manual |
+| [UAT-WF-020](/test-suites/workflow/uat-wf-020-reconsider-with-a-live-model--01a1d0fca7cd.md) | Reconsider with a live model | High | Automated, tester-verified, live tokens |
 
 ## Traces to
 Vizzini ISSUE-027, ISSUE-028, ISSUE-029 and ADR-0023.

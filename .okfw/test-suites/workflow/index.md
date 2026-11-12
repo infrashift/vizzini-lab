@@ -24,4 +24,5 @@
 * [UAT-WF-017: The workflow on GitLab](uat-wf-017-the-workflow-on-gitlab--01a1cfa4f4f1.md) - Make sure that reply, resolve and the findings view work on a GitLab MR.
 * [UAT-WF-018: Fix rounds and cost are bounded](uat-wf-018-fix-rounds-and-cost-are-bounded--01a1cfa4f4fd.md) - Make sure that a runaway fix loop stops.
 * [UAT-WF-019: Only a person merges](uat-wf-019-only-a-person-merges--01a1cfa4f508.md) - Make sure that the branch policy needs a human approval.
+* [UAT-WF-020: Reconsider with a live model](uat-wf-020-reconsider-with-a-live-model--01a1d0fca7cd.md) - Make sure that a live model answers /vizzini reconsider with a real argument, and that the bot acts on each verdict.
 

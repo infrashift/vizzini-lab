@@ -1,4 +1,4 @@
-.PHONY: help build litellm-up litellm-down litellm-smoke uat uat-vizzini uat-stub uat-bot uat-bot-stub uat-ci-github uat-ci-ado uat-ci-gitlab uat-webhook uat-workflow ado-check ado-down lint clean
+.PHONY: help build litellm-up litellm-down litellm-smoke uat uat-vizzini uat-stub uat-bot uat-bot-stub uat-ci-github uat-ci-ado uat-ci-gitlab uat-webhook uat-workflow uat-reconsider ado-check ado-down lint clean
 
 help: ## List targets
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-14s %s\n", $$1, $$2}'
@@ -44,6 +44,9 @@ uat-webhook: build ## The experimental webhook receiver, live on an ADO PR, deli
 
 uat-workflow: build ## The full review workflow on one ADO PR: fix, defend, dispute, settle, guardrails (stubllm)
 	uat/workflow.sh
+
+uat-reconsider: build ## /vizzini reconsider answered by a live model on one ADO PR (MODEL=claude-sonnet-5-5)
+	uat/reconsider.sh --model $(or $(MODEL),claude-sonnet-5-5)
 
 ado-check: ## Check the PAT and ADO repository
 	uat/ado.sh check
