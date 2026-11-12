@@ -30,7 +30,7 @@
 # only). It also tries what it must not do: resolve the bot's thread,
 # approve, and grant itself.
 #
-# With a second ADO account's PAT in ~/.config/vizzini-uat/ado-dev.pat (the
+# With a second ADO account's PAT in ~/.config/vizzini-lab/ado-dev.pat (the
 # developer's own identity), two more cases run: the agent cannot resolve the
 # bot's threads even with resolve allowed (mrman's own-thread rule), and
 # --command-authors can exclude it. Without that file they are BLOCKED.
@@ -45,7 +45,7 @@ source "$root/versions.env"
 bin="$root/.cache/bin"
 src="$root/.cache/src"
 committed="$src/mrman/policies/garmr/mrman"
-cfg="${XDG_CONFIG_HOME:-$HOME/.config}/vizzini-uat"
+cfg="${XDG_CONFIG_HOME:-$HOME/.config}/vizzini-lab"
 
 say() { printf '\n== %s\n' "$*"; }
 die() { printf 'workflow: %s\n' "$*" >&2; exit 1; }
@@ -112,7 +112,7 @@ unset VIZZINI_API_KEY
 
 # --- the fixture ------------------------------------------------------------
 repo="$run/repo"
-g() { git -C "$repo" -c user.name=vizzini-uat -c user.email=uat@example.invalid "$@"; }
+g() { git -C "$repo" -c user.name=vizzini-lab -c user.email=uat@example.invalid "$@"; }
 git init -q -b uat-base "$repo"
 mkdir -p "$repo/wf"
 printf 'module example.com/wf\n\ngo 1.23\n' >"$repo/go.mod"
@@ -475,7 +475,7 @@ print("\n## UAT-WF-013 the agent cannot grant itself\n")
 check(r["guard_auto_exit"] != "0", "mrman refuses --auto without a terminal")
 print("\n## UAT-WF-014 / 015 identity separation\n")
 if r.get("identity") == "BLOCKED":
-    print("- BLOCKED: no second ADO account (~/.config/vizzini-uat/ado-dev.pat); not run")
+    print("- BLOCKED: no second ADO account (~/.config/vizzini-lab/ado-dev.pat); not run")
 else:
     check(r["id_resolve_exit"] != "0" and r["id_resolve_refused"] != "0",
           "the agent's own account cannot resolve the bot's thread, even with resolve allowed")

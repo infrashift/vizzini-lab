@@ -27,7 +27,7 @@ Make sure that the run opens a real ADO PR for the fixture.
 | Step | Action | Expected result |
 |---|---|---|
 | 1 | Find the line `PR: https://dev.azure.com/…/pullrequest/<id>` for the fixture and model. | The line shows a PR URL. |
-| 2 | Open the PR URL in the browser. | The PR title starts with `vizzini-uat`. |
+| 2 | Open the PR URL in the browser. | The PR title starts with `vizzini-lab`. |
 | 3 | Examine the target branch. | The target branch is `uat/<fixture>/base`. |
 
 ## Pass criteria

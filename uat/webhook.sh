@@ -31,7 +31,7 @@ source "$root/versions.env"
 bin="$root/.cache/bin"
 src="$root/.cache/src"
 committed="$src/mrman/policies/garmr/mrman"
-cfg="${XDG_CONFIG_HOME:-$HOME/.config}/vizzini-uat"
+cfg="${XDG_CONFIG_HOME:-$HOME/.config}/vizzini-lab"
 fixture=csharp-seeded live=0
 [[ ${1:-} == --live ]] && live=1
 

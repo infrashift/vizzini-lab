@@ -29,9 +29,9 @@ Make sure that the test removes the permission and everything else it made.
 | 1 | Find the section `== cleanup`. | The section shows the permission removed or restored, the PR abandoned, the policy, pipeline and branches deleted, and the agent stopped. |
 | 2 | In ADO, open *Project settings* > *Repositories* > the repository > *Security*. Select `<Project> Build Service (<org>)`. | *Contribute to pull requests* is *Not set*, or the value it had before the run. |
 | 3 | Open *Pipelines*. | No pipeline has the name `vizzini-bot-test-<stamp>`. |
-| 4 | Open *Organization settings* > *Agent pools* > *Default* > *Agents*. | No agent has the name `vizzini-uat-<stamp>`. |
+| 4 | Open *Organization settings* > *Agent pools* > *Default* > *Agents*. | No agent has the name `vizzini-lab-<stamp>`. |
 | 5 | Open *Repos* > *Branches*. | No branch starts with `ci/`. |
-| 6 | Run `podman ps -a --filter name=vizzini-uat-`. | The output shows no agent container. |
+| 6 | Run `podman ps -a --filter name=vizzini-lab-`. | The output shows no agent container. |
 
 > **CAUTION:** If the permission is still set, remove it now. See [cleanup](/runbooks/runbook-clean-up-after-an-interrupted-run--01a1cf4af83a.md).
 

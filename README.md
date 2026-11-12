@@ -1,4 +1,4 @@
-# vizzini-uat
+# vizzini-lab
 
 End-to-end and user-acceptance tests that run one C# pull request through all four infrashift tools, with live Claude models:
 
@@ -31,9 +31,9 @@ make uat-vizzini  # Vizzini + garmr + okfw on the seeded fixture and the real-wo
 ### Full UAT with Azure DevOps and mrman
 
 ```sh
-mkdir -p ~/.config/vizzini-uat
-echo 'ADO_REPO_URL=https://dev.azure.com/ORG/PROJECT/_git/REPO' > ~/.config/vizzini-uat/ado.env
-read -rs P && install -m600 /dev/null ~/.config/vizzini-uat/ado.pat && printf %s "$P" > ~/.config/vizzini-uat/ado.pat && unset P
+mkdir -p ~/.config/vizzini-lab
+echo 'ADO_REPO_URL=https://dev.azure.com/ORG/PROJECT/_git/REPO' > ~/.config/vizzini-lab/ado.env
+read -rs P && install -m600 /dev/null ~/.config/vizzini-lab/ado.pat && printf %s "$P" > ~/.config/vizzini-lab/ado.pat && unset P
 make ado-check
 make uat          # attended: it pauses for you to grant mrman's submit (see below)
 make ado-down     # abandon the UAT's PRs and delete its branches

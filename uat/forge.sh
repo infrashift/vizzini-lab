@@ -25,7 +25,7 @@ forge_env() {
 	mrman_data="$run/mrman-data"
 	mkdir -p "$mrman_data"
 	if [[ -z ${AZURE_DEVOPS_EXT_PAT:-} ]]; then
-		local f="${ADO_PAT_FILE:-${XDG_CONFIG_HOME:-$HOME/.config}/vizzini-uat/ado.pat}"
+		local f="${ADO_PAT_FILE:-${XDG_CONFIG_HOME:-$HOME/.config}/vizzini-lab/ado.pat}"
 		AZURE_DEVOPS_EXT_PAT="$(<"$f")"
 		export AZURE_DEVOPS_EXT_PAT
 	fi
@@ -84,7 +84,7 @@ forge_leg() {
    │ In another terminal, open the PR in mrman with the submit grant:
    │
    │   XDG_DATA_HOME='$mrman_data' \\
-   │   AZURE_DEVOPS_EXT_PAT="\$(cat ~/.config/vizzini-uat/ado.pat)" \\
+   │   AZURE_DEVOPS_EXT_PAT="\$(cat ~/.config/vizzini-lab/ado.pat)" \\
    │   '$bin/mrman' pr '$pr' --vizzini-report '$d/review.json' --auto
    │
    │ Check the header (vizzini score, finding count), press F / f to read the
@@ -113,7 +113,7 @@ for f in r["findings"]:
         body += f"\n\nSuggestion:\n```\n{f['suggestion'].strip()}\n```"
     if f.get("citations"):
         body += "\n\nSee: " + ", ".join(f["citations"])
-    body += "\n\n_(from a Vizzini review, posted by the vizzini-uat harness)_"
+    body += "\n\n_(from a Vizzini review, posted by the vizzini-lab harness)_"
     print(json.dumps({"file": f["file"], "start": f["start_line"], "end": f["end_line"], "body": body}))
 PY
 	local posted=0 failed=0 file start end body

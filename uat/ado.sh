@@ -14,23 +14,23 @@
 #                                set THREAD's status (active, fixed, wontFix, byDesign, closed)
 #   ado.sh threads PR_URL        print the PR's comment threads as JSON
 #   ado.sh whoami                print the PAT owner's identity (the requester)
-#   ado.sh down                  abandon open "vizzini-uat" PRs, delete uat/* branches
+#   ado.sh down                  abandon open "vizzini-lab" PRs, delete uat/* branches
 #                                (uat-base, the first run's base, stays: as the
 #                                first branch pushed it is the default branch)
 #
 # Configuration (nothing secret is ever passed on a command line):
 #   ADO_REPO_URL   https://dev.azure.com/ORG/PROJECT/_git/REPO
-#                  (or a line ADO_REPO_URL=... in ~/.config/vizzini-uat/ado.env)
+#                  (or a line ADO_REPO_URL=... in ~/.config/vizzini-lab/ado.env)
 #   ADO_PAT_FILE   file holding a PAT with Code (Read & Write)
-#                  (default ~/.config/vizzini-uat/ado.pat, must be mode 0600)
+#                  (default ~/.config/vizzini-lab/ado.pat, must be mode 0600)
 # The PAT is exported as AZURE_DEVOPS_EXT_PAT, the variable mrman reads, and
 # reaches git through a credential helper and curl through a config on stdin.
 #
 # Commits say [skip ci], so pipelines on the repository build nothing.
 set -euo pipefail
 
-TITLE_PREFIX="vizzini-uat"
-cfg="${XDG_CONFIG_HOME:-$HOME/.config}/vizzini-uat"
+TITLE_PREFIX="vizzini-lab"
+cfg="${XDG_CONFIG_HOME:-$HOME/.config}/vizzini-lab"
 
 die() { printf 'ado: %s\n' "$*" >&2; exit 1; }
 
@@ -98,7 +98,7 @@ g() {
 	# shellcheck disable=SC2016
 	git -C "$dir" -c credential.helper= \
 		-c 'credential.helper=!f() { echo username=pat; echo "password=$AZURE_DEVOPS_EXT_PAT"; }; f' \
-		-c user.name=vizzini-uat -c user.email=uat@example.invalid "$@"
+		-c user.name=vizzini-lab -c user.email=uat@example.invalid "$@"
 }
 
 cmd_check() {

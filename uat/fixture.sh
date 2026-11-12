@@ -35,7 +35,7 @@ source "$fx/fixture.env"
 dir="$(realpath -m "$2")"
 [[ ! -e $dir ]] || die "$dir already exists"
 
-g() { git -C "$dir" -c user.name="vizzini-uat" -c user.email="uat@example.invalid" "$@"; }
+g() { git -C "$dir" -c user.name="vizzini-lab" -c user.email="uat@example.invalid" "$@"; }
 
 mkdir -p "$dir"
 git -C "$dir" init -q -b uat-base

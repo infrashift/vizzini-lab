@@ -90,7 +90,7 @@ else
 fi
 
 # Who and what is asking, on every request (Vizzini ISSUE-025).
-export VIZZINI_AGENT=vizzini-uat VIZZINI_REQUESTER="${VIZZINI_REQUESTER:-${USER:-uat}}"
+export VIZZINI_AGENT=vizzini-lab VIZZINI_REQUESTER="${VIZZINI_REQUESTER:-${USER:-uat}}"
 
 say "garmr: Vizzini policy pack"
 "$bin/garmr" validate "$policies" >"$run/garmr-validate.log" 2>&1 || { cat "$run/garmr-validate.log"; die "garmr validate"; }
@@ -131,7 +131,7 @@ for fixture in $FIXTURES; do
 	# "pull request", the head commit and who ran it; each pr-review call
 	# gets its own run id.
 	VIZZINI_ITERATION="$(git -C "$f/repo" rev-parse HEAD)"
-	export VIZZINI_PR="uat:vizzini-uat/$fixture" VIZZINI_ITERATION
+	export VIZZINI_PR="uat:vizzini-lab/$fixture" VIZZINI_ITERATION
 	for model in $MODELS; do
 		export VIZZINI_MODEL=$model
 		d="$f/$model"

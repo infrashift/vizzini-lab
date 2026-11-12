@@ -1,9 +1,9 @@
-# CLAUDE.md — vizzini-uat
+# CLAUDE.md — vizzini-lab
 
 Cross-tool UAT for Vizzini, mrman, garmr and okf-wiki. Shell + Python harness only: no product code lives here.
 
 ## Rules
-1. **Never handle secrets directly.** The Anthropic key is the podman secret `vizzini-anthropic-key`. The ADO PAT is `~/.config/vizzini-uat/ado.pat` (0600). Never echo, log, commit, or pass either on a command line. The user creates both in their own terminal.
+1. **Never handle secrets directly.** The Anthropic key is the podman secret `vizzini-anthropic-key`. The ADO PAT is `~/.config/vizzini-lab/ado.pat` (0600). Never echo, log, commit, or pass either on a command line. The user creates both in their own terminal.
 2. **Never fake mrman's submit grant** (ADR-0002). No pty tricks, no `script`, no `expect`. The forge leg waits for a person.
 3. **Pins, not working trees.** Test a tool change by committing it in that tool's repo and bumping `versions.env`. Never build from, or edit, the sibling checkouts from this repo.
 4. **Don't weaken hard checks to make a model pass.** A model-quality miss is a finding to report. Move a check between hard and metric only with a recorded decision.

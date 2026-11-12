@@ -28,5 +28,5 @@ description: "Run make uat end to end with live Claude models, the attended mrma
 ## After
 - **Evidence:** `.cache/runs/<UTC>/summary.md`, `scores.json` and `costs.md` ([layout](/architecture/run-artifacts-and-the-cache-layout--01a1cf4af87e.md)).
 - **Record a run worth keeping:** copy `summary.md` to `results/YYYY-MM-DD-live-<topic>.md`, and note the outcome in the issue or ADR the run was for (for example [ISSUE-001](/issues/issue-001-live-uat-with-claude-sonnet-5-5-and-opus-5-5--01a1caeb8d15.md)).
-- **Clean ADO:** `make ado-down`. It abandons every open PR titled `vizzini-uat…` and deletes **every** `uat/*` branch, not just this run's; see [cleanup](/runbooks/runbook-clean-up-after-an-interrupted-run--01a1cf4af83a.md).
+- **Clean ADO:** `make ado-down`. It abandons every open PR titled `vizzini-lab…` and deletes **every** `uat/*` branch, not just this run's; see [cleanup](/runbooks/runbook-clean-up-after-an-interrupted-run--01a1cf4af83a.md).
 - `make litellm-down` when you are done with live models. The spend history stays in its volume.

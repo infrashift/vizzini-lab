@@ -7,7 +7,7 @@ tags:
   - "overview"
 created: "2026-11-12T04:25:59-06:00"
 timestamp: "2026-11-12T04:25:59-06:00"
-description: "The vizzini-uat suites, what each one exercises, what it needs, and what it touches outside this machine."
+description: "The vizzini-lab suites, what each one exercises, what it needs, and what it touches outside this machine."
 ---
 
 # Suite map: what each make target proves

@@ -63,7 +63,7 @@ The developer agent is a script. It acts only through mrman: `review threads --f
 ## Preconditions
 - The [first-time setup](/runbooks/runbook-first-time-setup--01a1cf4a8f24.md) is complete. `make ado-check` passes.
 - The pinned mrman has `review threads --findings` (ISSUE-027), and the pinned Vizzini has `/vizzini reconsider` (ISSUE-029).
-- Optional, for UAT-WF-014 and UAT-WF-015: a second ADO account's PAT in `~/.config/vizzini-uat/ado-dev.pat`.
+- Optional, for UAT-WF-014 and UAT-WF-015: a second ADO account's PAT in `~/.config/vizzini-lab/ado-dev.pat`.
 - You have a web browser signed in to Azure DevOps.
 
 ## Execution

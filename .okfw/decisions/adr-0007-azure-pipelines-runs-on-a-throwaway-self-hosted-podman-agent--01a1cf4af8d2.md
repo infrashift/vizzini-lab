@@ -24,7 +24,7 @@ description: "uat/ci-ado.sh runs the Azure Pipelines template on a self-hosted a
 ## Decision
 - **The agent:**
   - `ci/ado-agent` builds an agent image: Ubuntu 24.04 by digest, agent 5.281.1 checked against its published SHA-256.
-  - The test starts it in podman as `vizzini-uat-<stamp>` in the `Default` pool. The PAT arrives as `VSTS_AGENT_INPUT_TOKEN` (name only on the command line).
+  - The test starts it in podman as `vizzini-lab-<stamp>` in the `Default` pool. The PAT arrives as `VSTS_AGENT_INPUT_TOKEN` (name only on the command line).
   - The agent deregisters when stopped.
 - **The pipeline:** created from the template, with the `Default` pool and the stub ([ADR-0006](/decisions/adr-0006-ci-template-tests-run-stubllm-inside-the-job--01a1cf4af8c2.md)), and authorized for that queue. A **non-blocking** build-validation policy on the throwaway base branch triggers it.
 - **The permission:**

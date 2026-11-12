@@ -27,8 +27,8 @@ Make sure that the test removes its containers, volumes and network.
 | Step | Action | Expected result |
 |---|---|---|
 | 1 | Find the section `== cleanup`. | The section shows the runner, the job volumes, GitLab and the network removed. |
-| 2 | Run `podman ps -a --filter name=vizzini-uat-`. | The output shows no GitLab or runner container. |
-| 3 | Run `podman network ls`. | No network starts with `vizzini-uat-gl-`. |
+| 2 | Run `podman ps -a --filter name=vizzini-lab-`. | The output shows no GitLab or runner container. |
+| 3 | Run `podman network ls`. | No network starts with `vizzini-lab-gl-`. |
 
 ## Pass criteria
 The case passes when each step gives its expected result.

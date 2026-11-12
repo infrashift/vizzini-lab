@@ -7,7 +7,7 @@ tags:
   - "setup"
 created: "2026-11-12T04:25:32-06:00"
 timestamp: "2026-11-12T04:25:32-06:00"
-description: "Everything a machine needs before any vizzini-uat suite runs: tools, the two secrets, the ADO repository, gh, the podman socket, and a first build."
+description: "Everything a machine needs before any vizzini-lab suite runs: tools, the two secrets, the ADO repository, gh, the podman socket, and a first build."
 ---
 
 # Runbook: first-time setup
@@ -30,9 +30,9 @@ Create each one **in your own terminal**, never through an agent. [Credential ha
    ```
 2. **Azure DevOps**, for the forge leg, the bot test and the Azure Pipelines test:
    ```sh
-   mkdir -p ~/.config/vizzini-uat
-   echo 'ADO_REPO_URL=https://dev.azure.com/ORG/PROJECT/_git/REPO' > ~/.config/vizzini-uat/ado.env
-   read -rs P && install -m600 /dev/null ~/.config/vizzini-uat/ado.pat && printf %s "$P" > ~/.config/vizzini-uat/ado.pat && unset P
+   mkdir -p ~/.config/vizzini-lab
+   echo 'ADO_REPO_URL=https://dev.azure.com/ORG/PROJECT/_git/REPO' > ~/.config/vizzini-lab/ado.env
+   read -rs P && install -m600 /dev/null ~/.config/vizzini-lab/ado.pat && printf %s "$P" > ~/.config/vizzini-lab/ado.pat && unset P
    make ado-check
    ```
    *Code (Read & Write)* is enough for `make uat` and `make uat-bot`. `make uat-ci-ado` also creates a pipeline and a branch policy, changes a repository permission and registers an agent; it has only been run with a full-access PAT.

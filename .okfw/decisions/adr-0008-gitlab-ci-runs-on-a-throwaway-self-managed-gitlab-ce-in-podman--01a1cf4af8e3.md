@@ -21,7 +21,7 @@ description: "uat/ci-gitlab.sh tests the GitLab template on a GitLab CE and gitl
 Until this test, Vizzini's GitLab CI template had only been linted. There was no GitLab account or token on this machine. gitlab.com would also need runner identity verification, and possibly a paid tier for project access tokens. A self-managed instance is also where adopters' setups differ most.
 
 ## Decision
-- **The instance:** GitLab CE 19.5.1 and gitlab-runner v19.5.1, both by digest in `versions.env`. They run in podman on a private network (`vizzini-uat-gl-<stamp>`). GitLab is published on 127.0.0.1:18480 only and named `gitlab.uat.test` inside the network.
+- **The instance:** GitLab CE 19.5.1 and gitlab-runner v19.5.1, both by digest in `versions.env`. They run in podman on a private network (`vizzini-lab-gl-<stamp>`). GitLab is published on 127.0.0.1:18480 only and named `gitlab.uat.test` inside the network.
 - **Tokens, all made for the run:**
   - **Root:** generated locally and installed with `gitlab-rails runner`, read from the environment.
   - **Runner:** created through `POST /user/runners` and registered with the docker executor on this user's rootless podman socket.

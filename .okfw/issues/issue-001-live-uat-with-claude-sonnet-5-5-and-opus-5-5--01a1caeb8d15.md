@@ -24,7 +24,7 @@ description: "Run the full UAT against both models through LiteLLM and an Azure 
 - [x] `make uat` passes all hard checks for Sonnet 5.5 and Opus 5.5; the comparison is recorded here
 
 ## Resolution (2026-11-11, run 20261111T142959Z)
-**86/86 hard checks passed** for `claude-sonnet-5-5` and `claude-opus-5-5` through LiteLLM v1.99.4 in podman. The forge leg ran on Azure DevOps (`scratch/vizzini-scratch`, PRs #4 and #5): mrman's headless session carried every finding, a person granted submit in the TUI, and every finding was posted as an inline thread. The full summary is in vizzini-uat `results/2026-11-11-live-sonnet-opus-5-5.md`.
+**86/86 hard checks passed** for `claude-sonnet-5-5` and `claude-opus-5-5` through LiteLLM v1.99.4 in podman. The forge leg ran on Azure DevOps (`scratch/vizzini-scratch`, PRs #4 and #5): mrman's headless session carried every finding, a person granted submit in the TUI, and every finding was posted as an inline thread. The full summary is in vizzini-lab `results/2026-11-11-live-sonnet-opus-5-5.md`.
 
 | | Sonnet 5.5 | Opus 5.5 |
 |---|---|---|

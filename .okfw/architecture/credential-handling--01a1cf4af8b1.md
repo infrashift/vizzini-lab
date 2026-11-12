@@ -16,7 +16,7 @@ description: "Where every secret the UAT uses lives, how each reaches the tool t
 |---|---|---|---|
 | Anthropic key | podman secret `vizzini-anthropic-key`, created by a person | `podman --secret …,type=env` into the LiteLLM container | read, echoed, or written by the harness or an agent |
 | LiteLLM master key, DB password | `.cache/litellm/*` (0600) and podman secrets | `litellm.sh env` for Vizzini; podman secrets for the containers | committed |
-| ADO PAT | `~/.config/vizzini-uat/ado.pat` (0600) | git: a credential helper that reads an env var; curl: a config on stdin (`-K -`); mrman: `AZURE_DEVOPS_EXT_PAT`; the ADO agent: `VSTS_AGENT_INPUT_TOKEN`, with only the name on podman's command line | on a command line, in a log, in `.cache/runs` |
+| ADO PAT | `~/.config/vizzini-lab/ado.pat` (0600) | git: a credential helper that reads an env var; curl: a config on stdin (`-K -`); mrman: `AZURE_DEVOPS_EXT_PAT`; the ADO agent: `VSTS_AGENT_INPUT_TOKEN`, with only the name on podman's command line | on a command line, in a log, in `.cache/runs` |
 | `GITHUB_TOKEN` | GitHub, per job | the workflow, scoped to the job | outside GitHub |
 | `System.AccessToken` | ADO, per job | the pipeline step's env | outside ADO |
 | GitLab root token, runner token, project access token | generated for the run; die with the instance | root: `podman exec -e NAME`, git credential helper, curl config on stdin; the bot token: a masked CI/CD variable | written to disk; the bot token is masked in job logs |

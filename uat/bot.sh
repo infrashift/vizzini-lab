@@ -121,7 +121,7 @@ export VIZZINI_PR
 echo "   PR: $pr ($VIZZINI_PR)"
 
 # The PAT, as mrman reads it, for the bot's mrman calls only.
-pat_file="${ADO_PAT_FILE:-${XDG_CONFIG_HOME:-$HOME/.config}/vizzini-uat/ado.pat}"
+pat_file="${ADO_PAT_FILE:-${XDG_CONFIG_HOME:-$HOME/.config}/vizzini-lab/ado.pat}"
 
 # The linter report the bot explains, built at the head under review.
 lint=(--lint-json "$run/repo.sarif")
@@ -183,7 +183,7 @@ if [[ -d $root/fixtures/$fixture/fix ]]; then
 
 	say "push a fix to the PR"
 	cp -a "$root/fixtures/$fixture/fix/." "$run/repo/"
-	git -C "$run/repo" -c user.name=vizzini-uat -c user.email=uat@example.invalid commit -qam "$fixture: fix"
+	git -C "$run/repo" -c user.name=vizzini-lab -c user.email=uat@example.invalid commit -qam "$fixture: fix"
 	git -C "$run/repo" diff --stat HEAD~1 | sed 's/^/   /'
 	"$root/uat/ado.sh" push "$run/repo" "$pr"
 	# The linter report must describe the new head, or its diagnostics would
@@ -263,7 +263,7 @@ EOF
 		mkdir -p "$run/repo/.vizzini"
 		cp "$run/suggested-rule.yaml" "$run/repo/.vizzini/suppressions.yaml"
 		git -C "$run/repo" add .vizzini
-		git -C "$run/repo" -c user.name=vizzini-uat -c user.email=uat@example.invalid commit -qm "suppress: dismissed hardcoded secret [skip ci]"
+		git -C "$run/repo" -c user.name=vizzini-lab -c user.email=uat@example.invalid commit -qm "suppress: dismissed hardcoded secret [skip ci]"
 		git -C "$run/repo" checkout -q uat-head
 		"$root/uat/ado.sh" base "$run/repo" "$fixture"
 		leg suppress "$allow" --full

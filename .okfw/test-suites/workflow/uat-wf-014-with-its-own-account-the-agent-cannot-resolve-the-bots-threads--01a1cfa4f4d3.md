@@ -28,7 +28,7 @@ Make sure that mrman's own-thread rule holds even when the agent's policy allows
 ## Steps
 | Step | Action | Expected result |
 |---|---|---|
-| 1 | Put a second ADO account's PAT in `~/.config/vizzini-uat/ado-dev.pat` (mode 0600). | The file exists. |
+| 1 | Put a second ADO account's PAT in `~/.config/vizzini-lab/ado-dev.pat` (mode 0600). | The file exists. |
 | 2 | Run `make uat-workflow`. | The output shows `== identity separation` without `BLOCKED`. |
 | 3 | Find `UAT-WF-014 / 015` in `<run>/summary.md`. | The first item shows `[x]`. |
 

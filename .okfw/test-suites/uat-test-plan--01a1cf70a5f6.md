@@ -7,12 +7,12 @@ tags:
   - "test-plan"
 created: "2026-11-12T05:07:08-06:00"
 timestamp: "2026-11-12T05:07:08-06:00"
-description: "The vizzini-uat test plan: the six test suites, how a tester runs each one, how to record a result, and the entry and exit criteria."
+description: "The vizzini-lab test plan: the six test suites, how a tester runs each one, how to record a result, and the entry and exit criteria."
 ---
 
 # UAT test plan
 
-This plan lists the UAT suites for vizzini-uat. A tester runs a suite, then does each test case and examines the observable results.
+This plan lists the UAT suites for vizzini-lab. A tester runs a suite, then does each test case and examines the observable results.
 
 ## Suites
 | Suite | Name | Command | Cases | Tokens | Attended |
@@ -41,7 +41,7 @@ This plan lists the UAT suites for vizzini-uat. A tester runs a suite, then does
 | BLOCKED | A precondition is not true. Write the precondition in *Notes*. |
 
 ## Build identity
-Write the build in each record as the short commit of vizzini-uat: `git rev-parse --short HEAD`. `.cache/bin/build-manifest.json` gives the tool commits for that build.
+Write the build in each record as the short commit of vizzini-lab: `git rev-parse --short HEAD`. `.cache/bin/build-manifest.json` gives the tool commits for that build.
 
 ## Entry criteria
 - The [first-time setup](/runbooks/runbook-first-time-setup--01a1cf4a8f24.md) is complete.
