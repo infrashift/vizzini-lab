@@ -24,9 +24,9 @@ The owner reviewed these notes and approved three changes. Each changed label ke
    - aspnetcore findings outside `UrlNormalizer.cs`;
    - the six gitea findings that name the right line but the wrong consequence.
 
-   The lenient calls had favoured Vizzini: 22 of the disputed findings were Vizzini's, against 7 of PR-Agent's. The rule matches the Avalonia judge's reading.
+   Of the 26 findings, 18 were Vizzini's and 8 PR-Agent's. (An earlier draft said 22 and 7: that count tallied rows, and carried rounds repeat a finding.) The rule matches the Avalonia judge's reading.
 2. **Django clean case:** stays `invalid`. Before the change, a failed cache delete also left the stale session. The change only stops raising the error, as `save()` already does.
-3. **react-router d3 (`server.ts`) removed from the ground truth.** The fix encoded commas on the client and did not change `server.ts`, whose split is correct once clients encode. Nine `defect:d3` findings became `valid`, and d3 was removed from 12 `also` lists. The record is under `removed_defects` in `bench/cases.json`.
+3. **react-router d3 (`server.ts`) removed from the ground truth.** The fix encoded commas on the client and did not change `server.ts`, whose split is correct once clients encode. Nine `defect:d3` findings (6 PR-Agent's, 3 Vizzini's) became `valid`, and d3 was removed from 12 `also` lists. The record is under `removed_defects` in `bench/cases.json`.
 
 Effect: real-PR recall fell by about 3 points for each tool, and no conclusion changed.
 
