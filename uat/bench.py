@@ -336,7 +336,41 @@ def main():
         r, p_ = sc["judged_recall_ci"], sc["precision_strict_ci"]
         out.append(f"| {sc['tool']} | {sc['model']} | {pct(sc['judged_recall'])} [{pct(r[0]) if r else '—'}, {pct(r[1]) if r else '—'}] | "
                    f"{pct(sc['precision_strict'])} [{pct(p_[0]) if p_ else '—'}, {pct(p_[1]) if p_ else '—'}] |")
-    out.append("\n## Paired comparisons (A minus B, same cases; 95% bootstrap interval; 'holds' when it excludes 0)\n")
+    real_ids = [c["case"] for c in per_case if not c["case"].endswith("-seeded")]
+    rdraws = [[rng.choice(real_ids) for _ in real_ids] for _ in range(2000)]
+    out.append("\n## Real pull requests only (the seeded fixtures excluded), with 95% bootstrap intervals\n")
+    out.append("| Tool | Model | Defects found | Judged recall | Strict precision | Lenient precision |")
+    out.append("|---|---|---|---|---|---|")
+    for sc in scores.values():
+        st = stats[(sc["tool"], sc["model"])]
+        n = sum(st[i][0] for i in real_ids if i in st)
+        h = sum(st[i][1] for i in real_ids if i in st)
+        rec, prec = ratio(st, real_ids, 1, 0), ratio(st, real_ids, 3, 2)
+        rci, pci = ci([ratio(st, d_, 1, 0) for d_ in rdraws]), ci([ratio(st, d_, 3, 2) for d_ in rdraws])
+        fs = [f for r in rows if r["tool"] == sc["tool"] and r["model"] == sc["model"] and r["ok"] and r["case"] in real_ids for f in r["findings"] if f["label"]]
+        len_ = sum(1 for f in fs if f["label"] != "invalid") / len(fs) if fs else None
+        sc["real"] = {"defects": n, "hits": h, "recall": rec, "recall_ci": rci, "precision_strict": prec, "precision_strict_ci": pci, "precision_lenient": len_}
+        out.append(f"| {sc['tool']} | {sc['model']} | {h}/{n} | {pct(rec)} [{pct(rci[0]) if rci else '—'}, {pct(rci[1]) if rci else '—'}] | "
+                   f"{pct(prec)} [{pct(pci[0]) if pci else '—'}, {pct(pci[1]) if pci else '—'}] | {pct(len_)} |")
+    real_comparisons = []
+    for a_, b_ in pairs:
+        for m in models:
+            sa, sb = stats[(a_, m)], stats[(b_, m)]
+            if not sa or not sb:
+                continue
+            for name, num, den in (("judged recall", 1, 0), ("strict precision", 3, 2)):
+                point = (ratio(sa, real_ids, num, den) or 0) - (ratio(sb, real_ids, num, den) or 0)
+                lo, hi = ci([(ratio(sa, d_, num, den) or 0) - (ratio(sb, d_, num, den) or 0) for d_ in rdraws])
+                real_comparisons.append({"a": a_, "b": b_, "model": m, "metric": name, "diff": round(point, 3),
+                                         "ci": [lo, hi], "holds": lo > 0 or hi < 0})
+    out.append("\n## Paired comparisons, real pull requests only\n")
+    out.append("| A | B | Model | Metric | Difference | Interval | Holds |")
+    out.append("|---|---|---|---|---|---|---|")
+    for c in real_comparisons:
+        out.append(f"| {c['a']} | {c['b']} | {c['model']} | {c['metric']} | {c['diff']:+.0%} | [{c['ci'][0]:+.0%}, {c['ci'][1]:+.0%}] | {'yes' if c['holds'] else 'no'} |")
+    json.dump({"scores": scores, "comparisons": comparisons, "real_comparisons": real_comparisons, "rows": rows, "cases": per_case},
+              open(os.path.join(run, "scores.json"), "w"), indent=1)
+    out.append("\n## Paired comparisons, all cases (A minus B, same cases; 95% bootstrap interval; 'holds' when it excludes 0)\n")
     out.append("| A | B | Model | Metric | Difference | Interval | Holds |")
     out.append("|---|---|---|---|---|---|---|")
     for c in comparisons:

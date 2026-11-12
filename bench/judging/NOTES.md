@@ -17,6 +17,19 @@ publication. Method: lab ADR-0013 and `bench/RUBRIC.md`.
 
 The judges never disagreed on `defect:<id>` or on `valid`. Every disagreement (13 of 150) was between `nit` and `invalid`, or one step from `valid`. Strict precision and judged recall are therefore robust to the judge. The `nit`/`invalid` line is softer, so the lenient numbers are less certain. The sample is in `second-opinion-sample.jsonl`.
 
+## Owner decisions (2026-11-12)
+The owner reviewed these notes and approved three changes. Each changed label keeps the judge's original verdict as `judged_verdict` and the reason in `revision`.
+1. **One strict rule for defect credit.** A finding earns `defect:<id>` only when it sits in the defect's own code and describes the actual failure. Under this rule, 26 findings became `valid`:
+   - Vue findings far from lines 61-64;
+   - aspnetcore findings outside `UrlNormalizer.cs`;
+   - the six gitea findings that name the right line but the wrong consequence.
+
+   The lenient calls had favoured Vizzini: 22 of the disputed findings were Vizzini's, against 7 of PR-Agent's. The rule matches the Avalonia judge's reading.
+2. **Django clean case:** stays `invalid`. Before the change, a failed cache delete also left the stale session. The change only stops raising the error, as `save()` already does.
+3. **react-router d3 (`server.ts`) removed from the ground truth.** The fix encoded commas on the client and did not change `server.ts`, whose split is correct once clients encode. Nine `defect:d3` findings became `valid`, and d3 was removed from 12 `also` lists. The record is under `removed_defects` in `bench/cases.json`.
+
+Effect: real-PR recall fell by about 3 points for each tool, and no conclusion changed.
+
 ## Calls flagged for the owner's review
 These are the judges' own notes, by group. Calls marked FOR OWNER REVIEW
 change a recall number if reversed.

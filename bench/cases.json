@@ -426,16 +426,19 @@
      "end_line": 979,
      "description": "Same unescaped comma join in the RSC manifest URL builder.",
      "category": "Logic"
-    },
+    }
+   ],
+   "notes": "Older intro (2025-09-17), well before the knowledge cutoff, so the bug may have been memorized. Fix encodes commas client-side (getManifestPathsParam) rather than changing the server split; the server split lines are the other half of the same flawed encoding scheme.",
+   "removed_defects": [
     {
      "file": "packages/react-router/lib/server-runtime/server.ts",
      "start_line": 368,
      "end_line": 369,
      "description": "Server splits the `paths` param on ',' with no way to distinguish delimiter commas from commas inside a path.",
-     "category": "Logic"
+     "category": "Logic",
+     "removed": "Owner review 2026-11-12: the fix (encoding commas on the client) did not change server.ts; its comma split is correct once clients encode."
     }
-   ],
-   "notes": "Older intro (2025-09-17), well before the knowledge cutoff, so the bug may have been memorized. Fix encodes commas client-side (getManifestPathsParam) rather than changing the server split; the server split lines are the other half of the same flawed encoding scheme."
+   ]
   },
   {
    "id": "py-django-verbatim-lexer",

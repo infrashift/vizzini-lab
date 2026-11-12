@@ -5,9 +5,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "002d78c3ee32b1c2": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "In RewriteAction a '\\'-led value skips the collapse and is later prefixed to '/\\...' in Request.Path, the labelled gap for rewrite targets.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); in a different file than the defect (UrlNormalizer.cs)."
  },
  "0031817a0b549b88": {
   "verdict": "nit",
@@ -45,9 +47,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "01326c3876ba9fed": {
-  "verdict": "defect:d3",
+  "verdict": "valid",
   "reason": "server.ts:368-369 does pathParam.split(\",\") on the decoded value, so delimiter commas cannot be told apart from commas inside a path.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d3",
+  "revision": "Owner review 2026-11-12: label d3 (server.ts) removed from the ground truth, the fix did not change it; the finding describes a real issue at head."
  },
  "01499c3fe760cf3e": {
   "verdict": "invalid",
@@ -218,10 +222,10 @@
   "reason": "fog-of-war.ts:225 joins raw paths with \",\" (searchParams.set(\"paths\", paths.sort().join(\",\"))) without escaping, so a path containing a comma is split server-side into bogus paths.",
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
   "also": [
-   "d2",
-   "d3"
+   "d2"
   ],
-  "also_reason": "States the same flaw exists in the RSC client (browser.tsx) and both server parsers, and gives a server-side unescape-after-split fix."
+  "also_reason": "States the same flaw exists in the RSC client (browser.tsx) and both server parsers, and gives a server-side unescape-after-split fix.",
+  "revision": "Owner review 2026-11-12: d3 removed from the ground truth."
  },
  "0782480bfc4f53a5": {
   "verdict": "valid",
@@ -418,9 +422,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "0d63f92e8503ab82": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "In RedirectRule a '\\\\evil.com' result is not collapsed and is later prefixed with '/', still scheme-relative, which is d1.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); in a different file than the defect (UrlNormalizer.cs)."
  },
  "0d6af1754b80846e": {
   "verdict": "nit",
@@ -513,9 +519,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "1066d1a9b4016a10": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "A target starting with '\\' is not collapsed and becomes '/\\example.com' after the prefix, the labelled bypass.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); in a different file than the defect (UrlNormalizer.cs)."
  },
  "1143ea1bea199b82": {
   "verdict": "invalid",
@@ -533,9 +541,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "1161077991818447": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "With AddRedirect(\"(.*)\", \"$1\") a request to '/\\evil.com' yields '\\evil.com', which the helper leaves unchanged and RedirectRule prefixes to '/\\evil.com', exactly d1.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); in a different file than the defect (UrlNormalizer.cs)."
  },
  "11632f2fdfd044ee": {
   "verdict": "valid",
@@ -566,10 +576,8 @@
   "verdict": "defect:d1",
   "reason": "fog-of-war.ts:225 joins raw paths with \",\" (searchParams.set(\"paths\", paths.sort().join(\",\"))) without escaping, so a path containing a comma is split server-side into bogus paths.",
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
-  "also": [
-   "d3"
-  ],
-  "also_reason": "Describes the server splitting `/a,b` into two paths and requires decoding in server.ts as well."
+  "also_reason": "Describes the server splitting `/a,b` into two paths and requires decoding in server.ts as well.",
+  "revision": "Owner review 2026-11-12: d3 removed from the ground truth."
  },
  "11f8974c791421e6": {
   "verdict": "invalid",
@@ -786,9 +794,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "18b0f873a9d1939d": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "It flags that addTailSection (line 547) now builds the tail DiffLineSection with empty Content instead of \" \", which is the direct cause of the labelled tail-section rendering failure (GetLineTypeMarker indexing Content[0]).",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); right line, wrong consequence (the real failure is a GetLineTypeMarker panic)."
  },
  "18c4452e7b275ba4": {
   "verdict": "invalid",
@@ -871,9 +881,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "1be35d4c02937042": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "It identifies that the slot claim's close is first resolved off the cursor via locateClaimedEnd and suggests caching it by walk at boundary entry, which is the missing eager locate in withHydratingSlotBoundary.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); far from the defect's lines (61-64)."
  },
  "1c21f7373ae0959e": {
   "verdict": "nit",
@@ -881,9 +893,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "1d44e7c887b4e6d6": {
-  "verdict": "defect:d3",
+  "verdict": "valid",
   "reason": "server.ts:368-369 does pathParam.split(\",\") on the decoded value, so delimiter commas cannot be told apart from commas inside a path.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d3",
+  "revision": "Owner review 2026-11-12: label d3 (server.ts) removed from the ground truth, the fix did not change it; the finding describes a real issue at head."
  },
  "1d500f623b061fcd": {
   "verdict": "nit",
@@ -981,9 +995,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "209785882b322d3b": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "It flags that addTailSection (line 547) now builds the tail DiffLineSection with empty Content instead of \" \", which is the direct cause of the labelled tail-section rendering failure (GetLineTypeMarker indexing Content[0]).",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); right line, wrong consequence (the real failure is a GetLineTypeMarker panic)."
  },
  "20cc28471040b088": {
   "verdict": "defect:d1",
@@ -1041,13 +1057,15 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "229903a038436702": {
-  "verdict": "defect:d3",
+  "verdict": "valid",
   "reason": "server.ts:368-369 does pathParam.split(\",\") on the decoded value, so delimiter commas cannot be told apart from commas inside a path.",
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
   "also": [
    "d1"
   ],
-  "also_reason": "Describes the client sending an unescaped `/foo,bar`, and prescribes escaping commas in each path before joining as well as decoding after the split."
+  "also_reason": "Describes the client sending an unescaped `/foo,bar`, and prescribes escaping commas in each path before joining as well as decoding after the split.",
+  "judged_verdict": "defect:d3",
+  "revision": "Owner review 2026-11-12: label d3 (server.ts) removed from the ground truth, the fix did not change it; the finding describes a real issue at head."
  },
  "235a12752ce7d8aa": {
   "verdict": "nit",
@@ -1409,9 +1427,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "304333f4151e5183": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "A '\\example.com' capture is unchanged because url[0] != '/', then becomes '/\\example.com', which is d1.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); in a different file than the defect (UrlNormalizer.cs)."
  },
  "30655d83c6be708d": {
   "verdict": "defect:d1",
@@ -1424,9 +1444,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "30b628ed21608b4b": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "The slot branch of planReuseOwnClose now resolves currentSlotClaim's close lazily via locateClaimedEnd off the cursor instead of the eagerly located close, so it can pick a wrong same-kind close, the lazy-lookup defect.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); far from the defect's lines (61-64)."
  },
  "30c728221d432fd1": {
   "verdict": "invalid",
@@ -1659,13 +1681,15 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "362073981bf7bc22": {
-  "verdict": "defect:d3",
+  "verdict": "valid",
   "reason": "server.ts:368-369 does pathParam.split(\",\") on the decoded value, so delimiter commas cannot be told apart from commas inside a path.",
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
   "also": [
    "d1"
   ],
-  "also_reason": "Describes the client joining paths with ',' as half of the ambiguity, and prescribes escaping each path before joining."
+  "also_reason": "Describes the client joining paths with ',' as half of the ambiguity, and prescribes escaping each path before joining.",
+  "judged_verdict": "defect:d3",
+  "revision": "Owner review 2026-11-12: label d3 (server.ts) removed from the ground truth, the fix did not change it; the finding describes a real issue at head."
  },
  "3670a43a05c65c32": {
   "verdict": "invalid",
@@ -1742,10 +1766,10 @@
   "reason": "fog-of-war.ts:225 joins raw paths with \",\" (searchParams.set(\"paths\", paths.sort().join(\",\"))) without escaping, so a path containing a comma is split server-side into bogus paths.",
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
   "also": [
-   "d2",
-   "d3"
+   "d2"
   ],
-  "also_reason": "Says the server splits the joined paths, and prescribes decoding on the server and the same encoding in the RSC browser code."
+  "also_reason": "Says the server splits the joined paths, and prescribes decoding on the server and the same encoding in the RSC browser code.",
+  "revision": "Owner review 2026-11-12: d3 removed from the ground truth."
  },
  "38e3b6b2b0526cac": {
   "verdict": "valid",
@@ -2040,15 +2064,15 @@
   "verdict": "defect:d1",
   "reason": "fog-of-war.ts:225 joins raw paths with \",\" (searchParams.set(\"paths\", paths.sort().join(\",\"))) without escaping, so a path containing a comma is split server-side into bogus paths.",
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
-  "also": [
-   "d3"
-  ],
-  "also_reason": "Explains that the server decodes and then splits on ',', and gives the server-side `.split(',').map(decodeURIComponent)` fix."
+  "also_reason": "Explains that the server decodes and then splits on ',', and gives the server-side `.split(',').map(decodeURIComponent)` fix.",
+  "revision": "Owner review 2026-11-12: d3 removed from the ground truth."
  },
  "4541a33e46f9d3d6": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "A '\\/evil.com' capture is not normalized because the helper only acts on url[0]=='/', then RedirectAction prefixes '/', which is d1.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); in a different file than the defect (UrlNormalizer.cs)."
  },
  "454402dd2a7c78c3": {
   "verdict": "defect:d1",
@@ -2192,10 +2216,8 @@
   "verdict": "defect:d1",
   "reason": "fog-of-war.ts:225 joins raw paths with \",\" (searchParams.set(\"paths\", paths.sort().join(\",\"))) without escaping, so a path containing a comma is split server-side into bogus paths.",
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
-  "also": [
-   "d3"
-  ],
-  "also_reason": "Describes the server splitting `/foo,bar` into `/foo` and `bar`, and prescribes decoding after splitting."
+  "also_reason": "Describes the server splitting `/foo,bar` into `/foo` and `bar`, and prescribes decoding after splitting.",
+  "revision": "Owner review 2026-11-12: d3 removed from the ground truth."
  },
  "49d7f230e223d95e": {
   "verdict": "defect:units",
@@ -2486,9 +2508,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "5423573be585c26d": {
-  "verdict": "defect:d3",
+  "verdict": "valid",
   "reason": "server.ts:368-369 does pathParam.split(\",\") on the decoded value, so delimiter commas cannot be told apart from commas inside a path.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d3",
+  "revision": "Owner review 2026-11-12: label d3 (server.ts) removed from the ground truth, the fix did not change it; the finding describes a real issue at head."
  },
  "543d0194b1084b4f": {
   "verdict": "valid",
@@ -2594,15 +2618,17 @@
   "reason": "fog-of-war.ts:225 joins raw paths with \",\" (searchParams.set(\"paths\", paths.sort().join(\",\"))) without escaping, so a path containing a comma is split server-side into bogus paths.",
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
   "also": [
-   "d2",
-   "d3"
+   "d2"
   ],
-  "also_reason": "Explicitly says the same split happens in server-runtime/server.ts lines 368-369 and rsc/browser.tsx:979, and gives the client and server fixes."
+  "also_reason": "Explicitly says the same split happens in server-runtime/server.ts lines 368-369 and rsc/browser.tsx:979, and gives the client and server fixes.",
+  "revision": "Owner review 2026-11-12: d3 removed from the ground truth."
  },
  "57d8ab06e9a15137": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "A '\\'-led pattern is a no-op for the collapse and then gets '/' prepended, emitting '/\\example.com', which is d1.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); in a different file than the defect (UrlNormalizer.cs)."
  },
  "57ea9213752b9d75": {
   "verdict": "nit",
@@ -2610,9 +2636,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "58012f6db4a5c118": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "It flags that addTailSection (line 547) now builds the tail DiffLineSection with empty Content instead of \" \", which is the direct cause of the labelled tail-section rendering failure (GetLineTypeMarker indexing Content[0]).",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); right line, wrong consequence (the real failure is a GetLineTypeMarker panic)."
  },
  "5803973ae9d5dbf7": {
   "verdict": "invalid",
@@ -2623,10 +2651,8 @@
   "verdict": "defect:d1",
   "reason": "fog-of-war.ts:225 joins raw paths with \",\" (searchParams.set(\"paths\", paths.sort().join(\",\"))) without escaping, so a path containing a comma is split server-side into bogus paths.",
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
-  "also": [
-   "d3"
-  ],
-  "also_reason": "Describes the server splitting `/products/a,b` and requires the server to decode each segment after splitting."
+  "also_reason": "Describes the server splitting `/products/a,b` and requires the server to decode each segment after splitting.",
+  "revision": "Owner review 2026-11-12: d3 removed from the ground truth."
  },
  "58256be51f5342c7": {
   "verdict": "valid",
@@ -2683,15 +2709,17 @@
   "reason": "fog-of-war.ts:225 joins raw paths with \",\" (searchParams.set(\"paths\", paths.sort().join(\",\"))) without escaping, so a path containing a comma is split server-side into bogus paths.",
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
   "also": [
-   "d2",
-   "d3"
+   "d2"
   ],
-  "also_reason": "Prescribes decoding after the split in server.ts and server.rsc.ts and the same encoding in rsc/browser.tsx, having described the server split corrupting comma paths."
+  "also_reason": "Prescribes decoding after the split in server.ts and server.rsc.ts and the same encoding in rsc/browser.tsx, having described the server split corrupting comma paths.",
+  "revision": "Owner review 2026-11-12: d3 removed from the ground truth."
  },
  "5b2dd89260265d67": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "It flags that addTailSection (line 547) now builds the tail DiffLineSection with empty Content instead of \" \", which is the direct cause of the labelled tail-section rendering failure (GetLineTypeMarker indexing Content[0]).",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); right line, wrong consequence (the real failure is a GetLineTypeMarker panic)."
  },
  "5c0ae8fbf3fba257": {
   "verdict": "nit",
@@ -2919,14 +2947,16 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "639c350d728f9a23": {
-  "verdict": "defect:d3",
+  "verdict": "valid",
   "reason": "server.ts:368-369 does pathParam.split(\",\") on the decoded value, so delimiter commas cannot be told apart from commas inside a path.",
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
   "also": [
    "d1",
    "d2"
   ],
-  "also_reason": "Describes the client joining raw paths with ',' as the cause and applies the per-path encoding fix to fog-of-war.ts and rsc/browser.tsx."
+  "also_reason": "Describes the client joining raw paths with ',' as the cause and applies the per-path encoding fix to fog-of-war.ts and rsc/browser.tsx.",
+  "judged_verdict": "defect:d3",
+  "revision": "Owner review 2026-11-12: label d3 (server.ts) removed from the ground truth, the fix did not change it; the finding describes a real issue at head."
  },
  "63d35204cf3b34d6": {
   "verdict": "defect:d1",
@@ -2949,9 +2979,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "6433023a1b48aa02": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "A '\\'-led pattern skips normalization and has '/' prepended, recreating '/\\example.com', which is d1.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); in a different file than the defect (UrlNormalizer.cs)."
  },
  "644e216706567ea0": {
   "verdict": "defect:offbyone",
@@ -3069,9 +3101,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "67d1bce2811a42c1": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "The slot branch of planReuseOwnClose now resolves currentSlotClaim's close lazily via locateClaimedEnd off the cursor instead of the eagerly located close, so it can pick a wrong same-kind close, the lazy-lookup defect.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); far from the defect's lines (61-64)."
  },
  "67d268b410d98e5b": {
   "verdict": "valid",
@@ -3381,10 +3415,8 @@
   "verdict": "defect:d1",
   "reason": "fog-of-war.ts:225 joins raw paths with \",\" (searchParams.set(\"paths\", paths.sort().join(\",\"))) without escaping, so a path containing a comma is split server-side into bogus paths.",
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
-  "also": [
-   "d3"
-  ],
-  "also_reason": "Explains that the server decodes and then splits a single `/a,b` into two paths, and prescribes decoding after splitting."
+  "also_reason": "Explains that the server decodes and then splits a single `/a,b` into two paths, and prescribes decoding after splitting.",
+  "revision": "Owner review 2026-11-12: d3 removed from the ground truth."
  },
  "71400348f671a9ca": {
   "verdict": "nit",
@@ -3724,9 +3756,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "7c49dc95c2fc593b": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "In RewriteAction's path branch a '\\'-led pattern gets '/' prepended after the no-op collapse, the same leading-backslash gap as d1.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); in a different file than the defect (UrlNormalizer.cs)."
  },
  "7c577fd35b29c9eb": {
   "verdict": "invalid",
@@ -3844,9 +3878,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "812d517b58f117bc": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "The slot branch of planReuseOwnClose now resolves currentSlotClaim's close lazily via locateClaimedEnd off the cursor instead of the eagerly located close, so it can pick a wrong same-kind close, the lazy-lookup defect.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); far from the defect's lines (61-64)."
  },
  "8177e53e6d475604": {
   "verdict": "defect:d1",
@@ -3949,9 +3985,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "863f881ba33fa98f": {
-  "verdict": "defect:d3",
+  "verdict": "valid",
   "reason": "server.ts:368-369 does pathParam.split(\",\") on the decoded value, so delimiter commas cannot be told apart from commas inside a path.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d3",
+  "revision": "Owner review 2026-11-12: label d3 (server.ts) removed from the ground truth, the fix did not change it; the finding describes a real issue at head."
  },
  "864ebbedf178a9ae": {
   "verdict": "defect:dispose",
@@ -3988,9 +4026,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "87f36e7da0ed8cec": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "It flags that addTailSection (line 547) now builds the tail DiffLineSection with empty Content instead of \" \", which is the direct cause of the labelled tail-section rendering failure (GetLineTypeMarker indexing Content[0]).",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); right line, wrong consequence (the real failure is a GetLineTypeMarker panic)."
  },
  "880512f7c90d7afd": {
   "verdict": "defect:d1",
@@ -4308,9 +4348,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "9564849a278b7580": {
-  "verdict": "defect:d3",
+  "verdict": "valid",
   "reason": "server.ts:368-369 does pathParam.split(\",\") on the decoded value, so delimiter commas cannot be told apart from commas inside a path.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d3",
+  "revision": "Owner review 2026-11-12: label d3 (server.ts) removed from the ground truth, the fix did not change it; the finding describes a real issue at head."
  },
  "95763fa94912a499": {
   "verdict": "invalid",
@@ -4712,9 +4754,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "a5f7c9be83d7e118": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "'\\/example.com' is returned unchanged by the url[0]=='/' guard and then prefixed with '/', the labelled bypass.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); in a different file than the defect (UrlNormalizer.cs)."
  },
  "a60100d9e6296cd2": {
   "verdict": "nit",
@@ -4862,9 +4906,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "ab21205df2583b6f": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "It flags that addTailSection (line 547) now builds the tail DiffLineSection with empty Content instead of \" \", which is the direct cause of the labelled tail-section rendering failure (GetLineTypeMarker indexing Content[0]).",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); right line, wrong consequence (the real failure is a GetLineTypeMarker panic)."
  },
  "ab584354988419a6": {
   "verdict": "defect:d2",
@@ -5186,9 +5232,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "b6b87a08d204492a": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "The slot branch of planReuseOwnClose now resolves currentSlotClaim's close lazily via locateClaimedEnd off the cursor instead of the eagerly located close, so it can pick a wrong same-kind close, the lazy-lookup defect.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); far from the defect's lines (61-64)."
  },
  "b6e5d0fd1a9f2474": {
   "verdict": "valid",
@@ -5541,9 +5589,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "c8ac2f7cfa05b6dc": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "A '\\evil.com' target skips the collapse and is prefixed to '/\\evil.com', the labelled bypass caused by the url[0]=='/' guard.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); in a different file than the defect (UrlNormalizer.cs)."
  },
  "c94f1eba90dddade": {
   "verdict": "defect:redos",
@@ -5672,10 +5722,10 @@
   "reason": "fog-of-war.ts:225 joins raw paths with \",\" (searchParams.set(\"paths\", paths.sort().join(\",\"))) without escaping, so a path containing a comma is split server-side into bogus paths.",
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
   "also": [
-   "d2",
-   "d3"
+   "d2"
   ],
-  "also_reason": "States that the server splits on ',' and that the same defect is in the RSC browser code and the server handlers, with a fix that decodes on the server after splitting."
+  "also_reason": "States that the server splits on ',' and that the same defect is in the RSC browser code and the server handlers, with a fix that decodes on the server after splitting.",
+  "revision": "Owner review 2026-11-12: d3 removed from the ground truth."
  },
  "ce47975ccfe535eb": {
   "verdict": "nit",
@@ -5831,10 +5881,8 @@
   "verdict": "defect:d1",
   "reason": "fog-of-war.ts:225 joins raw paths with \",\" (searchParams.set(\"paths\", paths.sort().join(\",\"))) without escaping, so a path containing a comma is split server-side into bogus paths.",
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
-  "also": [
-   "d3"
-  ],
-  "also_reason": "Describes the server splitting a comma path into two, and gives the server-side split-then-decode fix."
+  "also_reason": "Describes the server splitting a comma path into two, and gives the server-side split-then-decode fix.",
+  "revision": "Owner review 2026-11-12: d3 removed from the ground truth."
  },
  "d600ccb421d235bf": {
   "verdict": "defect:eval",
@@ -6017,13 +6065,15 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "dc2fec2d5d555618": {
-  "verdict": "defect:d3",
+  "verdict": "valid",
   "reason": "server.ts:368-369 does pathParam.split(\",\") on the decoded value, so delimiter commas cannot be told apart from commas inside a path.",
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
   "also": [
    "d1"
   ],
-  "also_reason": "Describes the client's `paths.join(\",\")` making `/tags/a,b` indistinguishable from two paths, and prescribes encoding each path before joining."
+  "also_reason": "Describes the client's `paths.join(\",\")` making `/tags/a,b` indistinguishable from two paths, and prescribes encoding each path before joining.",
+  "judged_verdict": "defect:d3",
+  "revision": "Owner review 2026-11-12: label d3 (server.ts) removed from the ground truth, the fix did not change it; the finding describes a real issue at head."
  },
  "dc461dce070f9e81": {
   "verdict": "valid",
@@ -6046,9 +6096,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "dd21a491c66ebd56": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "CollapseLeadingSlashes returns early unless url[0]=='/', so a '\\'-led target passes through and RedirectAction then prepends '/' to give '/\\example.com', which is the labelled bypass.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); in a different file than the defect (UrlNormalizer.cs)."
  },
  "dd6c86367478c3c7": {
   "verdict": "defect:d1",
@@ -6194,10 +6246,8 @@
   "verdict": "defect:d1",
   "reason": "fog-of-war.ts:225 joins raw paths with \",\" (searchParams.set(\"paths\", paths.sort().join(\",\"))) without escaping, so a path containing a comma is split server-side into bogus paths.",
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
-  "also": [
-   "d3"
-  ],
-  "also_reason": "Names the server's split on ',' as part of the bug and says each entry must be decoded on the server."
+  "also_reason": "Names the server's split on ',' as part of the bug and says each entry must be decoded on the server.",
+  "revision": "Owner review 2026-11-12: d3 removed from the ground truth."
  },
  "e3be96ee66034d22": {
   "verdict": "defect:sqli",
@@ -6210,9 +6260,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "e3ca8a70c6b116d1": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "The slot branch of planReuseOwnClose now resolves currentSlotClaim's close lazily via locateClaimedEnd off the cursor instead of the eagerly located close, so it can pick a wrong same-kind close, the lazy-lookup defect.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); far from the defect's lines (61-64)."
  },
  "e3cfc0a225368862": {
   "verdict": "defect:d1",
@@ -6354,9 +6406,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "e9401c62c25fabac": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "'\\\\evil.com' passes the url[0]=='/' guard unchanged and RedirectAction prepends '/', reproducing the open redirect, which is d1.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); in a different file than the defect (UrlNormalizer.cs)."
  },
  "e95714a87e8d6585": {
   "verdict": "invalid",
@@ -6904,9 +6958,11 @@
   "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
  },
  "ff968e276a0acf61": {
-  "verdict": "defect:d1",
+  "verdict": "valid",
   "reason": "A '\\'-led target skips CollapseLeadingSlashes and is prefixed to '/\\example.com' in RedirectAction, the labelled bypass.",
-  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12"
+  "judge": "claude-opus-5-5 blind judge (bench/RUBRIC.md), 2026-11-12",
+  "judged_verdict": "defect:d1",
+  "revision": "Owner review 2026-11-12: strict defect rule (credit only a finding in the defect's own code that describes the actual failure); in a different file than the defect (UrlNormalizer.cs)."
  },
  "ffae3bb5f96ebe40": {
   "verdict": "invalid",
