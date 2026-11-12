@@ -188,6 +188,10 @@ import json, sys
 print(json.dumps({"token": sys.argv[1], "merge": True,
   "accessControlEntries": [{"descriptor": sys.argv[2], "allow": 16384, "deny": 0}]}))' "$ace_token" "$ace_desc")" >/dev/null
 echo "   $PROJECT Build Service ($ORG): Contribute to pull requests on $REPO"
+podman image exists "$image" || {
+	echo "   building $image (ci/ado-agent)"
+	podman build -q -t "$image" "$root/ci/ado-agent" >/dev/null
+}
 podman run -d --name "$agent" -e AZP_URL="https://dev.azure.com/$ORG" -e AZP_POOL=Default -e AZP_AGENT="$agent" \
 	-e VSTS_AGENT_INPUT_TOKEN "$image" >/dev/null
 for _ in $(seq 60); do podman logs "$agent" 2>&1 | grep -q 'Listening for Jobs' && break; sleep 3; done
