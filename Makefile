@@ -1,4 +1,4 @@
-.PHONY: help build litellm-up litellm-down litellm-smoke uat uat-vizzini uat-stub uat-bot uat-bot-stub uat-ci-github uat-ci-ado ado-check ado-down lint clean
+.PHONY: help build litellm-up litellm-down litellm-smoke uat uat-vizzini uat-stub uat-bot uat-bot-stub uat-ci-github uat-ci-ado uat-ci-gitlab ado-check ado-down lint clean
 
 help: ## List targets
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-14s %s\n", $$1, $$2}'
@@ -35,6 +35,9 @@ uat-ci-github: build ## Vizzini's GitHub Actions template, live on a throwaway P
 
 uat-ci-ado: build ## Vizzini's Azure Pipelines template, live on a self-hosted agent (podman) and a throwaway PR
 	uat/ci-ado.sh
+
+uat-ci-gitlab: build ## Vizzini's GitLab CI template, live on a throwaway GitLab CE and runner in podman
+	uat/ci-gitlab.sh
 
 ado-check: ## Check the PAT and ADO repository
 	uat/ado.sh check
