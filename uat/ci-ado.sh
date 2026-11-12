@@ -13,7 +13,9 @@
 #
 #   1. base branch ci/base-<stamp>: a Go file, the template's grant policy
 #      (no identity) and the test pipeline; a pipeline created from it; a
-#      build-validation policy on the base branch
+#      build-validation policy on the base branch; and the template's setup
+#      step: "<Project> Build Service (<org>)" granted Contribute to pull
+#      requests on this repository only (removed or restored at the end)
 #   2. PR from ci/pr-<stamp>
 #      -> the build must fail with exit 3, nothing posted; its log names the
 #         identity System.AccessToken posts as
@@ -22,7 +24,8 @@
 #   4. a "/vizzini explain" comment in a bot thread and another commit
 #      -> an incremental review of the changed file; the command answered in
 #         its thread (ADO supports replies)
-#   5. PR abandoned; policy, pipeline, branches and agent removed
+#   5. PR abandoned; policy, pipeline, branches, permission and agent
+#      removed
 #
 # Uses the ADO settings of uat/ado.sh. The PAT goes to git through a
 # credential helper, to curl through a config on stdin, and to the agent as
@@ -49,12 +52,23 @@ VSTS_AGENT_INPUT_TOKEN="$(<"${ADO_PAT_FILE:-$cfg/ado.pat}")"
 export VSTS_AGENT_INPUT_TOKEN
 api_base="https://dev.azure.com/$ORG/$PROJECT/_apis"
 
-# api METHOD URL [JSON]: the body; fails on a non-2xx status.
+# api METHOD URL [JSON]: the body; fails on a non-2xx status. A failure to
+# connect (dev.azure.com resets the odd TLS handshake) is retried: the request
+# never reached the server, so repeating it is safe.
 api() {
-	local out code
+	local out code="" try
 	out="$(mktemp)"
-	code="$(printf 'header = "Authorization: Basic %s"\n' "$(printf ':%s' "$VSTS_AGENT_INPUT_TOKEN" | base64 -w0)" |
-		curl -sS -K - -o "$out" -w '%{http_code}' -X "$1" -H 'Content-Type: application/json' ${3:+--data "$3"} "$2")"
+	local rc
+	for try in 1 2 3; do
+		rc=0
+		code="$(printf 'header = "Authorization: Basic %s"\n' "$(printf ':%s' "$VSTS_AGENT_INPUT_TOKEN" | base64 -w0)" |
+			curl -sS -K - -o "$out" -w '%{http_code}' -X "$1" -H 'Content-Type: application/json' ${3:+--data "$3"} "$2")" || rc=$?
+		# Retry only failures before the request was sent: DNS (6), connect
+		# (7), TLS handshake (35).
+		[[ $rc == 6 || $rc == 7 || $rc == 35 ]] || break
+		code=""
+		sleep $((try * 5))
+	done
 	if [[ $code != 2* ]]; then
 		echo "ci-ado: $1 $2 -> HTTP $code: $(head -c 400 "$out")" >&2
 		rm -f "$out"
@@ -64,6 +78,7 @@ api() {
 	rm -f "$out"
 }
 jq_() { python3 -I -c "import json,sys; d=json.load(sys.stdin); print($1)"; }
+urlq() { python3 -I -c 'import sys,urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=""))' "$1"; }
 
 stamp="$(date -u +%Y%m%dT%H%M%SZ)"
 run="$root/.cache/runs/$stamp-ci-ado"
@@ -71,9 +86,19 @@ base="ci/base-$stamp" head="ci/pr-$stamp" agent="vizzini-uat-$stamp"
 mkdir -p "$run"
 echo "run: $run"
 
-pipeline_id="" policy_id="" pr_id=""
+pipeline_id="" policy_id="" pr_id="" ace_token="" ace_desc="" ace_before=""
+git_ns=2e9eb7ed-3c0a-47d4-87c1-0ffdd275fd87 # the Git Repositories security namespace
 cleanup() {
 	say "cleanup"
+	if [[ -n $ace_token ]]; then
+		if [[ -n $ace_before ]]; then
+			api POST "https://dev.azure.com/$ORG/_apis/AccessControlEntries/$git_ns?api-version=7.1" "$ace_before" >/dev/null &&
+				echo "   build service permission restored"
+		else
+			api DELETE "https://dev.azure.com/$ORG/_apis/AccessControlEntries/$git_ns?token=$(urlq "$ace_token")&descriptors=$(urlq "$ace_desc")&api-version=7.1" \
+				>/dev/null && echo "   build service permission removed"
+		fi
+	fi
 	[[ -n $pr_id ]] && api PATCH "$api_base/git/repositories/$REPO/pullrequests/$pr_id?api-version=7.1" '{"status":"abandoned"}' >/dev/null && echo "   PR $pr_id abandoned"
 	[[ -n $policy_id ]] && api DELETE "$api_base/policy/configurations/$policy_id?api-version=7.1" >/dev/null && echo "   policy $policy_id deleted"
 	[[ -n $pipeline_id ]] && api DELETE "$api_base/build/definitions/$pipeline_id?api-version=7.1" >/dev/null && echo "   pipeline $pipeline_id deleted"
@@ -144,6 +169,25 @@ print(json.dumps({"isEnabled": True, "isBlocking": False, "type": {"id": "0609b9
                "scope": [{"repositoryId": sys.argv[2], "refName": "refs/heads/"+sys.argv[3], "matchKind": "Exact"}]}}))' \
 	"$pipeline_id" "$repo_id" "$base")" | jq_ 'd["id"]')"
 echo "   build validation policy $policy_id on $base"
+# The template's documented setup: the build service may contribute to pull
+# requests in this repository (PullRequestContribute, 16384).
+project_id="$(api GET "https://dev.azure.com/$ORG/_apis/projects/$PROJECT?api-version=7.1" | jq_ 'd["id"]')"
+ace_desc="$(api GET "https://vssps.dev.azure.com/$ORG/_apis/identities?searchFilter=General&filterValue=$(urlq "$PROJECT Build Service ($ORG)")&api-version=7.1" |
+	jq_ 'd["value"][0]["descriptor"]')"
+ace_before="$(api GET "https://dev.azure.com/$ORG/_apis/accesscontrollists/$git_ns?token=repoV2/$project_id/$repo_id&api-version=7.1" |
+	python3 -I -c '
+import json, sys
+token, desc = sys.argv[1:]
+for acl in json.load(sys.stdin)["value"]:
+    ace = acl.get("acesDictionary", {}).get(desc)
+    if ace:
+        print(json.dumps({"token": token, "merge": False, "accessControlEntries": [ace]}))' "repoV2/$project_id/$repo_id" "$ace_desc")"
+ace_token="repoV2/$project_id/$repo_id"
+api POST "https://dev.azure.com/$ORG/_apis/AccessControlEntries/$git_ns?api-version=7.1" "$(python3 -I -c '
+import json, sys
+print(json.dumps({"token": sys.argv[1], "merge": True,
+  "accessControlEntries": [{"descriptor": sys.argv[2], "allow": 16384, "deny": 0}]}))' "$ace_token" "$ace_desc")" >/dev/null
+echo "   $PROJECT Build Service ($ORG): Contribute to pull requests on $REPO"
 podman run -d --name "$agent" -e AZP_URL="https://dev.azure.com/$ORG" -e AZP_POOL=Default -e AZP_AGENT="$agent" \
 	-e VSTS_AGENT_INPUT_TOKEN "$image" >/dev/null
 for _ in $(seq 60); do podman logs "$agent" 2>&1 | grep -q 'Listening for Jobs' && break; sleep 3; done
@@ -253,7 +297,8 @@ print("# vizzini-bot Azure Pipelines template, live (self-hosted agent)\n")
 print("## build 1: the policy lists no identity\n")
 log1 = read("build1.log")
 check(read("build1.result").strip() == "failed", "the build failed")
-check("exit code 3" in log1, "vizzini-bot exited 3 (the grant policy denied posting)")
+check("exited with code '3'" in log1 and "the grant policy denied posting" in log1,
+      "vizzini-bot exited 3 (the grant policy denied posting)")
 check('"decision":"deny"' in log1 and "MRM-002" in log1, "denied by MRM-002 (identity not listed)")
 check(identity, f"the log names the identity System.AccessToken posts as ({identity})")
 check("install: done" in log1 and "mrman version v0.1.4" in log1, "install.sh built and verified the tools on the agent")
