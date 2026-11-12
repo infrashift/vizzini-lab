@@ -243,7 +243,7 @@ check(read("run1.conclusion").strip() == "failure", "the run failed")
 check("exit code 3" in log1, "vizzini-bot exited 3 (the grant policy denied posting)")
 check('"decision":"deny"' in log1 and "MRM-002" in log1, "denied by MRM-002 (identity not listed)")
 check(identity, f"the log names the identity GITHUB_TOKEN posts as ({identity})")
-check("install: done" in log1 and "mrman version v0.1.8" in log1, "install.sh built and verified the tools on the runner")
+check("install: done" in log1 and "mrman version v0.1.9" in log1, "install.sh built and verified the tools on the runner")
 
 print("\n## run 2: the identity allowed on the base branch\n")
 log2 = read("run2.log")
