@@ -311,7 +311,7 @@ check("exit code 3" in log1 and "the grant policy denied posting" in log1,
 check('"decision":"deny"' in log1 and "MRM-002" in log1, "denied by MRM-002 (identity not listed)")
 check(identity and identity == read("bot-username").strip(),
       f"the log names the identity the project access token posts as ({identity}, its bot user)")
-check("install: done" in log1 and "mrman version v0.1.6" in log1, "install.sh built and verified the tools in the job")
+check("install: done" in log1 and "mrman version v0.1.7" in log1, "install.sh built and verified the tools in the job")
 # The bot user is named only if mrman authenticated, which on a self-managed
 # host takes the template's [[forge.hosts]] entry.
 check('if [ "$CI_SERVER_HOST" != gitlab.com ]' in log1 and identity == read("bot-username").strip(),
