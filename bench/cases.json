@@ -1,0 +1,874 @@
+{
+ "description": "The benchmark's labelled real-PR set (Vizzini ISSUE-022, lab ADR-0013): pins only, never code. Each buggy case is a change (base..head) from a permissively licensed public repository that a later fix names as the cause of a bug; its defects are the lines (head numbering) that hold the bug. Clean cases are changes of similar size that no later commit changed or named. Found and verified with git and the GitHub API on 2026-11-12: the SHAs exist, base is head's first parent, diff_stats match, each defect range lies on lines the change added and holds the bug, the fix descends from head, and the evidence quotes the fix's own text. uat/bench.sh fetches each case at its pinned SHAs.",
+ "verified": "2026-11-12",
+ "notes": "26 buggy + 5 clean cases. Buggy languages: {'Go': 7, 'JavaScript': 5, 'TypeScript': 2, 'Python': 6, 'C#': 4, 'Rust': 2}; 20 distinct repos among buggy cases (max 3 per repo). 15 of 26 buggy introducing changes are dated 2026-07-01 or later. Every case was re-verified with git in partial clones: shas exist, base == head^1 (first parent for merge commits), `git diff --numstat base head` equals diff_stats (raw counts, including tests/changelog files), fix descends from head (for py-numpy-linspace-subclass via the GitHub compare API, since the shallow clone cannot show it), and every defect range overlaps lines added by base..head and contains the buggy code in `git show head:file`. diff_stats are raw (tests and changelog files included). intro_date is the author date of head. No Java case was found (netty/spring-framework fix texts did not name introducing commits). Pre-2026-07-01 cases (11) were kept because they are strong, explicitly attributed bugs; the oldest (efcore 2024-09, tokio 2024-01, react-router 2025-09) are the most likely to be in training data. Weaker/harder labels flagged in their notes: cs-avalonia-vsp-anchor-at-end, ts-vue-vapor-slot-close-lazy, py-numpy-linspace-subclass, py-pandas-agg-func-names-truthiness, go-rclone-shade-complete-eof, go-gitea-runner-bulk-empty-ids (needs knowledge of FindRunnerOptions outside the diff). Spare verified buggy Go candidates not included (repo/size balance): tailscale aa21b0c00 (#19627, fixed by 77948cd: missing Location.Valid() check) and helm c2f1b238 (#32056, fixed by #32217: registry output routed to stdout in template/show). Spare clean: django 67c40758 (xml control chars). Read-only: no GitHub writes, no repository code was executed.",
+ "cases": [
+  {
+   "id": "go-gitea-tail-diffline-empty",
+   "kind": "buggy",
+   "repo": "https://github.com/go-gitea/gitea",
+   "license": "MIT",
+   "language": "Go",
+   "base": "11d0ed699b111011d12baf354029337b80994677",
+   "head": "d87d26d7352cbd76f5e5139c4f94504fbd465bf8",
+   "intro_ref": "PR #38706 (https://github.com/go-gitea/gitea/pull/38706)",
+   "intro_date": "2026-07-30",
+   "fix": "a3e7fe1f113d0e63ce9a0fd55bfc7757b0a52c08",
+   "fix_ref": "PR #38728 (https://github.com/go-gitea/gitea/pull/38728)",
+   "evidence": "\"The regression was introduced in PR #38706 (`94c61137e4`) where `Content: \\\" \\\"` was removed from the initialization of `tailDiffLine`.\"",
+   "diff_stats": {
+    "files": 11,
+    "added": 187,
+    "deleted": 158
+   },
+   "defects": [
+    {
+     "file": "services/gitdiff/gitdiff.go",
+     "start_line": 546,
+     "end_line": 547,
+     "description": "The tail section DiffLine is now built without Content, so GetLineTypeMarker (which indexes d.Content[0]) panics with index out of range when rendering the unified diff tail section.",
+     "category": "Logic"
+    }
+   ],
+   "notes": "Squash-merged PR; the fix text cites the PR-branch sha 94c61137e4, the squash commit on main is the head here. The panic site (GetLineTypeMarker indexing d.Content[0], line 172-173) is unchanged context in the same file."
+  },
+  {
+   "id": "go-gitea-diff-linecount-shadow",
+   "kind": "buggy",
+   "repo": "https://github.com/go-gitea/gitea",
+   "license": "MIT",
+   "language": "Go",
+   "base": "e8befe026853a90a9efca559ca9f9cac8b41fc88",
+   "head": "ae176cd6493480f27b138fb77701d6ac251ebe2c",
+   "intro_ref": "PR #38517 (https://github.com/go-gitea/gitea/pull/38517)",
+   "intro_date": "2026-07-19",
+   "fix": "7f7dc2d16c5bece927af0113f072ec84e0ed0078",
+   "fix_ref": "PR #38746 (https://github.com/go-gitea/gitea/pull/38746)",
+   "evidence": "\"Fix a regression from #38517 (the tail section index is not correctly assigned).\"",
+   "diff_stats": {
+    "files": 7,
+    "added": 115,
+    "deleted": 112
+   },
+   "defects": [
+    {
+     "file": "services/gitdiff/gitdiff.go",
+     "start_line": 499,
+     "end_line": 508,
+     "description": "Line counts are stored in new local variables instead of the new ret.leftLineCount/ret.rightLineCount fields, so the fields stay 0 and the tail section gets wrong LeftIdx/RightIdx.",
+     "category": "Logic"
+    }
+   ],
+   "notes": "Classic shadowing bug: the PR adds leftLineCount/rightLineCount fields to the returned struct (line 486) and reads them in addTailSection (lines 550-551), but fills local variables instead. Lines 550-551 are a second symptom site of the same defect."
+  },
+  {
+   "id": "go-gitea-runner-bulk-empty-ids",
+   "kind": "buggy",
+   "repo": "https://github.com/go-gitea/gitea",
+   "license": "MIT",
+   "language": "Go",
+   "base": "dafc9e127aac1beb3078d17820f69c9f7ba629cd",
+   "head": "dd59c6848660ffa31db0db8c14c2a610076a7a8b",
+   "intro_ref": "PR #37869 (https://github.com/go-gitea/gitea/pull/37869)",
+   "intro_date": "2026-05-29",
+   "fix": "880ddb572456dfbec87eee703513bb78edc4b7ce",
+   "fix_ref": "PR #38453 (https://github.com/go-gitea/gitea/pull/38453)",
+   "evidence": "\"Fix the bug in the site-admin runner bulk actions introduced by #37869: the runner IDs are empty then all runners will be deleted.\"",
+   "diff_stats": {
+    "files": 6,
+    "added": 189,
+    "deleted": 6
+   },
+   "defects": [
+    {
+     "file": "routers/web/shared/actions/runners.go",
+     "start_line": 376,
+     "end_line": 401,
+     "description": "The ids form value is never checked for emptiness, and FindRunnerOptions{IDs: nil} applies no filter, so a bulk request with no ids deletes/disables/enables every runner.",
+     "category": "Security"
+    }
+   ],
+   "notes": "Detecting it requires knowing that FindRunnerOptions ignores an empty IDs slice (models/actions/runner.go:212, outside the diff); the range spans from reading the ids to the unfiltered Find. Admin-only endpoint, but a single request with no ids deletes every runner."
+  },
+  {
+   "id": "go-tailscale-socks5-halfclose",
+   "kind": "buggy",
+   "repo": "https://github.com/tailscale/tailscale",
+   "license": "BSD-3-Clause",
+   "language": "Go",
+   "base": "35848427ce658cc093fd907db799d36b236367d5",
+   "head": "027e249fcf664458a5dae7fa71b418b80750f9c9",
+   "intro_ref": "commit https://github.com/tailscale/tailscale/commit/027e249fcf664458a5dae7fa71b418b80750f9c9 (PR #21359)",
+   "intro_date": "2026-09-17",
+   "fix": "b8dc4061b0451836e8528d9780d58f5f61cb3082",
+   "fix_ref": "commit https://github.com/tailscale/tailscale/commit/b8dc4061b0451836e8528d9780d58f5f61cb3082 (Fixes #21522)",
+   "evidence": "\"Shutting down a socket's read side after its peer's FIN has arrived does nothing on the wire and fails with ENOTCONN ... The regression was introduced by 027e249fcf (#21359), merged 2026-09-17.\"",
+   "diff_stats": {
+    "files": 4,
+    "added": 151,
+    "deleted": 3
+   },
+   "defects": [
+    {
+     "file": "net/socks5/socks5.go",
+     "start_line": 280,
+     "end_line": 298,
+     "description": "After io.Copy hits EOF the code also CloseRead()s the source socket, which fails with ENOTCONN on macOS/TIME_WAIT so every clean half-close is reported as an error, and errors.Join(srvHalfCloser.CloseRead()) discards the copy error.",
+     "category": "Error handling"
+    },
+    {
+     "file": "net/socks5/socks5.go",
+     "start_line": 301,
+     "end_line": 306,
+     "description": "When one direction fails the handler still waits for the other goroutine, which can block forever reading the live peer because neither connection is closed.",
+     "category": "Concurrency"
+    }
+   ],
+   "notes": "Fix rewrites handleTCP with a pump helper. Two related defects: half-close/error handling in the copy goroutines, and the wait-for-both loop that never tears down. Note errors.Join(srvHalfCloser.CloseRead()) also drops the copy error (line 284)."
+  },
+  {
+   "id": "go-rclone-shade-complete-eof",
+   "kind": "buggy",
+   "repo": "https://github.com/rclone/rclone",
+   "license": "MIT",
+   "language": "Go",
+   "base": "c10eb47bb6681e0e4cc6d40eaf8dcdc59d6b70d0",
+   "head": "a4972de505afc1cbef45a3aa338a4df0ad905b86",
+   "intro_ref": "commit https://github.com/rclone/rclone/commit/a4972de505afc1cbef45a3aa338a4df0ad905b86",
+   "intro_date": "2026-07-20",
+   "fix": "aba5c11eab888d702c7bf49ccca0de11a1c2a676",
+   "fix_ref": "commit https://github.com/rclone/rclone/commit/aba5c11eab888d702c7bf49ccca0de11a1c2a676",
+   "evidence": "\"This was a regression introduced in a4972de505afc1cb shade: retry server errors instead of failing the transfer which started treating the JSON decode error as fatal where previously it was accidentally ignored.\"",
+   "diff_stats": {
+    "files": 2,
+    "added": 38,
+    "deleted": 32
+   },
+   "defects": [
+    {
+     "file": "backend/shade/upload.go",
+     "start_line": 272,
+     "end_line": 274,
+     "description": "Any CallJSON error, including the EOF from decoding the empty body of a successful multipart-complete response, is now returned and retried, so every multipart upload fails after exhausting retries.",
+     "category": "Error handling"
+    }
+   ],
+   "notes": "Moderate difficulty: the reviewer must notice CallJSON decodes the complete response into an http.Response and that a decode error with a 200 response used to be ignored (old code returned err only when res == nil) but is now returned and retried."
+  },
+  {
+   "id": "go-otelcol-hostwrapper-capabilities",
+   "kind": "buggy",
+   "repo": "https://github.com/open-telemetry/opentelemetry-collector",
+   "license": "Apache-2.0",
+   "language": "Go",
+   "base": "fa69e2c53ba5fc309faa86a78a24e6ce359aa915",
+   "head": "2ab65ae99cb1d65b93f460a95c26d50c3485d735",
+   "intro_ref": "PR #15557 (https://github.com/open-telemetry/opentelemetry-collector/pull/15557)",
+   "intro_date": "2026-07-20",
+   "fix": "c82363844ef5fe297baab861408a991219b456a8",
+   "fix_ref": "PR #15619 (https://github.com/open-telemetry/opentelemetry-collector/pull/15619)",
+   "evidence": "\"The host wrapper introduced in #15557 hid the host's optional capability interfaces (`ModuleInfo`, `ExposeExporters`, `ComponentFactory`) from extensions, breaking type assertions such as `host.(hostcapabilities.ModuleInfo)` used by the OpAMP extension.\"",
+   "diff_stats": {
+    "files": 4,
+    "added": 150,
+    "deleted": 1
+   },
+   "defects": [
+    {
+     "file": "service/extensions/extensions.go",
+     "start_line": 266,
+     "end_line": 282,
+     "description": "hostWrapper embeds only the component.Host interface, so type assertions by extensions for optional host capabilities (ModuleInfo, ExposeExporters, ComponentFactory) now fail.",
+     "category": "Logic"
+    }
+   ],
+   "notes": "Line 52 (wrapping the host before ext.Start) is where the wrapper is introduced; the struct only embeds the component.Host interface, so optional interfaces of the concrete host disappear. The PR forwards RegisterZPages manually but not the hostcapabilities interfaces. 25 of 150 added lines are a .chloggen yaml file."
+  },
+  {
+   "id": "go-cilium-mapstate-prefix",
+   "kind": "buggy",
+   "repo": "https://github.com/cilium/cilium",
+   "license": "Apache-2.0",
+   "language": "Go",
+   "base": "66959a8ba3dc761c1cd9984f3432360cf665aa89",
+   "head": "17838ff0876fb2e8c151a518dc2d923c9ca76413",
+   "intro_ref": "commit https://github.com/cilium/cilium/commit/17838ff0876fb2e8c151a518dc2d923c9ca76413",
+   "intro_date": "2026-06-05",
+   "fix": "ee333352c6f8307a88f6275f1c608007c7edea29",
+   "fix_ref": "commit https://github.com/cilium/cilium/commit/ee333352c6f8307a88f6275f1c608007c7edea29 (Fixes: #48945)",
+   "evidence": "\"lookup() had the check the wrong way round, so it picked the other one. ... Fixes: 17838ff0876f (\\\"pkg/policy: prepare for multiple aggregates\\\")\"",
+   "diff_stats": {
+    "files": 5,
+    "added": 196,
+    "deleted": 118
+   },
+   "defects": [
+    {
+     "file": "pkg/policy/mapstate.go",
+     "start_line": 505,
+     "end_line": 506,
+     "description": "The prefix-length comparison is inverted: the aggregate entry is returned when the specific-identity entry has the longer L4 prefix, so lookup() disagrees with the datapath and Hubble attributes flows to the wrong policy.",
+     "category": "Logic"
+    }
+   ],
+   "notes": "Rename refactor (wildcard -> aggregate) that kept the comparison operand order but swapped which entry is returned. The diff also touches bpf/lib/*.h (C). Effect is observability only (Hubble shows the wrong policy), not enforcement."
+  },
+  {
+   "id": "js-node-stream-asynciter-undefined",
+   "kind": "buggy",
+   "repo": "https://github.com/nodejs/node",
+   "license": "MIT",
+   "language": "JavaScript",
+   "base": "c8996eaec9d8c1cc1c10c820a5b2ca4f32cb3542",
+   "head": "4551732bf1137bdc1e49d26ab6e26bec9c065e8d",
+   "intro_ref": "https://github.com/nodejs/node/pull/64447",
+   "intro_date": "2026-08-14",
+   "fix": "1c179c99e7f89b9ce490553d74feb124ba618d75",
+   "fix_ref": "https://github.com/nodejs/node/pull/65969",
+   "evidence": "Fix commit 1c179c99: \"The hand-rolled async iterator introduced in https://github.com/nodejs/node/pull/64447 unwraps thenable chunks before delivering them, but guards the `then` access with `chunk !== null` while the dereference itself requires `chunk != null`.\"",
+   "diff_stats": {
+    "files": 3,
+    "added": 351,
+    "deleted": 35
+   },
+   "defects": [
+    {
+     "file": "lib/internal/streams/readable.js",
+     "start_line": 1503,
+     "end_line": 1506,
+     "description": "pump() guards with `chunk !== null` but then reads `chunk.then`, so an object-mode stream yielding an `undefined` chunk throws a TypeError inside a microtask, surfacing as an uncaught exception that kills the process.",
+     "category": "Error handling"
+    },
+    {
+     "file": "lib/internal/streams/readable.js",
+     "start_line": 1576,
+     "end_line": 1579,
+     "description": "Same unguarded `chunk.then` dereference on the next() fast path for a buffered `undefined` chunk.",
+     "category": "Error handling"
+    }
+   ],
+   "notes": "Both defect sites are the same bug (fix changes `chunk.then` to `chunk?.then` at both). lib/ readable.js accounts for 243 of the changed lines; the rest are tests. Commit is on nodejs/node main (land via PR-URL trailer, no merge commit)."
+  },
+  {
+   "id": "js-node-child-process-env-reassigned",
+   "kind": "buggy",
+   "repo": "https://github.com/nodejs/node",
+   "license": "MIT",
+   "language": "JavaScript",
+   "base": "d782ae67b6f2ea2fb896c5d1d7d9a62bba3c2584",
+   "head": "bd83a5cd7a80c3b4b1378fd66c700bff9752847f",
+   "intro_ref": "https://github.com/nodejs/node/pull/65325",
+   "intro_date": "2026-09-30",
+   "fix": "2aef805afe091f0c6e28b756cf85b97b8b6ab87f",
+   "fix_ref": "https://github.com/nodejs/node/pull/66883",
+   "evidence": "PR #66883 body: \"Since #65325 (first released in v26.11.0), spawning a child without `options.env` builds its environment from the OS environment block. If user code has reassigned `process.env` (`process.env = { ...process.env, FOO: 'x' }`), the child no longer sees the change ... Since this is a v26.11.0 regression\"; commit trailer Refs: https://github.com/nodejs/node/pull/65325.",
+   "diff_stats": {
+    "files": 5,
+    "added": 248,
+    "deleted": 50
+   },
+   "defects": [
+    {
+     "file": "lib/child_process.js",
+     "start_line": 716,
+     "end_line": 723,
+     "description": "When options.env is omitted the new fast path builds the child env from the native OS environment block via getEnvPairs(), ignoring the documented default of `process.env`, so a reassigned process.env (a plain object) is silently dropped and the child gets a stale environment.",
+     "category": "Logic"
+    }
+   ],
+   "notes": "Diff also touches C++ (src/node_env_var.cc, process_wrap.cc, util.h, ~77 lines); defect is in the JS. A sizeable part of the child_process.js change is re-indentation of the old path into an else branch. The fix also changed the native binding to detect whether process.env is still the env proxy."
+  },
+  {
+   "id": "js-prettier-markdown-cj-null-deref",
+   "kind": "buggy",
+   "repo": "https://github.com/prettier/prettier",
+   "license": "MIT",
+   "language": "JavaScript",
+   "base": "43432349d41a61937ff1e719a025c17439b62d1f",
+   "head": "5927216227411bc2cdaf30d50559e0a475ab4832",
+   "intro_ref": "PR #20143 (https://github.com/prettier/prettier/pull/20143)",
+   "intro_date": "2026-10-04",
+   "fix": "ccdf5e4558206091a7a86ece76aa14065998e6a9",
+   "fix_ref": "https://github.com/prettier/prettier/pull/20257",
+   "evidence": "Fix commit title: \"Fix runtime error caused by #20143 (#20257)\"",
+   "diff_stats": {
+    "files": 7,
+    "added": 181,
+    "deleted": 13
+   },
+   "defects": [
+    {
+     "file": "src/language-markdown/print/whitespace.js",
+     "start_line": 302,
+     "end_line": 308,
+     "description": "isLineBreakAmbiguous() guards with `previous?.isCJ || next?.isCJ` (so one neighbour may be undefined) but then dereferences `previous.kind` and `next.kind` unconditionally, throwing a TypeError when a line break is at the start or end of a paragraph next to a CJ character.",
+     "category": "Error handling"
+    }
+   ],
+   "notes": "Squash-merged; base is first parent. Only 35 changed lines are source; the rest are a changelog entry, tests and snapshots."
+  },
+  {
+   "id": "ts-vue-vapor-slot-close-lazy",
+   "kind": "buggy",
+   "repo": "https://github.com/vuejs/core",
+   "license": "MIT",
+   "language": "TypeScript",
+   "base": "2100ef9d7c012cd7679ed20379e73c13e8b325b7",
+   "head": "92971551dc81bbff6db3f3e14d2a83458ac4e0de",
+   "intro_ref": "PR #16039 (https://github.com/vuejs/core/pull/16039)",
+   "intro_date": "2026-10-27",
+   "fix": "d57a77f0ca74d79a34c3aa1450a679f9913c77e4",
+   "fix_ref": "https://github.com/vuejs/core/pull/16073",
+   "evidence": "PR #16073 body: \"Since #16039, hydrating a list component that renders `<template v-for ...><slot :item=\"item\" /></template>` throws `Cannot set properties of null (setting '$vha')` when the last row's slot content is an empty `v-for`. ... When the boundary's server range is empty, its close is now located before the content hydrates, as it was before #16039. Regression from #16039, shipped in 3.6.0-rc.14.\"",
+   "diff_stats": {
+    "files": 3,
+    "added": 27,
+    "deleted": 20
+   },
+   "defects": [
+    {
+     "file": "packages/runtime-vapor/src/dom/hydrateFragment.ts",
+     "start_line": 61,
+     "end_line": 64,
+     "description": "withHydratingSlotBoundary() no longer locates the range's close marker before running the slot content; for an empty SSR range the content adopts the close as its anchor and advances the cursor past it, so the later lazy lookup reads the enclosing list's close instead and hydration throws on a null node.",
+     "category": "Logic"
+    }
+   ],
+   "notes": "Lives on the vuejs/core `minor` branch (3.6 vapor), not main. Fix inserts an eager locateEndAnchor() call right after line 62 when the range is empty. Subtle hydration-cursor ordering bug; a reviewer must notice that removing the eager locateFragmentEnd() changes behaviour when fn() moves the cursor."
+  },
+  {
+   "id": "js-undici-h2-maxconcurrentstreams-validation",
+   "kind": "buggy",
+   "repo": "https://github.com/nodejs/undici",
+   "license": "MIT",
+   "language": "JavaScript",
+   "base": "21a8e1ed1843e74c3004a2926c12bb0ceaca6b71",
+   "head": "ab0ecfd6cf536ffda72c16ba96eb67f661a1f401",
+   "intro_ref": "PR #5498 (https://github.com/nodejs/undici/pull/5498)",
+   "intro_date": "2026-07-27",
+   "fix": "bfea02017eca586787a62194d11cb81226a6ecc3",
+   "fix_ref": "https://github.com/nodejs/undici/pull/5830",
+   "evidence": "PR #5830 body: \"Regression from #5498. ... The `maxConcurrentStreams` was validated with the wrong option\"",
+   "diff_stats": {
+    "files": 11,
+    "added": 374,
+    "deleted": 55
+   },
+   "defects": [
+    {
+     "file": "lib/dispatcher/client.js",
+     "start_line": 240,
+     "end_line": 240,
+     "description": "Validation of h2Options.maxConcurrentStreams checks Number.isInteger(h2Options.connectionWindowSize) instead of maxConcurrentStreams, so passing maxConcurrentStreams alone throws InvalidArgumentError and a non-integer value is accepted when connectionWindowSize is set.",
+     "category": "Logic"
+    }
+   ],
+   "notes": "Classic copy-paste wrong-variable bug. Diff includes docs, types and tests; lib changes are ~120 lines."
+  },
+  {
+   "id": "js-fastify-forceclose-idle",
+   "kind": "buggy",
+   "repo": "https://github.com/fastify/fastify",
+   "license": "MIT",
+   "language": "JavaScript",
+   "base": "d33f017ffef3a9beec687b4d4b1777e2e1180afa",
+   "head": "c2ba18c17769dacce61472ec0397560b3b4eebde",
+   "intro_ref": "PR #6669 (https://github.com/fastify/fastify/pull/6669)",
+   "intro_date": "2026-04-19",
+   "fix": "9ba6d6016fa932118e6cb2a2f68617cab0824f12",
+   "fix_ref": "https://github.com/fastify/fastify/pull/6889",
+   "evidence": "PR #6889 body: \"Regression from #6669. That PR correctly avoided the redundant `closeIdleConnections()` call on native servers by narrowing the first branch to `serverFactory`, but the next branch was left with a loose truthiness check ... After #6669 the string `'idle'` falls through to it, and being truthy it takes the `closeAllConnections()` path.\"",
+   "diff_stats": {
+    "files": 3,
+    "added": 40,
+    "deleted": 4
+   },
+   "defects": [
+    {
+     "file": "fastify.js",
+     "start_line": 384,
+     "end_line": 387,
+     "description": "Narrowing the 'idle' branch to `options.serverFactory` lets forceCloseConnections === 'idle' (the default) fall through to the truthy `else if (serverHasCloseAllConnections && forceCloseConnections)` branch, so close() destroys in-flight connections (ECONNRESET) instead of only idle ones.",
+     "category": "Logic"
+    }
+   ],
+   "notes": "Before the 2026-07-01 cutoff. Line 384 is the changed line; 387 is an unchanged context line in the same if/else chain whose meaning the change alters (the fix edits 387). Very small, highly reviewable diff."
+  },
+  {
+   "id": "ts-react-router-manifest-paths-comma",
+   "kind": "buggy",
+   "repo": "https://github.com/remix-run/react-router",
+   "license": "MIT",
+   "language": "TypeScript",
+   "base": "4c34bdfe4a34de9e7e676ea212681818520d1193",
+   "head": "49815ae75af76b522dee09d5991697bd7242c27b",
+   "intro_ref": "PR #14321 (https://github.com/remix-run/react-router/pull/14321)",
+   "intro_date": "2025-09-17",
+   "fix": "8b0c5553257e331099537cfe14c310f87efe6999",
+   "fix_ref": "https://github.com/remix-run/react-router/pull/15640",
+   "evidence": "PR #15640 body: \"Since #14321, lazy route discovery sends paths to the manifest endpoint as one comma-delimited `paths` param, and the server splits on `,`. Any path that has a literal comma (e.g. `/tags/a,b`) gets broken into bogus paths (`/tags/a`, `b`), so its route is never patched in.\"",
+   "diff_stats": {
+    "files": 7,
+    "added": 33,
+    "deleted": 22
+   },
+   "defects": [
+    {
+     "file": "packages/react-router/lib/dom/ssr/fog-of-war.ts",
+     "start_line": 225,
+     "end_line": 225,
+     "description": "Paths are joined with ',' without escaping literal commas, so a path containing a comma is split into bogus paths server-side and its route is never discovered.",
+     "category": "Logic"
+    },
+    {
+     "file": "packages/react-router/lib/rsc/browser.tsx",
+     "start_line": 979,
+     "end_line": 979,
+     "description": "Same unescaped comma join in the RSC manifest URL builder.",
+     "category": "Logic"
+    },
+    {
+     "file": "packages/react-router/lib/server-runtime/server.ts",
+     "start_line": 368,
+     "end_line": 369,
+     "description": "Server splits the `paths` param on ',' with no way to distinguish delimiter commas from commas inside a path.",
+     "category": "Logic"
+    }
+   ],
+   "notes": "Older intro (2025-09-17), well before the knowledge cutoff, so the bug may have been memorized. Fix encodes commas client-side (getManifestPathsParam) rather than changing the server split; the server split lines are the other half of the same flawed encoding scheme."
+  },
+  {
+   "id": "py-django-verbatim-lexer",
+   "kind": "buggy",
+   "repo": "https://github.com/django/django",
+   "license": "BSD-3-Clause",
+   "language": "Python",
+   "base": "de6559094e81a55583fd6428b502fa925db8f593",
+   "head": "1a9fba7a6c2a0acead19bbb45c25ceb0fdcca7c8",
+   "intro_ref": "https://github.com/django/django/commit/1a9fba7a6c2a0acead19bbb45c25ceb0fdcca7c8 (Fixed #23424 -- Corrected tokenization of verbatim blocks.)",
+   "intro_date": "2026-10-13",
+   "fix": "45fe4636d8d147b87040170a6cee4ab036ed2324",
+   "fix_ref": "https://github.com/django/django/commit/45fe4636d8d147b87040170a6cee4ab036ed2324 (Fixed #37450)",
+   "evidence": "Fixed #37450 -- Fixed parsing of comment and verbatim tags without spaces.\n\nRegression in 1a9fba7a6c2a0acead19bbb45c25ceb0fdcca7c8.",
+   "diff_stats": {
+    "files": 4,
+    "added": 165,
+    "deleted": 41
+   },
+   "defects": [
+    {
+     "file": "django/template/base.py",
+     "start_line": 408,
+     "end_line": 418,
+     "description": "The new raw-block regexes require at least one whitespace after '{%' (\\s+ / [^\\S\\n]+), but Django accepts tags written without spaces like '{%verbatim%}' / '{%endcomment%}', so such blocks are no longer recognised and their contents are parsed as template syntax (or the closing tag is never found).",
+     "category": "Logic"
+    }
+   ],
+   "notes": "Django rebases (no merge commits); base is head's parent. The fix changes exactly these three regexes from + to *. Bug is visible from the diff alone: the old code used token_string[2:-2].strip(), which tolerates no space."
+  },
+  {
+   "id": "py-django-nonatomic-async",
+   "kind": "buggy",
+   "repo": "https://github.com/django/django",
+   "license": "BSD-3-Clause",
+   "language": "Python",
+   "base": "7112007fcaf7a7db8a4a6bb1d45b51d8fa41d0b7",
+   "head": "bdbda29c3e126754c3ae04ceb5c5d35d49aae01c",
+   "intro_ref": "https://github.com/django/django/commit/bdbda29c3e126754c3ae04ceb5c5d35d49aae01c (Fixed #29303 -- Avoided mutating original view in non_atomic_requests().)",
+   "intro_date": "2026-05-08",
+   "fix": "93d7e82b6a67aa56a2d9dababfefb8bda543786e",
+   "fix_ref": "https://github.com/django/django/commit/93d7e82b6a67aa56a2d9dababfefb8bda543786e (Fixed #37382)",
+   "evidence": "Fixed #37382, Refs #29303 -- Made @non_atomic_requests recognize async views.\n\nRegression in bdbda29c3e126754c3ae04ceb5c5d35d49aae01c.",
+   "diff_stats": {
+    "files": 2,
+    "added": 23,
+    "deleted": 4
+   },
+   "defects": [
+    {
+     "file": "django/db/transaction.py",
+     "start_line": 345,
+     "end_line": 347,
+     "description": "The new wrapper is always a plain sync function, so decorating an async view with @non_atomic_requests hides that it is a coroutine function; Django then treats the view as sync and the wrapper returns an un-awaited coroutine instead of a response.",
+     "category": "Logic"
+    }
+   ],
+   "notes": "Before the change the decorator returned the original view object, preserving async-ness. Fix adds an iscoroutinefunction branch with an async wrapper. Intro predates 2026-07-01."
+  },
+  {
+   "id": "py-django-yaml-sortkeys",
+   "kind": "buggy",
+   "repo": "https://github.com/django/django",
+   "license": "BSD-3-Clause",
+   "language": "Python",
+   "base": "1b0d46f715849de53563aaf6912b4ded7d61641d",
+   "head": "7142667340f78403cbbcaa8f33703c494282b7b7",
+   "intro_ref": "https://github.com/django/django/commit/7142667340f78403cbbcaa8f33703c494282b7b7 (Replaced yaml serializer workaround to preserve dict order with PyYAML's sort_keys=False.)",
+   "intro_date": "2026-04-04",
+   "fix": "a269574f1bcf4716502b9ba8c3492abf15dc93eb",
+   "fix_ref": "https://github.com/django/django/commit/a269574f1bcf4716502b9ba8c3492abf15dc93eb (Fixed #37405)",
+   "evidence": "Fixed #37405 -- Fixed crash if sort_keys option is used with YAML serializer.\n\nRegression in 7142667340f78403cbbcaa8f33703c494282b7b7.",
+   "diff_stats": {
+    "files": 1,
+    "added": 7,
+    "deleted": 4
+   },
+   "defects": [
+    {
+     "file": "django/core/serializers/pyyaml.py",
+     "start_line": 59,
+     "end_line": 65,
+     "description": "sort_keys=False is passed explicitly alongside **self.options, so a caller who passes sort_keys in the serializer options gets 'TypeError: got multiple values for keyword argument sort_keys'.",
+     "category": "Error handling"
+    }
+   ],
+   "notes": "Very small diff (11 changed lines, below the preferred 20). Fix moves it to self.options.setdefault('sort_keys', False). Intro predates 2026-07-01. Category could also be read as Logic/API misuse."
+  },
+  {
+   "id": "py-pandas-agg-func-names-truthiness",
+   "kind": "buggy",
+   "repo": "https://github.com/pandas-dev/pandas",
+   "license": "BSD-3-Clause",
+   "language": "Python",
+   "base": "e0b6e975b1f9534d782c6b7e25030a80f5612899",
+   "head": "b8997bc65807a25f9c7d866668e74e142419b6df",
+   "intro_ref": "PR #69496 (https://github.com/pandas-dev/pandas/pull/69496)",
+   "intro_date": "2026-09-28",
+   "fix": "76c9588293f3252f4606a5ca64373da6333c2071",
+   "fix_ref": "PR #70227 (https://github.com/pandas-dev/pandas/pull/70227)",
+   "evidence": "Commit: \"REGR: DataFrame.agg with an ndarray or Index of func names raises (GH#69496) (#70227)\". PR body: \"Follow-up to GH-69496, which added `not func_names` to the `DataFrame.agg` list-of-names fast path. That evaluates array truthiness, so `df.agg(np.array([\\\"sum\\\", \\\"min\\\"]))` and `df.agg(pd.Index([\\\"sum\\\", \\\"min\\\"]))` ... raise `ValueError: The truth value of ... is ambiguous`\"",
+   "diff_stats": {
+    "files": 7,
+    "added": 149,
+    "deleted": 4
+   },
+   "defects": [
+    {
+     "file": "pandas/core/apply.py",
+     "start_line": 1151,
+     "end_line": 1151,
+     "description": "`not func_names` evaluates the truthiness of the list-like of function names, which raises 'truth value of an array is ambiguous' when agg is given an ndarray or Index of names (should be len(func_names) == 0).",
+     "category": "Logic"
+    }
+   ],
+   "notes": "Squash-merged PR; base is the squash commit's parent. func_names is cast to list[str] in the code, but agg accepts any list-like (ndarray/Index), so a reviewer needs pandas knowledge. 54 of 149 added lines are in pandas/core; rest are tests/whatsnew."
+  },
+  {
+   "id": "py-pytest-initial-conftest-testdirs",
+   "kind": "buggy",
+   "repo": "https://github.com/pytest-dev/pytest",
+   "license": "MIT",
+   "language": "Python",
+   "base": "09d01042fe6ee88b667b8b854d10bce12f69aacb",
+   "head": "b665afc848a83f7498b9a52c467ec255bbd208a1",
+   "intro_ref": "PR #14307 (https://github.com/pytest-dev/pytest/pull/14307), merge commit b665afc8",
+   "intro_date": "2026-03-22",
+   "fix": "f36b07a432100b55e4c0fd768b1d9339dd7c3415",
+   "fix_ref": "https://github.com/pytest-dev/pytest/commit/f36b07a432100b55e4c0fd768b1d9339dd7c3415 (Fix #14608)",
+   "evidence": "config: fix regression causing <invocation_dir>/tests* conftests to not be initial\n\nRegressed in b665afc848a83f7498b9a52c467ec255bbd208a1.\n\nFix #14608.",
+   "diff_stats": {
+    "files": 1,
+    "added": 14,
+    "deleted": 36
+   },
+   "defects": [
+    {
+     "file": "src/_pytest/config/__init__.py",
+     "start_line": 611,
+     "end_line": 612,
+     "description": "In the refactor, the fallback when no CLI path anchors exist uses only invocation_dir and drops the scan of its test* subdirectories that the old _try_load_conftest performed, so conftest.py files under <invocation_dir>/tests* are no longer loaded as initial conftests (their pytest_addoption options become 'unrecognized arguments').",
+     "category": "Logic"
+    }
+   ],
+   "notes": "head is a true merge commit (PR #14307 merged with a merge commit); base is its first parent, so base..head is the PR's net diff. Behaviour-preserving refactor that silently changed behaviour; detectable by comparing the removed _try_load_conftest to the new loop. Intro predates 2026-07-01."
+  },
+  {
+   "id": "py-numpy-linspace-subclass",
+   "kind": "buggy",
+   "repo": "https://github.com/numpy/numpy",
+   "license": "BSD-3-Clause",
+   "language": "Python",
+   "base": "b8853b27c1884002eefc55b8e3a87e7a1bac241f",
+   "head": "a2dea9776752caf57bb72ca4158c51b898009e62",
+   "intro_ref": "PR #31620 (https://github.com/numpy/numpy/pull/31620), merge commit a2dea977",
+   "intro_date": "2026-07-06",
+   "fix": "bcb6ae07a71618c1b3864eb19d5dc35dd6725ce5",
+   "fix_ref": "PR #31997 (https://github.com/numpy/numpy/pull/31997)",
+   "evidence": "Commit: \"BUG: fix subclass problems introduced in linspace by gh-31620 (#31997)\". PR body: \"#31620 made some nice improvements to `np.linspace`'s handling of infinities which unfortunately broke astropy (https://github.com/astropy/astropy/issues/20043).\"",
+   "diff_stats": {
+    "files": 3,
+    "added": 71,
+    "deleted": 2
+   },
+   "defects": [
+    {
+     "file": "numpy/_core/function_base.py",
+     "start_line": 151,
+     "end_line": 152,
+     "description": "np.subtract is given out=np.zeros(...), a plain ndarray, so ndarray subclasses such as astropy Quantity can no longer carry their class/unit through delta (astropy raises UnitTypeError 'Cannot store quantity ... in a non-Quantity instance'), breaking linspace for array-valued subclass endpoints.",
+     "category": "Logic"
+    }
+   ],
+   "notes": "head is a merge commit; base is its first parent. LICENSE.txt is BSD-3-Clause (GitHub reports NOASSERTION because of appended bundled-license text). Line 148 (`delta = dt.type(0)` for equal scalar endpoints) similarly drops the subclass and is also rewritten by the fix, but the reported astropy failure is the out= path. Detecting it needs awareness of numpy's subclass/__array_ufunc__ contract; the surrounding code comments (gh-7142, Quantities) hint at it. The local partial clone cannot prove ancestry (grafted history); the GitHub compare API (head...fix) reports the fix 103 commits ahead and 0 behind, and the PR API gives a2dea977 as #31620's merge_commit_sha on main."
+  },
+  {
+   "id": "cs-aspnetcore-rewrite-backslash",
+   "kind": "buggy",
+   "repo": "https://github.com/dotnet/aspnetcore",
+   "license": "MIT",
+   "language": "C#",
+   "base": "782333aa8be1b593838750cb997c4cb95bee195e",
+   "head": "0563bffcb76c5be3d812e275df30c766b17541fa",
+   "intro_ref": "PR #66961",
+   "intro_date": "2026-06-24",
+   "fix": "93148da620b4fc967f57aaafff1dad96b7ecff27",
+   "fix_ref": "https://github.com/dotnet/aspnetcore/pull/67928",
+   "evidence": "PR #67928 body: \"UrlNormalizer.CollapseLeadingSlashes (introduced in #66961) was intended to prevent rewrite/redirect targets from resolving as scheme-relative URLs (//host, /\\host). However, it only triggered when the string already started with /\"",
+   "diff_stats": {
+    "files": 7,
+    "added": 156,
+    "deleted": 1
+   },
+   "defects": [
+    {
+     "file": "src/Middleware/Rewrite/src/UrlNormalizer.cs",
+     "start_line": 12,
+     "end_line": 15,
+     "description": "The early-return guard only normalizes targets whose first char is '/', so a redirect/rewrite target starting with '\\' (e.g. \"\\\\evil.com\" or \"\\/evil.com\") is returned unchanged and still resolves as a scheme-relative off-origin URL, leaving the open redirect the PR set out to close.",
+     "category": "Security"
+    }
+   ],
+   "notes": "Fix commit message itself has no reference; the reference is in the fix PR body. Intro date is 7 days before the 2026-07-01 cutoff. Diff includes 3 test files (122 of the 156 added lines)."
+  },
+  {
+   "id": "cs-avalonia-vsp-anchor-at-end",
+   "kind": "buggy",
+   "repo": "https://github.com/AvaloniaUI/Avalonia",
+   "license": "MIT",
+   "language": "C#",
+   "base": "7f456057cdad1c64253d208091112f63bca7456f",
+   "head": "7f8dd8e6bd5557fb30f935c261db05acd38821b5",
+   "intro_ref": "PR #22014",
+   "intro_date": "2026-08-24",
+   "fix": "11593a70ce818edc42bb3c5a4a72e1d05fc6677a",
+   "fix_ref": "https://github.com/AvaloniaUI/Avalonia/pull/22081",
+   "evidence": "PR #22081 body: \"This PR fixes a recent regression introduced in #22014: the anchor was placed at the end even when the viewport was at the beginning of the list.\"",
+   "diff_stats": {
+    "files": 2,
+    "added": 80,
+    "deleted": 0
+   },
+   "defects": [
+    {
+     "file": "src/Avalonia.Controls/VirtualizingStackPanel.cs",
+     "start_line": 941,
+     "end_line": 942,
+     "description": "anchorAtEnd does not exclude a viewport that starts at 0 (unlike the existing IsZero(viewportStartU) guard in GetOrEstimateAnchorElementForViewport), so for an auto-sized panel whose viewport covers its whole bounds the last item is anchored at viewportEnd - size, placing the first item at negative bounds and rendering an empty list.",
+     "category": "Logic"
+    }
+   ],
+   "notes": "Fix adds `!MathUtilities.IsZero(viewport.viewportUStart)` to this condition. The similar new block at lines 842-849 is preceded by the pre-existing IsZero(viewportStartU) early return at line 832, which a reviewer can use to spot the inconsistency. Diff includes a 59-line test."
+  },
+  {
+   "id": "cs-avalonia-popup-pointer-resize",
+   "kind": "buggy",
+   "repo": "https://github.com/AvaloniaUI/Avalonia",
+   "license": "MIT",
+   "language": "C#",
+   "base": "1b50ee4bdd5e39d893f00ec52cb56efb35bb6212",
+   "head": "cc2aeb295f36939c3c459e3efcd6d43b1753ff27",
+   "intro_ref": "PR #22366",
+   "intro_date": "2026-10-05",
+   "fix": "2a38dc63ebc69956b0e16e0120a5d2c5709ed155",
+   "fix_ref": "https://github.com/AvaloniaUI/Avalonia/pull/22624",
+   "evidence": "PR #22624 body: \"Fixes a 12.1.4 regression from #22366: a popup with PlacementMode.Pointer ... no longer resizes when its content grows after it opens, so the content gets clipped.\"",
+   "diff_stats": {
+    "files": 2,
+    "added": 71,
+    "deleted": 11
+   },
+   "defects": [
+    {
+     "file": "src/Avalonia.Controls/Primitives/PopupRoot.cs",
+     "start_line": 218,
+     "end_line": 221,
+     "description": "After the first arrange, pointer-placement popups force reposition=false even when _popupSize just changed, so UpdatePosition() (which also resizes the platform popup) is skipped and the popup keeps its first ClientSize, clipping content that grows.",
+     "category": "Logic"
+    }
+   ],
+   "notes": "Fix removes these lines (and the _hasInitialPosition field/assignments at lines 37, 134, 225-228) and instead captures the pointer position once per open. Diff includes a test file (FlyoutTests.cs)."
+  },
+  {
+   "id": "cs-efcore-executedelete-commandsource",
+   "kind": "buggy",
+   "repo": "https://github.com/dotnet/efcore",
+   "license": "MIT",
+   "language": "C#",
+   "base": "bb583a91d7269510ecb09a4466fee61bc62280d1",
+   "head": "a0443c1460e33f76094a30dc5ae0524743ed02f5",
+   "intro_ref": "PR #34768",
+   "intro_date": "2024-09-27",
+   "fix": "d2f44102f11425aee445e7a3fb00b7fe5520d96e",
+   "fix_ref": "https://github.com/dotnet/efcore/pull/39187",
+   "evidence": "PR #39187 body: \"RelationalShapedQueryCompilingExpressionVisitor.VisitExtension passed CommandSource.ExecuteUpdate for DeleteExpression (regressed in #34768).\"",
+   "diff_stats": {
+    "files": 8,
+    "added": 44,
+    "deleted": 155
+   },
+   "defects": [
+    {
+     "file": "src/EFCore.Relational/Query/RelationalShapedQueryCompilingExpressionVisitor.cs",
+     "start_line": 92,
+     "end_line": 92,
+     "description": "Copy-paste error: the DeleteExpression arm passes CommandSource.ExecuteUpdate instead of CommandSource.ExecuteDelete, so interceptors see ExecuteDelete commands as ExecuteUpdate and failures are logged via ExecuteUpdateFailed.",
+     "category": "Logic"
+    }
+   ],
+   "notes": "Old (2024) case. Mostly a deletion/refactor diff (NonQueryExpression removed); the previous code read the command source from NonQueryExpression.CommandSource, so the bug was introduced by this refactor."
+  },
+  {
+   "id": "rs-tokio-pidfd-child-leak",
+   "kind": "buggy",
+   "repo": "https://github.com/tokio-rs/tokio",
+   "license": "MIT",
+   "language": "Rust",
+   "base": "8463af92afb398aa94600eaac84eafe3ee83b737",
+   "head": "e4f9bcb5775a8cbbc848aedea3ad49aa60dd1dae",
+   "intro_ref": "PR #6152",
+   "intro_date": "2024-01-11",
+   "fix": "6e15e2e32ac0a8920ff69c13f0e98f5b52987674",
+   "fix_ref": "https://github.com/tokio-rs/tokio/pull/8359",
+   "evidence": "PR #8359 body: \"The gap was only the post-spawn setup error paths, including the explicit `_child` discard on pidfd registration failure introduced in #6152.\" Fix commit trailer: \"Refs: #6152\".",
+   "diff_stats": {
+    "files": 4,
+    "added": 414,
+    "deleted": 13
+   },
+   "defects": [
+    {
+     "file": "tokio/src/process/unix/mod.rs",
+     "start_line": 134,
+     "end_line": 134,
+     "description": "When PidfdReaper::new fails with an error, the already-spawned child is dropped as `_child` without try_wait or pushing it onto the orphan queue, so the process can never be reaped and stays a zombie until the parent exits.",
+     "category": "Resource"
+    }
+   ],
+   "notes": "Old (2024) case. The fix also covers the stdio and SIGCHLD error paths, but those `?` returns pre-date #6152; only the pidfd arm (line 134) was added by this diff. 317 of the added lines are the new pidfd_reaper.rs."
+  },
+  {
+   "id": "rs-rust-analyzer-fetch-semantic",
+   "kind": "buggy",
+   "repo": "https://github.com/rust-lang/rust-analyzer",
+   "license": "MIT OR Apache-2.0",
+   "language": "Rust",
+   "base": "13bbf74923453c8b3f76273ff1a8610007936dec",
+   "head": "c2b0c4b6342170bd109efcd317527450f3150ad2",
+   "intro_ref": "PR #22272",
+   "intro_date": "2026-05-04",
+   "fix": "6ee6a51fd4023ad4c02df40d2d8b729640ea6aa3",
+   "fix_ref": "https://github.com/rust-lang/rust-analyzer/pull/23534",
+   "evidence": "Fix merge commit: \"fix: Fix `fetch_semantic` logic bug introduced in #22272.\" PR body: \"#22272 contained a logic error: It queried fetch_build_data_queue.last_op_result() and fetch_proc_macros_queue.last_op_result() with is_none() instead of is_some().\"",
+   "diff_stats": {
+    "files": 2,
+    "added": 15,
+    "deleted": 3
+   },
+   "defects": [
+    {
+     "file": "crates/rust-analyzer/src/main_loop.rs",
+     "start_line": 672,
+     "end_line": 675,
+     "description": "The conditions use last_op_result().is_none() where the comment requires the build data / proc-macros to have finished loading once (is_some()), so with run_build_scripts or proc-macro expansion enabled semantic diagnostics are never pushed after loading completes.",
+     "category": "Logic"
+    }
+   ],
+   "notes": "Intro is a true merge commit (not squash); base is its first parent, and base..head equals the PR's single commit be3bed0. Dual-licensed MIT/Apache-2.0 (LICENSE-MIT, LICENSE-APACHE). Small diff (18 lines), below the preferred 20."
+  },
+  {
+   "id": "go-helm-ssa-conflict-retry-clean",
+   "kind": "clean",
+   "repo": "https://github.com/helm/helm",
+   "license": "Apache-2.0",
+   "language": "Go",
+   "base": "74b41286e8c347b73b0bb572c75747f1aefc3584",
+   "head": "aa1ae3a36017156817e89e59eee0e88af9fc6365",
+   "intro_ref": "PR #32088 (https://github.com/helm/helm/pull/32088)",
+   "intro_date": "2026-07-15",
+   "diff_stats": {
+    "files": 2,
+    "added": 62,
+    "deleted": 9
+   },
+   "notes": "Check: python clean_check.py (git blame --line-porcelain origin/HEAD on each touched file at helm main as of 2026-11-12) attributes all 62 added lines (38 in pkg/kube/client.go, 24 in client_test.go) to this commit; `git log origin/HEAD --grep \"#32088|aa1ae3a36\"` finds only the commit itself."
+  },
+  {
+   "id": "go-tailscale-controld-doh-clean",
+   "kind": "clean",
+   "repo": "https://github.com/tailscale/tailscale",
+   "license": "BSD-3-Clause",
+   "language": "Go",
+   "base": "689c6c2e6d24763829f9d991a9037b92d8ee9ef4",
+   "head": "d2af6a4d39adbca71792cf0f89119e513e111e1c",
+   "intro_ref": "PR #20463 (https://github.com/tailscale/tailscale/pull/20463)",
+   "intro_date": "2026-07-17",
+   "diff_stats": {
+    "files": 3,
+    "added": 60,
+    "deleted": 13
+   },
+   "notes": "Check: git blame --line-porcelain origin/HEAD (tailscale main as of 2026-11-12) attributes all 60 added lines (8 in net/dns/publicdns/publicdns.go, 52 in tests) to this commit; `git log origin/HEAD --grep \"#20463|d2af6a4d3\"` finds only the commit itself."
+  },
+  {
+   "id": "js-undici-frozen-globalthis-clean",
+   "kind": "clean",
+   "repo": "https://github.com/nodejs/undici",
+   "license": "MIT",
+   "language": "JavaScript",
+   "base": "354a151f615f03d72f6aff02f3ad18a7e99a72b5",
+   "head": "a0922b0b6b5db878881017abb6fca3bbcdea555a",
+   "intro_ref": "PR #5574 (https://github.com/nodejs/undici/pull/5574)",
+   "intro_date": "2026-07-22",
+   "diff_stats": {
+    "files": 2,
+    "added": 98,
+    "deleted": 16
+   },
+   "notes": "fix: handle frozen globalThis in setGlobalDispatcher. Check at origin/main af82906506e374d3450335d1f8a1f9d1ec63334b (2026-11-12): `git blame` attributes all 36 added lines of lib/global.js and all 62 lines of test/global-frozen.js to a0922b0b; `git log a0922b0..main -- lib/global.js test/global-frozen.js` is empty; no commit message on main mentions a0922b0 or #5574."
+  },
+  {
+   "id": "py-django-cacheddb-delete-logging-clean",
+   "kind": "clean",
+   "repo": "https://github.com/django/django",
+   "license": "BSD-3-Clause",
+   "language": "Python",
+   "base": "065a4a4b8d55451c4ffba02e447faf9cf5e8d807",
+   "head": "a486b48d4ea0d34babe58cae215b2123748aacbd",
+   "intro_ref": "https://github.com/django/django/commit/a486b48d4ea0d34babe58cae215b2123748aacbd (Fixed #37210 -- Logged cached_db session cache delete failures.)",
+   "intro_date": "2026-07-09",
+   "diff_stats": {
+    "files": 4,
+    "added": 56,
+    "deleted": 5
+   },
+   "notes": "Checked at django main a0f2e29e0a98ee14aa808ebe38ec5fb79c8af71f: `git blame -l` per touched file attributes all added lines (8+8+6+34=56) still to a486b48d; no later commit touches django/contrib/sessions/backends/cached_db.py; `git log --grep` for 'a486b48d' and '37210' after it returns nothing."
+  },
+  {
+   "id": "cs-avalonia-commandbar-overflow-clean",
+   "kind": "clean",
+   "repo": "https://github.com/AvaloniaUI/Avalonia",
+   "license": "MIT",
+   "language": "C#",
+   "base": "cc08405da9511bd554308eeeab8c7b63f598bbc3",
+   "head": "c00a2f23750a2a5e649073e663952482bf2babb7",
+   "intro_ref": "PR #21742",
+   "intro_date": "2026-07-10",
+   "diff_stats": {
+    "files": 2,
+    "added": 76,
+    "deleted": 10
+   },
+   "notes": "At repo HEAD ca61365d753e4f01c4ff7605f3d32c410b2aae3c: `git blame HEAD` attributes all 44 added lines of src/Avalonia.Controls/CommandBar/CommandBar.cs and all 32 added lines of tests/Avalonia.Controls.UnitTests/CommandBarTests.cs to c00a2f2; `git log c00a2f2..HEAD -- CommandBar.cs` is empty; `git log --grep=21742` after it is empty and no fetched PR body mentions #21742."
+  }
+ ]
+}

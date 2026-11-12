@@ -1,4 +1,4 @@
-.PHONY: help build litellm-up litellm-down litellm-smoke uat uat-vizzini uat-stub uat-bot uat-bot-stub uat-ci-github uat-ci-ado uat-ci-gitlab uat-webhook uat-workflow uat-reconsider ado-check ado-down lint clean
+.PHONY: help build litellm-up litellm-down litellm-smoke uat uat-vizzini uat-stub uat-bot uat-bot-stub uat-ci-github uat-ci-ado uat-ci-gitlab uat-webhook uat-workflow uat-reconsider bench bench-score ado-check ado-down lint clean
 
 help: ## List targets
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-14s %s\n", $$1, $$2}'
@@ -47,6 +47,12 @@ uat-workflow: build ## The full review workflow on one ADO PR: fix, defend, disp
 
 uat-reconsider: build ## /vizzini reconsider answered by a live model on one ADO PR (MODEL=claude-sonnet-5-5)
 	uat/reconsider.sh --model $(or $(MODEL),claude-sonnet-5-5)
+
+bench: build ## Head-to-head benchmark, Vizzini vs PR-Agent, live models (CASES=all|seeded|real|ID,..; BENCH_RUN=dir to resume)
+	uat/bench.sh --cases $(or $(CASES),all)
+
+bench-score: ## Rescore a benchmark run with the current labels (BENCH_RUN=dir)
+	python3 -I uat/bench.py $(BENCH_RUN)
 
 ado-check: ## Check the PAT and ADO repository
 	uat/ado.sh check

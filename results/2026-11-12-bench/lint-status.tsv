@@ -1,0 +1,34 @@
+cs-aspnetcore-rewrite-backslash	none: no linter for cs 
+cs-avalonia-commandbar-overflow-clean	none: no linter for cs 
+cs-avalonia-popup-pointer-resize	none: no linter for cs 
+cs-avalonia-vsp-anchor-at-end	none: no linter for cs 
+cs-efcore-executedelete-commandsource	none: no linter for cs 
+csharp-seeded	ok 5
+ctx-seeded	ok 0
+go-cilium-mapstate-prefix	ok 94
+go-gitea-diff-linecount-shadow	ok 103
+go-gitea-runner-bulk-empty-ids	ok 227
+go-gitea-tail-diffline-empty	ok 42
+go-helm-ssa-conflict-retry-clean	ok 10
+go-otelcol-hostwrapper-capabilities	ok 0
+go-rclone-shade-complete-eof	ok 1
+go-tailscale-controld-doh-clean	ok 105
+go-tailscale-socks5-halfclose	ok 65
+js-fastify-forceclose-idle	ok 36
+js-node-child-process-env-reassigned	ok 17
+js-node-stream-asynciter-undefined	ok 50
+js-prettier-markdown-cj-null-deref	ok 2
+js-undici-frozen-globalthis-clean	ok 10
+js-undici-h2-maxconcurrentstreams-validation	ok 92
+py-django-cacheddb-delete-logging-clean	ok 0
+py-django-nonatomic-async	ok 0
+py-django-verbatim-lexer	ok 7
+py-django-yaml-sortkeys	ok 0
+py-numpy-linspace-subclass	ok 4
+py-pandas-agg-func-names-truthiness	ok 17
+py-pytest-initial-conftest-testdirs	ok 4
+rs-rust-analyzer-fetch-semantic	none: no linter for rs 
+rs-tokio-pidfd-child-leak	none: no linter for rs 
+ts-react-router-manifest-paths-comma	ok 314
+ts-seeded	ok 3
+ts-vue-vapor-slot-close-lazy	ok 102

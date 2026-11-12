@@ -1,0 +1,13 @@
+{
+  "description": "Ground truth for the context-dependent Go fixture (Vizzini ISSUE-022/023). Each defect is visible only with code outside the diff: the unchanged caller of retry.Delay, store.FindUser's nil result, cache.Handle's Release contract. report/admin.go is a decoy: store.Admin never returns nil, which only the context shows. A defect is caught when a finding in the same file overlaps any anchor line within +/- tolerance lines.",
+  "tolerance": 2,
+  "defects": [
+    {"id": "units", "file": "retry/retry.go", "anchors": ["in seconds,", "d := 1 << attempt"], "categories": ["Logic"], "must_catch": false,
+     "note": "client.Wait (unchanged) still multiplies by time.Millisecond, so retries wait 1-30 ms instead of seconds"},
+    {"id": "leak", "file": "report/report.go", "anchors": ["h, err := cache.Load(name)", "return string(h.Bytes()), nil"], "categories": ["Performance", "Logic", "Maintainability"], "must_catch": false,
+     "note": "Summary never calls h.Release, so each call leaks a file descriptor"},
+    {"id": "nilderef", "file": "report/report.go", "anchors": ["u := s.FindUser(ownerID)", "return u.Email"], "categories": ["Logic"], "must_catch": false,
+     "note": "FindUser returns nil for an unknown id; OwnerEmail then panics"}
+  ],
+  "decoys": ["report/admin.go"]
+}
