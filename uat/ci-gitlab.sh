@@ -24,9 +24,9 @@
 #   3. that identity committed to the base's policy; a new commit on the MR
 #      -> the job posts the stub's findings as discussions with markers
 #   4. a "/vizzini explain" note in a bot discussion and another commit
-#      -> an incremental review of the changed file, nothing duplicated; mrman
-#         cannot reply on GitLab yet, so the command goes unanswered and the
-#         job still succeeds
+#      -> an incremental review of the changed file, nothing duplicated; the
+#         command answered once in the discussion (mrman v0.1.6 replies on
+#         GitLab)
 #   5. the containers, their volumes, the job containers and the network
 #      removed
 #
@@ -303,7 +303,7 @@ check("exit code 3" in log1 and "the grant policy denied posting" in log1,
 check('"decision":"deny"' in log1 and "MRM-002" in log1, "denied by MRM-002 (identity not listed)")
 check(identity and identity == read("bot-username").strip(),
       f"the log names the identity the project access token posts as ({identity}, its bot user)")
-check("install: done" in log1 and "mrman version v0.1.5" in log1, "install.sh built and verified the tools in the job")
+check("install: done" in log1 and "mrman version v0.1.6" in log1, "install.sh built and verified the tools in the job")
 # The bot user is named only if mrman authenticated, which on a self-managed
 # host takes the template's [[forge.hosts]] entry.
 check('if [ "$CI_SERVER_HOST" != gitlab.com ]' in log1 and identity == read("bot-username").strip(),
@@ -327,9 +327,8 @@ replies = [n for d in d3 if d["id"] == disc for n in d["notes"] if "vizzini:repl
 check(read("job3.result").strip() == "success", "the job succeeded")
 check("reviewing 1 file(s) changed since" in log3, "an incremental review of the changed file only")
 check(len(fps) == len(set(fps)), f"no discussion duplicated ({len(fps)} discussions, {len(set(fps))} distinct)")
-check(not replies and re.search(r"vizzini-bot: reply in thread \S+ failed", log3)
-      and "replying in threads from the command line is not supported on this forge" in log3,
-      "the /vizzini command went unanswered, reported as unsupported (mrman has no GitLab reply yet), and the job went on")
+check(len(replies) == 1 and replies[0]["author"]["username"] == identity,
+      f"the /vizzini command was answered once in its discussion, by {identity} (mrman v0.1.6 replies on GitLab)")
 print("\nresult: " + ("PASS" if ok else "FAIL"))
 sys.exit(0 if ok else 1)
 EOF
