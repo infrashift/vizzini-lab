@@ -11,4 +11,5 @@ okf_version: "0.2"
 * [architecture/](architecture/)
 * [decisions/](decisions/)
 * [issues/](issues/)
+* [runbooks/](runbooks/)
 

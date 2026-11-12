@@ -25,3 +25,5 @@ description: "What the UAT runs, in order, and which tool each step proves."
 7. **Forge**: an Azure DevOps PR per model. mrman opens it headlessly with the Vizzini report, and the findings are posted as review threads after a human grants submit. See [ADR-0002](/decisions/adr-0002-the-mrman-submit-grant-stays-a-human-step--01a1caeb8ce7.md).
 8. **Real-world commits**: the pins in `fixtures/csharp-oss.txt` (serilog, Polly) go through review, describe and garmr.
 9. **Score**: `uat/score.py` writes `summary.md` and `scores.json`. Hard checks fail the run; quality metrics are only reported.
+
+This is `make uat`. The other suites (the unattended bot test and the CI template tests) are in the [suite map](/architecture/suite-map-what-each-make-target-proves--01a1cf4af86d.md); how to run this one is in [run the live UAT](/runbooks/runbook-run-the-live-uat--01a1cf4af7f5.md).

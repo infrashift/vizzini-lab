@@ -15,4 +15,4 @@ Cross-tool UAT for Vizzini, mrman, garmr and okf-wiki. Shell + Python harness on
 - `make lint` runs shellcheck, the Python compile check, and okfw validate. Run it after every change.
 
 ## Knowledge base
-`.okfw/` (okfw) holds decisions and open issues. Search before deriving, use `okfw create` / `move` / `delete`, and run `okfw validate --all && okfw validate --okf`.
+`.okfw/` (okfw) holds runbooks (how to run, clean up and troubleshoot each suite), architecture, decisions (ADRs) and open issues. Read the matching runbook before running a suite. Search before deriving, use `okfw create` / `move` / `delete`, and run `okfw validate --all && okfw validate --okf`.
