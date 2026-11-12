@@ -21,6 +21,7 @@ description: "The vizzini-uat suites, what each one exercises, what it needs, an
 | `make uat-ci-github` | Vizzini's GitHub Actions template, end to end | stub in the job | gh | a PR and branches in infrashift/vizzini-uat |
 | `make uat-ci-ado` | the Azure Pipelines template | stub in the job | ADO PAT | pipeline, policy, permission, agent, PR (all removed) |
 | `make uat-ci-gitlab` | the GitLab CI template on a self-managed instance | stub in the job | podman socket | nothing |
+| `make uat-webhook` | the experimental webhook receiver: authentication, filtering, an answer with no push, answer-once, commands only, policy denial ([TS-HOOK](/test-suites/webhook/ts-hook-webhook-receiver-experimental--01a1cf9317e2.md), [ADR-0012](/decisions/adr-0012-the-webhook-test-delivers-locally-with-events-built-from-real-azure-devops-data--01a1cf935aa6.md)) | stub (or live) | ADO PAT | one ADO PR (abandoned at the end) |
 | `make lint` | scripts, `score.py` and this wiki are well formed | — | shellcheck, okfw | nothing |
 
 The CI tests share one sequence; see [CI template tests](/architecture/ci-template-tests-one-onboarding-sequence-on-three-platforms--01a1cf4af8a0.md). How to run each suite: [live UAT](/runbooks/runbook-run-the-live-uat--01a1cf4af7f5.md), [bot](/runbooks/runbook-run-the-unattended-bot-test--01a1cf4af807.md), [CI templates](/runbooks/runbook-run-the-ci-template-tests--01a1cf4af818.md).

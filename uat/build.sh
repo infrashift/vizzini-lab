@@ -55,6 +55,8 @@ build_vizzini() {
 		go build -trimpath -o "$bin/pr-review" ./cmd/pr-review
 		# vizzini-bot exists from ISSUE-024 slice 1 on.
 		if [[ -d cmd/vizzini-bot ]]; then go build -trimpath -o "$bin/vizzini-bot" ./cmd/vizzini-bot; fi
+		# vizzini-webhook (experimental) exists from ISSUE-026 on.
+		if [[ -d cmd/vizzini-webhook ]]; then go build -trimpath -o "$bin/vizzini-webhook" ./cmd/vizzini-webhook; fi
 	)
 }
 
