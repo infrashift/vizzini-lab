@@ -23,10 +23,11 @@
 #         identity the token posts as (the project's bot user)
 #   3. that identity committed to the base's policy; a new commit on the MR
 #      -> the job posts the stub's findings as discussions with markers
-#   4. a "/vizzini explain" note in a bot discussion and another commit
-#      -> an incremental review of the changed file, nothing duplicated; the
-#         command answered once in the discussion (mrman v0.1.6 replies on
-#         GitLab)
+#   4. a "/vizzini explain" note in a bot discussion, and a commit that
+#      changes calc.go and removes calc/extra.go
+#      -> an incremental review of calc.go, nothing duplicated; the command
+#         answered once in its discussion, and the extra.go discussion
+#         resolved by the bot (mrman v0.1.6: reply and resolve on GitLab)
 #   5. the containers, their volumes, the job containers and the network
 #      removed
 #
@@ -204,34 +205,38 @@ g remote add origin "http://127.0.0.1:$port/root/vizzini-ci.git"
 g push -q origin "$base"
 g checkout -qb "$head"
 printf '\n// Div returns a / b.\nfunc Div(a, b int) int { return a / b }\n' >>"$repo/calc/calc.go"
-g commit -qam "ci test: Div"
+printf 'package calc\n\n// Neg returns -a.\nfunc Neg(a int) int { return -a }\n' >"$repo/calc/extra.go"
+g add -A
+g commit -qm "ci test: Div, and extra.go"
 g push -q origin "$head"
 
-# wait_pipeline N NAME: wait for the MR's Nth pipeline to finish; save the
-# job's log and status as $run/NAME.{log,result}.
+# wait_pipeline NAME: wait for the newest MR pipeline of the commit just
+# pushed (the head of ci/pr) to finish; save its job's log and status as
+# $run/NAME.{log,result}. Pipelines are matched by commit, not counted:
+# GitLab sometimes creates a second pipeline for one commit (seen live).
 wait_pipeline() {
-	local n=$1 name=$2 id="" status="" waited=0 job
+	local name=$1 sha id="" status="" waited=0 job
+	sha="$(g rev-parse "$head")"
 	while ((waited < 1500)); do
 		read -r id status < <(api GET "/projects/$project_id/merge_requests/$mr/pipelines?per_page=100" | python3 -I -c '
 import json, sys
-ps = sorted(json.load(sys.stdin), key=lambda p: p["id"])
-n = int(sys.argv[1])
-print(ps[n-1]["id"], ps[n-1]["status"]) if len(ps) >= n else print("", "")' "$n") || true
+ps = sorted((p for p in json.load(sys.stdin) if p["sha"] == sys.argv[1]), key=lambda p: p["id"])
+print(ps[-1]["id"], ps[-1]["status"]) if ps else print("", "")' "$sha") || true
 		[[ $status =~ ^(success|failed|canceled|skipped)$ ]] && break
 		sleep 10
 		waited=$((waited + 10))
 	done
-	[[ $status =~ ^(success|failed|canceled|skipped)$ ]] || die "pipeline $n of MR !$mr did not finish in 1500s ($status)"
+	[[ $status =~ ^(success|failed|canceled|skipped)$ ]] || die "no finished pipeline for ${sha:0:12} on MR !$mr after 1500s ($status)"
 	job="$(api GET "/projects/$project_id/pipelines/$id/jobs" | jq_ 'd[0]["id"]')"
 	echo "$status" >"$run/$name.result"
 	api GET "/projects/$project_id/jobs/$job/trace" >"$run/$name.log" || true
-	echo "   pipeline $id (job $job): $status"
+	echo "   pipeline $id for ${sha:0:12} (job $job): $status"
 }
 
 say "MR: the policy lists no identity"
 mr="$(api POST "/projects/$project_id/merge_requests" "{\"source_branch\":\"$head\",\"target_branch\":\"$base\",\"title\":\"vizzini-uat CI template test $stamp\"}" | jq_ 'd["iid"]')"
 echo "   MR !$mr"
-wait_pipeline 1 job1
+wait_pipeline job1
 identity="$(python3 -I - "$run/job1.log" <<'EOF'
 import json, re, sys
 for line in open(sys.argv[1], errors="replace"):
@@ -259,7 +264,7 @@ g push -q origin "$base"
 g checkout -q "$head"
 g merge -q --no-edit "$base"
 g push -q origin "$head"
-wait_pipeline 2 job2
+wait_pipeline job2
 api GET "/projects/$project_id/merge_requests/$mr/discussions?per_page=100" >"$run/discussions2.json"
 
 say "a /vizzini command and a second commit"
@@ -273,10 +278,13 @@ for d in json.load(open(sys.argv[1])):
 api POST "/projects/$project_id/merge_requests/$mr/discussions/$discussion/notes" '{"body":"/vizzini explain What does this do?"}' |
 	jq_ 'd["id"]' >"$run/command-id"
 echo "$discussion" >"$run/command-discussion"
+# extra.go goes away, so its finding is gone: the bot resolves its own
+# discussion there (mrman v0.1.6 resolves on GitLab).
+g rm -q calc/extra.go
 printf '\n// Mod returns a %% b.\nfunc Mod(a, b int) int { return a %% b }\n' >>"$repo/calc/calc.go"
-g commit -qam "ci test: Mod"
+g commit -qam "ci test: Mod, and extra.go removed"
 g push -q origin "$head"
-wait_pipeline 3 job3
+wait_pipeline job3
 api GET "/projects/$project_id/merge_requests/$mr/discussions?per_page=100" >"$run/discussions3.json"
 
 say "checks"
@@ -318,17 +326,22 @@ check(d2, f"the findings were posted as discussions with markers ({len(d2)})")
 check(all(d["notes"][0]["author"]["username"] == identity for d in d2), f"posted as {identity} (role Reporter)")
 check(any((d["notes"][0].get("position") or {}).get("new_path") == "calc/calc.go" for d in d2), "a discussion sits on calc/calc.go")
 
-print("\n## job 3: a /vizzini command and a second commit\n")
+print("\n## job 3: a /vizzini command, a second commit, and extra.go removed\n")
 log3 = read("job3.log")
 d3 = bot("discussions3.json")
 fps = [marker.search(d["notes"][0]["body"]).group(1) for d in d3]
 disc = read("command-discussion").strip()
 replies = [n for d in d3 if d["id"] == disc for n in d["notes"] if "vizzini:reply-to=" in (n["body"] or "")]
 check(read("job3.result").strip() == "success", "the job succeeded")
-check("reviewing 1 file(s) changed since" in log3, "an incremental review of the changed file only")
+check("reviewing 1 file(s) changed since" in log3 and "1 file(s) with threads left the pull request" in log3,
+      "an incremental review of calc.go; the removed calc/extra.go reconciled, not reviewed")
 check(len(fps) == len(set(fps)), f"no discussion duplicated ({len(fps)} discussions, {len(set(fps))} distinct)")
 check(len(replies) == 1 and replies[0]["author"]["username"] == identity,
       f"the /vizzini command was answered once in its discussion, by {identity} (mrman v0.1.6 replies on GitLab)")
+extra = [d for d in d3 if (d["notes"][0].get("position") or {}).get("new_path") == "calc/extra.go"]
+check(extra and all(d["notes"][0].get("resolved") and (d["notes"][0].get("resolved_by") or {}).get("username") == identity
+                    and any("vizzini:reviewed" in (n["body"] or "") for n in d["notes"]) for d in extra),
+      f"the finding on the removed calc/extra.go: {identity} resolved its own discussion, with its reply (mrman v0.1.6 resolves on GitLab)")
 print("\nresult: " + ("PASS" if ok else "FAIL"))
 sys.exit(0 if ok else 1)
 EOF

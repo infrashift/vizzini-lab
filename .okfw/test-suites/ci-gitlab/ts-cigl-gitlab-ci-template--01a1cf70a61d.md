@@ -8,7 +8,7 @@ tags:
   - "ts-cigl"
 created: "2026-11-12T05:07:08-06:00"
 timestamp: "2026-11-12T05:07:08-06:00"
-description: "Vizzini's GitLab CI template on a throwaway self-managed GitLab CE in podman: denied, allowed for a Reporter token's bot user, then incremental with an unsupported /vizzini command."
+description: "Vizzini's GitLab CI template on a throwaway self-managed GitLab CE in podman: denied, allowed for a Reporter token's bot user, then incremental with a /vizzini command answered and a removed file's discussion resolved."
 ---
 
 # TS-CIGL: GitLab CI template
@@ -41,7 +41,7 @@ None. GitLab CE and the runner run in podman on this machine.
 |---|---|---|
 | [UAT-CIGL-001](/test-suites/ci-gitlab/uat-cigl-001-the-first-job-is-denied-and-names-the-bot-user--01a1cf70a73e.md) | The first job is denied and names the bot user | High |
 | [UAT-CIGL-002](/test-suites/ci-gitlab/uat-cigl-002-the-allowed-bot-user-posts-a-discussion--01a1cf70a748.md) | The allowed bot user posts a discussion | High |
-| [UAT-CIGL-003](/test-suites/ci-gitlab/uat-cigl-003-an-incremental-job-reports-the-command-as-unsupported--01a1cf70a753.md) | An incremental job reports the command as unsupported | High |
+| [UAT-CIGL-003](/test-suites/ci-gitlab/uat-cigl-003-an-incremental-job-answers-the-command-and-resolves-a-removed-file--01a1cf70a753.md) | An incremental job answers the command and resolves a removed file's finding | High |
 | [UAT-CIGL-004](/test-suites/ci-gitlab/uat-cigl-004-the-run-leaves-nothing-in-podman--01a1cf70a760.md) | The run leaves nothing in podman | Medium |
 
 ## After the run

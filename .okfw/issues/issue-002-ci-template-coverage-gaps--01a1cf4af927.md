@@ -17,6 +17,6 @@ The CI template tests ([architecture](/architecture/ci-template-tests-one-onboar
 
 ## Acceptance criteria
 - [ ] **gitlab.com.** On gitlab.com the template skips the mrman host entry, and mrman reads `GITLAB_TOKEN`. That path is untested. Testing it needs a gitlab.com project, runner verification, and possibly a paid tier for project access tokens ([ADR-0008](/decisions/adr-0008-gitlab-ci-runs-on-a-throwaway-self-managed-gitlab-ce-in-podman--01a1cf4af8e3.md)).
-- [ ] **Replies and resolution on GitLab.** mrman's GitLab driver cannot reply to or resolve threads. A `/vizzini` command on GitLab is therefore attempted, and fails, on **every** run (`command_failures` in the bot's result). When mrman gains GitLab replies, flip the GitLab test's command check to "answered once".
-- [ ] **Replies and resolution on GitHub.** The same gap; the GitHub test posts no command yet.
+- [x] **Replies and resolution on GitLab.** Done in mrman v0.1.6, verified live by TS-CIGL. Before that: mrman's GitLab driver cannot reply to or resolve threads. A `/vizzini` command on GitLab is therefore attempted, and fails, on **every** run (`command_failures` in the bot's result). When mrman gains GitLab replies, flip the GitLab test's command check to "answered once".
+- [x] **Replies and resolution on GitHub.** Done in mrman v0.1.6, verified live by TS-CIGH: a command answered, and a thread resolved with the documented `contents: write` opt-in (`GITHUB_TOKEN` cannot resolve without it).
 - [ ] **Runs that post nothing do not record their head.** The next run then reviews from the last head the bot commented on, not from the last head it reviewed (a Vizzini follow-up).

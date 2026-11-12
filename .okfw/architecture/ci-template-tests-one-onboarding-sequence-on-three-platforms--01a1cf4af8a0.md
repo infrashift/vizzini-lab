@@ -30,7 +30,7 @@ Every test plays the same onboarding, the one Vizzini's `deploy/ci/README.md` de
 4. **A second commit,** with a `/vizzini explain` comment in a bot thread on ADO and GitLab. The job must:
    - review incrementally, the changed file only;
    - duplicate nothing;
-   - answer the command where mrman can reply (ADO), or report it unsupported and carry on (GitLab).
+   - answer the command, and resolve the bot's thread on a file the push removed (GitHub and GitLab, mrman v0.1.6 on; on GitHub Actions resolving needs the `contents: write` opt-in).
 5. **Cleanup** in an exit trap.
 
 ## Per platform

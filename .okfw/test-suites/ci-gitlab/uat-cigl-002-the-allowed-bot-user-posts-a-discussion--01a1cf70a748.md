@@ -26,7 +26,7 @@ Make sure that a Reporter project access token can post a discussion when the po
 ## Steps
 | Step | Action | Expected result |
 |---|---|---|
-| 1 | Find the section `allow the identity on the base branch; a new commit on the MR`. | The section shows `pipeline <id> (job <id>): success`. |
+| 1 | Find the section `allow the identity on the base branch; a new commit on the MR`. | The section shows `pipeline <id> for <sha> (job <id>): success`. |
 | 2 | Run `grep -o '"username":"[^"]*"' <run>/discussions2.json`. | The output shows the bot user from UAT-CIGL-001. |
 | 3 | Run `grep -o '"new_path":"[^"]*"' <run>/discussions2.json`. | The output shows `calc/calc.go`. |
 | 4 | Find the section `job 2` in the checklist. | Each item shows `[x]`. |

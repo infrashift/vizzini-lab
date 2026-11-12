@@ -8,7 +8,7 @@ tags:
   - "ts-cigh"
 created: "2026-11-12T05:07:08-06:00"
 timestamp: "2026-11-12T05:07:08-06:00"
-description: "Vizzini's GitHub Actions template on a throwaway PR in infrashift/vizzini-uat: the denied first run, the allowed identity, and the incremental second commit."
+description: "Vizzini's GitHub Actions template on a throwaway PR in infrashift/vizzini-lab: the denied first run, the allowed identity, and the incremental second commit."
 ---
 
 # TS-CIGH: GitHub Actions template
@@ -22,7 +22,7 @@ description: "Vizzini's GitHub Actions template on a throwaway PR in infrashift/
 The template's install step, the grant policy from the base branch, `GITHUB_TOKEN` as the posting identity, and incremental review.
 
 ## Remote changes
-One PR and two `ci/` branches in infrashift/vizzini-uat. The script closes and deletes them.
+One PR and two `ci/` branches in infrashift/vizzini-lab. The script closes and deletes them.
 
 ## Preconditions
 - `gh` is signed in with the `repo` and `workflow` scopes.

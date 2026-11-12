@@ -27,8 +27,8 @@ Make sure that the test removes what it made on GitHub.
 | Step | Action | Expected result |
 |---|---|---|
 | 1 | Find the section `== close the PR, delete the branches`. | The output shows `PR <n> closed` and two `branch … deleted` lines. |
-| 2 | Run `gh pr view <n> -R infrashift/vizzini-uat --json state`. | The state is `CLOSED`. |
-| 3 | Run `gh api repos/infrashift/vizzini-uat/branches -q '.[].name'`. | No branch starts with `ci/`. |
+| 2 | Run `gh pr view <n> -R infrashift/vizzini-lab --json state`. | The state is `CLOSED`. |
+| 3 | Run `gh api repos/infrashift/vizzini-lab/branches -q '.[].name'`. | No branch starts with `ci/`. |
 
 ## Pass criteria
 The case passes when each step gives its expected result.

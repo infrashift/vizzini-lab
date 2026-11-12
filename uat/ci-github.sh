@@ -3,7 +3,7 @@
 #
 #   uat/ci-github.sh
 #
-# On throwaway branches of this repository (infrashift/vizzini-uat), the
+# On throwaway branches of this repository (infrashift/vizzini-lab), the
 # template deploy/ci/github/vizzini-bot.yml from the pinned Vizzini commit runs
 # on a real pull request, on GitHub's runners, with GITHUB_TOKEN. The test
 # changes the template in two ways: the model is Vizzini's stubllm, started
@@ -35,7 +35,7 @@ set -euo pipefail
 root="$(cd "$(dirname "$0")/.." && pwd)"
 # shellcheck source=versions.env
 source "$root/versions.env"
-gh_repo="${CI_GITHUB_REPO:-infrashift/vizzini-uat}"
+gh_repo="${CI_GITHUB_REPO:-infrashift/vizzini-lab}"
 vz="$root/.cache/src/vizzini"
 template="$vz/deploy/ci/github/vizzini-bot.yml"
 
@@ -224,9 +224,10 @@ query($o: String!, $r: String!, $n: Int!) { repository(owner: $o, name: $r) { pu
 	>"$run/threads3.json"
 
 say "checks"
-python3 -I - "$run" "$identity" <<'EOF' | tee "$run/summary.md"
+python3 -I - "$run" "$identity" "${CI_GITHUB_PERMISSIONS-contents=write}" <<'EOF' | tee "$run/summary.md"
 import json, os, re, sys
-run, identity = sys.argv[1:]
+run, identity, perms = sys.argv[1:]
+opted_in = "contents=write" in perms.replace(" ", "")
 ok = True
 def check(cond, what):
     global ok
@@ -268,8 +269,14 @@ check(len(answers) == 1 and answers[0]["user"]["login"] == identity,
       f"the /vizzini command was answered once in its thread, by {identity} (mrman v0.1.6 replies on GitHub)")
 threads = json.load(open(os.path.join(run, "threads3.json")))["data"]["repository"]["pullRequest"]["reviewThreads"]["nodes"]
 extra = [t for t in threads if t["path"] == "calc/extra.go" and marker.search(t["comments"]["nodes"][0]["body"])]
-check(extra and all(t["isResolved"] for t in extra) and all("vizzini:reviewed" in " ".join(c["body"] for c in t["comments"]["nodes"]) for t in extra),
-      "the finding on the removed calc/extra.go: the bot resolved its own thread, with its reply (mrman v0.1.6 resolves on GitHub)")
+if opted_in:
+    check(extra and all(t["isResolved"] for t in extra) and all("vizzini:reviewed" in " ".join(c["body"] for c in t["comments"]["nodes"]) for t in extra),
+          "the finding on the removed calc/extra.go: the bot resolved its own thread, with its reply (contents: write opt-in)")
+else:
+    # The template's default permissions: GitHub refuses the resolve, and
+    # mrman (v0.1.7 on) says which permission is missing.
+    check(extra and not any(t["isResolved"] for t in extra) and "contents: write" in log3 and "not resolved" in log3,
+          "default permissions: the resolve is refused and the log names the missing permission (contents: write)")
 print("\nresult: " + ("PASS" if ok else "FAIL"))
 sys.exit(0 if ok else 1)
 EOF

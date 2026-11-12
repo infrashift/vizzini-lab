@@ -27,7 +27,7 @@ Make sure that the first job posts nothing and shows the token's bot user.
 | Step | Action | Expected result |
 |---|---|---|
 | 1 | Find the line `project <id>; access token (Reporter, api) for bot user <id>`. | The line shows. |
-| 2 | Find the section `== MR: the policy lists no identity`. | The section shows `pipeline <id> (job <id>): failed`. |
+| 2 | Find the section `== MR: the policy lists no identity`. | The section shows `pipeline <id> for <sha> (job <id>): failed`. |
 | 3 | Find the line `VIZZINI_GITLAB_TOKEN posts as: project_<n>_bot_<hash>`. | The line shows. |
 | 4 | Open `<run>/job1.log`. | The log has `ERROR: Job failed: exit code 3`. |
 | 5 | Search `<run>/job1.log` for `MRM-002`. | The log has `"decision":"deny"` and `MRM-002`. |

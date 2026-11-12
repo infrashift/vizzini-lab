@@ -18,7 +18,7 @@ Each test plays the onboarding of Vizzini's `deploy/ci/README.md` through one te
 | | GitHub Actions | Azure Pipelines | GitLab CI |
 |---|---|---|---|
 | target | `make uat-ci-github` | `make uat-ci-ado` | `make uat-ci-gitlab` |
-| runs on | GitHub's runners, throwaway branches of infrashift/vizzini-uat | a self-hosted agent in podman, your ADO project ([ADR-0007](/decisions/adr-0007-azure-pipelines-runs-on-a-throwaway-self-hosted-podman-agent--01a1cf4af8d2.md)) | GitLab CE and a runner in podman, nothing remote ([ADR-0008](/decisions/adr-0008-gitlab-ci-runs-on-a-throwaway-self-managed-gitlab-ce-in-podman--01a1cf4af8e3.md)) |
+| runs on | GitHub's runners, throwaway branches of infrashift/vizzini-lab | a self-hosted agent in podman, your ADO project ([ADR-0007](/decisions/adr-0007-azure-pipelines-runs-on-a-throwaway-self-hosted-podman-agent--01a1cf4af8d2.md)) | GitLab CE and a runner in podman, nothing remote ([ADR-0008](/decisions/adr-0008-gitlab-ci-runs-on-a-throwaway-self-managed-gitlab-ce-in-podman--01a1cf4af8e3.md)) |
 | needs | `gh` auth (repo, workflow) | the ADO PAT (see [setup](/runbooks/runbook-first-time-setup--01a1cf4a8f24.md)) and the agent image `ci/ado-agent` | the podman socket, about 4 GB of images, about 3 GB of RAM for tmpfs |
 | changes outside this machine | a PR and two `ci/` branches | a pipeline, a branch policy, the build service's *Contribute to pull requests*, two `ci/` branches, a PR, an agent registration | nothing |
 

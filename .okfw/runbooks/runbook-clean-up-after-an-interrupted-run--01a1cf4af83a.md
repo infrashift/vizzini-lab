@@ -27,7 +27,7 @@ Check each item, and remove only this run's (`<stamp>`):
 5. **Agent:** `podman stop vizzini-uat-<stamp>` deregisters it from the Default pool, then `podman rm` it. If the container is gone, delete the agent from the pool in Organization settings → Agent pools.
 
 ## GitHub Actions test (`make uat-ci-github`)
-Check `gh pr list -R infrashift/vizzini-uat` and the repository's `ci/*` branches. Then close the test PR and run `git push origin --delete ci/base-<stamp> ci/pr-<stamp>`.
+Check `gh pr list -R infrashift/vizzini-lab` and the repository's `ci/*` branches. Then close the test PR and run `git push origin --delete ci/base-<stamp> ci/pr-<stamp>`.
 
 ## GitLab CI test (`make uat-ci-gitlab`)
 Everything is local:
