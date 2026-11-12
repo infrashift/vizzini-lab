@@ -62,12 +62,25 @@ quote() { python3 -I -c 'import sys,urllib.parse;print(urllib.parse.quote(sys.ar
 json() { python3 -I -c "import json,sys; d=json.load(sys.stdin); print($1)"; }
 
 # api METHOD URL [JSON]: prints the body; fails on a non-2xx status.
+# Transient network failures are retried only where a retry cannot act twice
+# (ADR-0011): any request that failed before it was sent (curl 6, 7, 35), and
+# an idempotent one (GET, PUT, PATCH, DELETE) cut off mid-way (52, 56). A
+# POST cut off mid-way may have been applied, so it fails.
 api() {
-	local method=$1 url=$2 data=${3:-} out code
+	local method=$1 url=$2 data=${3:-} out code="" rc try
 	out="$(mktemp)"
-	code="$(printf 'header = "Authorization: Basic %s"\n' "$(printf ':%s' "$AZURE_DEVOPS_EXT_PAT" | base64 -w0)" |
-		curl -sS -K - -o "$out" -w '%{http_code}' -X "$method" -H 'Content-Type: application/json' \
-			${data:+--data "$data"} "$url")"
+	for try in 1 2 3; do
+		rc=0
+		code="$(printf 'header = "Authorization: Basic %s"\n' "$(printf ':%s' "$AZURE_DEVOPS_EXT_PAT" | base64 -w0)" |
+			curl -sS -K - -o "$out" -w '%{http_code}' -X "$method" -H 'Content-Type: application/json' \
+				${data:+--data "$data"} "$url")" || rc=$?
+		case "$rc:$method" in
+		6:* | 7:* | 35:* | 52:GET | 52:PUT | 52:PATCH | 52:DELETE | 56:GET | 56:PUT | 56:PATCH | 56:DELETE) ;;
+		*) break ;;
+		esac
+		code=""
+		sleep $((try * 5))
+	done
 	if [[ $code != 2* ]]; then
 		echo "ado: $method $url -> HTTP $code: $(head -c 400 "$out")" >&2
 		rm -f "$out"

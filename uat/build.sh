@@ -57,6 +57,9 @@ build_vizzini() {
 		if [[ -d cmd/vizzini-bot ]]; then go build -trimpath -o "$bin/vizzini-bot" ./cmd/vizzini-bot; fi
 		# vizzini-webhook (experimental) exists from ISSUE-026 on.
 		if [[ -d cmd/vizzini-webhook ]]; then go build -trimpath -o "$bin/vizzini-webhook" ./cmd/vizzini-webhook; fi
+		# stubllm, the token-free model, from the same pinned commit: a stale one
+		# would not know newer commands.
+		go build -trimpath -o "$bin/stubllm" ./scripts/e2e/stubllm
 	)
 }
 

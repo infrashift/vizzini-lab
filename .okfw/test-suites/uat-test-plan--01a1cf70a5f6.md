@@ -24,6 +24,7 @@ This plan lists the UAT suites for vizzini-uat. A tester runs a suite, then does
 | [TS-CIADO](/test-suites/ci-ado/ts-ciado-azure-pipelines-template--01a1cf70a616.md) | Azure Pipelines template | `make uat-ci-ado` | 4 | No (stubllm in the job) | No |
 | [TS-CIGL](/test-suites/ci-gitlab/ts-cigl-gitlab-ci-template--01a1cf70a61d.md) | GitLab CI template | `make uat-ci-gitlab` | 4 | No (stubllm in the job) | No |
 | [TS-HOOK](/test-suites/webhook/ts-hook-webhook-receiver-experimental--01a1cf9317e2.md) | Webhook receiver (experimental) | `make uat-webhook` | 10 | No (stubllm) | No (UAT-HOOK-010 is manual) |
+| [TS-WF](/test-suites/workflow/ts-wf-full-review-workflow--01a1cfa4f447.md) | Full review workflow | `make uat-workflow` | 19 | No (stubllm) | No (UAT-WF-018, -019 are manual) |
 
 ## How to run a suite
 1. Do the steps in the suite's *Execution* section.

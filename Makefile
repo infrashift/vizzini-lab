@@ -1,4 +1,4 @@
-.PHONY: help build litellm-up litellm-down litellm-smoke uat uat-vizzini uat-stub uat-bot uat-bot-stub uat-ci-github uat-ci-ado uat-ci-gitlab uat-webhook ado-check ado-down lint clean
+.PHONY: help build litellm-up litellm-down litellm-smoke uat uat-vizzini uat-stub uat-bot uat-bot-stub uat-ci-github uat-ci-ado uat-ci-gitlab uat-webhook uat-workflow ado-check ado-down lint clean
 
 help: ## List targets
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-14s %s\n", $$1, $$2}'
@@ -41,6 +41,9 @@ uat-ci-gitlab: build ## Vizzini's GitLab CI template, live on a throwaway GitLab
 
 uat-webhook: build ## The experimental webhook receiver, live on an ADO PR, delivered to locally (stubllm; uat/webhook.sh --live for real models)
 	uat/webhook.sh
+
+uat-workflow: build ## The full review workflow on one ADO PR: fix, defend, dispute, settle, guardrails (stubllm)
+	uat/workflow.sh
 
 ado-check: ## Check the PAT and ADO repository
 	uat/ado.sh check
