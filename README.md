@@ -105,4 +105,4 @@ When the fixture has a `fix/` overlay, more legs run on the same PR ([ADR-0005](
 | `uat/ci-github.sh`, `uat/ci-ado.sh`, `uat/ci-gitlab.sh` | Vizzini's CI templates, live on GitHub Actions, Azure Pipelines and a throwaway GitLab CE |
 | `ci/ado-agent/` | the throwaway self-hosted Azure Pipelines agent image |
 | `results/` | kept run summaries, cited by the wiki and Vizzini's docs |
-| `.okfw/` | this repo's wiki: runbooks, architecture, decisions (ADRs) and open issues. Start with `.okfw/architecture/` (the suite map) and `.okfw/runbooks/` |
+| `.okfw/` | this repo's wiki: runbooks, architecture, decisions (ADRs) and open issues. Start with `.okfw/architecture/` (the suite map) and `.okfw/runbooks/`. Manual test cases: `.okfw/test-suites/` (the UAT test plan) |

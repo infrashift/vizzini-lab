@@ -24,3 +24,5 @@ description: "The vizzini-uat suites, what each one exercises, what it needs, an
 | `make lint` | scripts, `score.py` and this wiki are well formed | — | shellcheck, okfw | nothing |
 
 The CI tests share one sequence; see [CI template tests](/architecture/ci-template-tests-one-onboarding-sequence-on-three-platforms--01a1cf4af8a0.md). How to run each suite: [live UAT](/runbooks/runbook-run-the-live-uat--01a1cf4af7f5.md), [bot](/runbooks/runbook-run-the-unattended-bot-test--01a1cf4af807.md), [CI templates](/runbooks/runbook-run-the-ci-template-tests--01a1cf4af818.md).
+
+Test cases a tester can do step by step, with the observable results, are in the [UAT test plan](/test-suites/uat-test-plan--01a1cf70a5f6.md).

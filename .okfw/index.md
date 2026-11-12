@@ -12,4 +12,5 @@ okf_version: "0.2"
 * [decisions/](decisions/)
 * [issues/](issues/)
 * [runbooks/](runbooks/)
+* [test-suites/](test-suites/)
 
