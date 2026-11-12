@@ -90,6 +90,15 @@ pipeline_id="" policy_id="" pr_id="" ace_token="" ace_desc="" ace_before=""
 git_ns=2e9eb7ed-3c0a-47d4-87c1-0ffdd275fd87 # the Git Repositories security namespace
 cleanup() {
 	say "cleanup"
+	# A build still running holds the agent: ADO refuses to deregister an
+	# agent with a job. Cancel what is left first.
+	if [[ -n $pipeline_id ]]; then
+		local b
+		for b in $(api GET "$api_base/build/builds?definitions=$pipeline_id&statusFilter=inProgress,notStarted&api-version=7.1" |
+			jq_ '" ".join(str(x["id"]) for x in d["value"])' 2>/dev/null); do
+			api PATCH "$api_base/build/builds/$b?api-version=7.1" '{"status":"cancelling"}' >/dev/null && echo "   build $b cancelled"
+		done
+	fi
 	if [[ -n $ace_token ]]; then
 		if [[ -n $ace_before ]]; then
 			api POST "https://dev.azure.com/$ORG/_apis/AccessControlEntries/$git_ns?api-version=7.1" "$ace_before" >/dev/null &&
@@ -106,10 +115,31 @@ cleanup() {
 		g push -q origin --delete "$b" 2>/dev/null && echo "   branch $b deleted" || true
 	done
 	if podman container exists "$agent" 2>/dev/null; then
-		podman stop -t 60 "$agent" >/dev/null && echo "   agent $agent deregistered and stopped"
+		podman stop -t 60 "$agent" >/dev/null && echo "   agent container $agent stopped"
 		podman logs "$agent" >"$run/agent.log" 2>&1 || true
 		podman rm "$agent" >/dev/null
+		agent_gone
 	fi
+}
+
+# agent_gone: make sure the agent's registration left the Default pool. The
+# container deregisters itself when stopped, but not while ADO still holds a
+# job for it (the lease of a cancelled job can outlive the container by
+# minutes), so delete it through the API, retrying, and say if it stays.
+agent_gone() {
+	local pool id try
+	pool="$(api GET "https://dev.azure.com/$ORG/_apis/distributedtask/pools?poolName=Default&api-version=7.1" | jq_ 'd["value"][0]["id"]')" || return 0
+	for try in $(seq 30); do
+		id="$(api GET "https://dev.azure.com/$ORG/_apis/distributedtask/pools/$pool/agents?agentName=$(urlq "$agent")&api-version=7.1" |
+			jq_ 'd["value"][0]["id"] if d["value"] else ""')" || id="?"
+		if [[ -z $id ]]; then
+			echo "   agent $agent deregistered"
+			return 0
+		fi
+		[[ $id != "?" ]] && api DELETE "https://dev.azure.com/$ORG/_apis/distributedtask/pools/$pool/agents/$id?api-version=7.1" >/dev/null 2>&1 && continue
+		sleep 30
+	done
+	echo "   AGENT $agent IS STILL REGISTERED in the Default pool: remove it in Organization settings > Agent pools" >&2
 }
 trap cleanup EXIT
 

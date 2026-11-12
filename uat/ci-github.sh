@@ -20,7 +20,8 @@
 #      -> it must post the stub's findings as review comments with markers
 #   4. a second commit to the PR
 #      -> an incremental run of the changed file only; no comment duplicated
-#   5. the PR closed and both branches deleted
+#   5. the PR closed and both branches deleted (in an exit trap, so a
+#      failed run cleans up too)
 #
 # Needs gh (authenticated), the pinned Vizzini clone (uat/build.sh vizzini) and
 # python3 with PyYAML. Writes .cache/runs/<UTC>-ci-github/; exits non-zero when
@@ -72,6 +73,26 @@ say "branches $base and $head"
 repo="$run/repo"
 git init -q -b "$base" "$repo"
 g() { git -C "$repo" -c user.name=vizzini-uat -c user.email=uat@example.invalid "$@"; }
+# ghr: a read-only gh call, retried: api.github.com drops the odd TLS handshake.
+ghr() {
+	local try
+	for try in 1 2 3; do
+		gh "$@" && return 0
+		sleep $((try * 5))
+	done
+	return 1
+}
+pr=""
+cleanup() {
+	say "close the PR, delete the branches"
+	[[ -n $pr ]] && gh pr close "$pr" -R "$gh_repo" >/dev/null 2>&1 && echo "   PR $pr closed"
+	local b
+	for b in "$base" "$head"; do
+		git -C "$repo" push -q origin --delete "$b" 2>/dev/null && echo "   branch $b deleted"
+	done
+	return 0
+}
+trap cleanup EXIT
 mkdir -p "$repo/calc" "$repo/.vizzini/grant-policy"
 cat >"$repo/calc/calc.go" <<'EOF'
 package calc
@@ -115,8 +136,8 @@ wait_run() {
 
 # run_log ID NAME: the run's log and conclusion into $run/NAME.{log,conclusion}.
 run_log() {
-	gh run view "$1" -R "$gh_repo" --log >"$run/$2.log" 2>&1 || true
-	gh run view "$1" -R "$gh_repo" --json conclusion -q .conclusion >"$run/$2.conclusion"
+	ghr run view "$1" -R "$gh_repo" --log >"$run/$2.log" 2>&1 || true
+	ghr run view "$1" -R "$gh_repo" --json conclusion -q .conclusion >"$run/$2.conclusion"
 	echo "   run $1: $(<"$run/$2.conclusion")"
 }
 
@@ -151,12 +172,12 @@ g checkout -q "$head"
 gh run rerun "$id1" -R "$gh_repo"
 sleep 20
 for _ in $(seq 60); do
-	read -r att st < <(gh api "repos/$gh_repo/actions/runs/$id1" -q '"\(.run_attempt) \(.status)"')
+	read -r att st < <(gh api "repos/$gh_repo/actions/runs/$id1" -q '"\(.run_attempt) \(.status)"' 2>/dev/null) || true
 	[[ $att -ge 2 && $st == completed ]] && break
 	sleep 15
 done
 run_log "$id1" run2
-gh api "repos/$gh_repo/pulls/$pr/comments" >"$run/comments2.json"
+ghr api "repos/$gh_repo/pulls/$pr/comments" >"$run/comments2.json"
 
 say "run 3: a second commit"
 cat >>"$repo/calc/calc.go" <<'EOF'
@@ -169,11 +190,7 @@ g push -q origin "$head"
 sha3="$(g rev-parse HEAD)"
 id3="$(wait_run "$sha3")"
 run_log "$id3" run3
-gh api "repos/$gh_repo/pulls/$pr/comments" >"$run/comments3.json"
-
-say "close the PR, delete the branches"
-gh pr close "$pr" -R "$gh_repo" --delete-branch >/dev/null 2>&1 || true
-git -C "$repo" push -q origin --delete "$base" 2>/dev/null || true
+ghr api "repos/$gh_repo/pulls/$pr/comments" >"$run/comments3.json"
 
 say "checks"
 python3 -I - "$run" "$identity" <<'EOF' | tee "$run/summary.md"
