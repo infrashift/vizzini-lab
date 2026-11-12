@@ -5,6 +5,7 @@
 # LiteLLM proxy. uat/bench.py scores the run.
 #
 #   uat/bench.sh [--round 1|2|3] [--models "M1 M2"] [--cases ID,ID|seeded|real|all] [--jobs N]
+#                [--tools vizzini,vizzini-norepo,pa-review,pa-improve]  (round 1; default all)
 #
 # Rounds (the same cases, models and checkouts each time):
 #   1  the tools below: equal inputs, the diff and the checkout
@@ -50,10 +51,11 @@ repos="$root/.cache/bench-repos"
 say() { printf '\n== %s\n' "$*"; }
 die() { printf 'bench: %s\n' "$*" >&2; exit 1; }
 
-models="claude-sonnet-5-5 claude-opus-5-5" sel=all jobs=3 round=1
+models="claude-sonnet-5-5 claude-opus-5-5" sel=all jobs=3 round=1 tools=vizzini,vizzini-norepo,pa-review,pa-improve
 while (($#)); do
 	case $1 in
 	--round) round=${2:?}; shift 2 ;;
+	--tools) tools=${2:?}; shift 2 ;;
 	--models) models=${2:?}; shift 2 ;;
 	--cases) sel=${2:?}; shift 2 ;;
 	--jobs) jobs=${2:?}; shift 2 ;;
@@ -261,6 +263,9 @@ EOF
 	done
 }
 
+# want TOOL: whether --tools lists TOOL.
+want() { [[ ,$tools, == *,$1,* ]]; }
+
 # one ID KIND: every round-1 tool and model on one case.
 one() {
 	local id=$1 kind=$2 dir="$repos/$1" model d
@@ -275,19 +280,23 @@ one() {
 			export VIZZINI_LITELLM_URL="$proxy" VIZZINI_API_KEY="$key" VIZZINI_MODEL="$model" \
 				VIZZINI_PR="bench:$id" VIZZINI_ITERATION VIZZINI_REQUESTER=vizzini-lab-bench \
 				TIKTOKEN_CACHE_DIR="$root/.cache/tiktoken"
-			timed "$d/vizzini" "$bin/pr-review" --mode review --patch-file "$run/$id/change.patch" --repo . --format json
-			timed "$d/vizzini-norepo" "$bin/pr-review" --mode review --patch-file "$run/$id/change.patch" --format json
+			if want vizzini; then
+				timed "$d/vizzini" "$bin/pr-review" --mode review --patch-file "$run/$id/change.patch" --repo . --format json
+			fi
+			if want vizzini-norepo; then
+				timed "$d/vizzini-norepo" "$bin/pr-review" --mode review --patch-file "$run/$id/change.patch" --format json
+			fi
 		)
-		pa "$dir" "$model" review "$d/pa-review"
-		pa "$dir" "$model" improve "$d/pa-improve"
-		echo "   $id / $model: $(for t in vizzini vizzini-norepo pa-review pa-improve; do printf '%s %s  ' "$t" "$(cat "$d/$t.time")"; done)"
+		if want pa-review; then pa "$dir" "$model" review "$d/pa-review"; fi
+		if want pa-improve; then pa "$dir" "$model" improve "$d/pa-improve"; fi
+		echo "   $id / $model: $(for t in vizzini vizzini-norepo pa-review pa-improve; do want "$t" && printf '%s %s  ' "$t" "$(cat "$d/$t.time")"; done)"
 	done
 }
 
 "$root/.cache/src/vizzini/scripts/tiktoken-cache.sh" "$root/.cache/tiktoken" >/dev/null
 say "round $round: running ($jobs at a time)"
-export -f one later knowledge carry checkout timed pa
-export run repos root bin models key proxy round PR_AGENT_IMAGE
+export -f one later knowledge carry checkout timed pa want
+export run repos root bin models key proxy round tools PR_AGENT_IMAGE
 # shellcheck disable=SC2016 # the child bash expands $0 and $1
 while IFS=$'\t' read -r id kind; do printf '%s\0%s\0' "$id" "$kind"; done <"$run/cases.tsv" |
 	xargs -0 -n 2 -P "$jobs" bash -c 'one "$0" "$1"'

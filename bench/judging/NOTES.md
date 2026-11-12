@@ -77,3 +77,17 @@ change a recall number if reversed.
 - js-node-stream-asynciter-undefined: findings mainly about sync throws that also state the undefined chunk.then crash (42ac351536e6eb78, 6e53b9b578d2334c, d974be932c97acc7) → defect; generic throwing then/getter → valid; a9bca7eeb0c2e80c (flatMap test rewritten to hide timing change) → nit (arguably valid).
 - go-otelcol-hostwrapper-capabilities: 08aef79ce436701c (title about RegisterZPages, also states hidden-interfaces defect) → defect:d1; standalone zPages advertising → nit; change_logs: [] → invalid (unverified: assumes chloggen empty list = default).
 - Avalonia popup: host?.Height = 40 won't compile → invalid (LangVersion 14.0); "test passes without fix" → invalid. numpy complex-infinity → invalid (premise of *1.0 normalization absent).
+
+## Later: the noise-floor runs and one uniform pass (2026-11-12, ISSUE-032)
+- **Two Vizzini-only runs** of all 34 cases measured Vizzini ISSUE-032. Their new findings (247 and 231) were judged blind by two judges each, using the rubric with the owner's clarification and settled calls, and each run got its own second-defect pass.
+  - `results/2026-11-12-bench-floor-wide`: commit `ffcca00`, the wide floor (not shipped).
+  - `results/2026-11-12-bench-floor`: commit `38d9959`, the narrower floor plus the category rule.
+- **Consistency fixes before the pass:**
+  - The owner's Django ruling was applied to 3 new findings that a later judge had called valid.
+  - The strict rule was applied to 7 Avalonia popup findings in the first run that the owner review had missed.
+- **The uniform pass.** The later judges read "the actual failure" a little differently in a few cases. So three agents applied one written rule to every finding with defect credit on the real pull requests: 388 findings, from all three runs and both tools, blind to the tool. The rule: in the defect's own file and function or hunk, and describing its stated failure, not only its cause.
+  - **Lost credit:** 26 findings. 14 were Vizzini's in the first run, 8 PR-Agent's, and 4 from the later Vizzini runs.
+  - **Extra credits changed:** 9.
+  - **Effect:** real-PR recall fell for both tools, by 3 to 10 points against the first published numbers. No conclusion changed.
+  - **The records:** each changed label keeps `judged_verdict` and a `revision` note.
+\n

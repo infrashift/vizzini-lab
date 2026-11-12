@@ -1,0 +1,31 @@
+
+
+claude-sonnet-5-5: vizzini (20261112T225829Z-bench-floor2) vs vizzini (20261112T191951Z-bench), 31 real cases
+  judged recall       72% vs   69%  diff +3% [-7%, +17%] 
+  strict precision    69% vs   51%  diff +18% [+9%, +28%] holds
+  findings per PR   2.2 vs 2.7;  on clean PRs 9 vs 8
+
+claude-opus-5-5: vizzini (20261112T225829Z-bench-floor2) vs vizzini (20261112T191951Z-bench), 31 real cases
+  judged recall       62% vs   59%  diff +3% [+0%, +10%] 
+  strict precision    68% vs   50%  diff +19% [+11%, +26%] holds
+  findings per PR   2.5 vs 3.5;  on clean PRs 9 vs 12
+
+claude-sonnet-5-5: vizzini (20261112T225829Z-bench-floor2) vs vizzini+filtered (20261112T225829Z-bench-floor2), 31 real cases
+  judged recall       72% vs   72%  diff +0% [+0%, +0%] 
+  strict precision    69% vs   58%  diff +11% [+5%, +16%] holds
+  findings per PR   2.2 vs 2.6;  on clean PRs 9 vs 11
+
+claude-opus-5-5: vizzini (20261112T225829Z-bench-floor2) vs vizzini+filtered (20261112T225829Z-bench-floor2), 31 real cases
+  judged recall       62% vs   62%  diff +0% [+0%, +0%] 
+  strict precision    68% vs   56%  diff +13% [+6%, +19%] holds
+  findings per PR   2.5 vs 3.1;  on clean PRs 9 vs 10
+
+claude-sonnet-5-5: vizzini (20261112T225829Z-bench-floor2) vs pa (20261112T191951Z-bench), 31 real cases
+  judged recall       72% vs   62%  diff +10% [+0%, +22%] 
+  strict precision    69% vs   63%  diff +6% [-9%, +19%] 
+  findings per PR   2.2 vs 2.7;  on clean PRs 9 vs 8
+
+claude-opus-5-5: vizzini (20261112T225829Z-bench-floor2) vs pa (20261112T191951Z-bench), 31 real cases
+  judged recall       62% vs   66%  diff -3% [-19%, +11%] 
+  strict precision    68% vs   74%  diff -6% [-18%, +5%] 
+  findings per PR   2.5 vs 2.8;  on clean PRs 9 vs 6

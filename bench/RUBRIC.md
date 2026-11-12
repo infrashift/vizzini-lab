@@ -33,6 +33,19 @@ Each case directory has:
   about code the change did not touch, or not actionable at all (praise,
   restating the diff).
 
+## Owner clarification (2026-11-12)
+Apply `defect:<id>` strictly. The finding must sit in the defect's own code
+(its function or hunk, in its file) and describe the actual failure. These
+are `valid` (if true), not `defect:<id>`:
+- a finding in another file or function that describes the same problem;
+- a finding on the right line that names the wrong consequence.
+
+## Settled calls (owner, 2026-11-12)
+- `py-django-cacheddb-delete-logging-clean`: "a swallowed cache-delete
+  failure leaves a logged-out session usable" is `invalid`. A failed delete
+  left the stale cache entry before the change too; the change only stops
+  raising, as `save()` already does.
+
 ## How to decide
 
 - Read the finding's lines in `change.patch`, then as much of the checkout

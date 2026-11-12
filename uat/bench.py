@@ -33,7 +33,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TOOLS = ["vizzini", "vizzini-norepo", "vizzini-lint", "vizzini-lint-kb", "pa-review", "pa-improve", "pa-review-kb", "pa-improve-kb"]
-REPORTED = ["vizzini", "vizzini-norepo", "vizzini-lint", "vizzini-lint-kb", "pa", "pa-kb", "pa-review", "pa-improve", "pa-review-kb", "pa-improve-kb"]
+REPORTED = ["vizzini", "vizzini+filtered", "vizzini-norepo", "vizzini-lint", "vizzini-lint-kb", "pa", "pa-kb", "pa-review", "pa-improve", "pa-review-kb", "pa-improve-kb"]
 PER_CASE = ["vizzini", "vizzini-lint", "vizzini-lint-kb", "pa", "pa-kb"]
 # pa / pa-kb: PR-Agent review + improve, as one tool.
 COMBINED = {"pa": ("pa-review", "pa-improve"), "pa-kb": ("pa-review-kb", "pa-improve-kb")}
@@ -117,7 +117,10 @@ def normalize(tool, doc):
         return None
     out, notes = [], []
     if tool.startswith("vizzini"):
-        for f in doc.get("findings") or []:
+        # "<tool>+filtered" is the same report with the noise floor's
+        # filtered findings put back (ISSUE-032).
+        both = tool.endswith("+filtered")
+        for f in (doc.get("findings") or []) + ((doc.get("filtered") or []) if both else []):
             out.append({"file": f["file"], "start_line": f["start_line"], "end_line": f["end_line"],
                         "severity": f.get("severity", ""), "category": f.get("category", ""),
                         "title": f.get("title", ""), "body": (f.get("body", "") + ("\n\nSuggestion: " + f["suggestion"] if f.get("suggestion") else "")).strip()})
@@ -183,23 +186,29 @@ def main():
     models = sorted({m for cid, _ in cases for m in (os.listdir(os.path.join(run, cid)) if os.path.isdir(os.path.join(run, cid)) else [])
                      if os.path.isdir(os.path.join(run, cid, m))})
     rows, to_label, per_case = [], {}, []
+    # A run of a Vizzini with the noise floor (ISSUE-032) gets a second view,
+    # "vizzini+filtered", in every case: a report the floor filtered nothing
+    # from has no "filtered" list.
+    floor_run = any('"filtered"' in open(p_).read() for p_ in __import__("glob").glob(os.path.join(run, "*", "*", "vizzini.json")))
     for cid, kind in cases:
         defects, decoys, tol, ckind = truth(cid, kind, real_cases)
         for model in models:
             d = os.path.join(run, cid, model)
             if not os.path.isdir(d):
                 continue
-            for tool in TOOLS:
-                if not os.path.exists(os.path.join(d, f"{tool}.time")):
-                    continue
-                doc = load(os.path.join(d, f"{tool}.json"))
-                t = (open(os.path.join(d, f"{tool}.time")).read().split() if os.path.exists(os.path.join(d, f"{tool}.time")) else ["?", "0"])
+            present = [t for t in TOOLS if os.path.exists(os.path.join(d, f"{t}.time"))]
+            if "vizzini" in present and floor_run:
+                present.append("vizzini+filtered")
+            for tool in present:
+                src = tool.split("+")[0]
+                doc = load(os.path.join(d, f"{src}.json"))
+                t = (open(os.path.join(d, f"{src}.time")).read().split() if os.path.exists(os.path.join(d, f"{src}.time")) else ["?", "0"])
                 # pr-review exits 2 when its severity gate fails: a complete report.
                 norm = normalize(tool, doc) if t[0] == "0" or (tool.startswith("vizzini") and t[0] == "2") else None
                 i, o, cost = usage(tool, doc, model)
                 rec = {"case": cid, "kind": ckind, "model": model, "tool": tool, "ok": norm is not None,
                        "seconds": float(t[1]), "in": i, "out": o, "cost": cost, "findings": [], "notes": [],
-                       "carried": os.path.exists(os.path.join(d, f"{tool}.carried"))}
+                       "carried": os.path.exists(os.path.join(d, f"{src}.carried"))}
                 if norm:
                     rec["notes"] = norm[1]
                     for f in norm[0]:
@@ -298,7 +307,7 @@ def main():
         st = stats[(sc["tool"], sc["model"])]
         sc["judged_recall_ci"] = ci([ratio(st, d, 1, 0) for d in draws])
         sc["precision_strict_ci"] = ci([ratio(st, d, 3, 2) for d in draws])
-    pairs = [("vizzini", "pa"), ("vizzini-lint-kb", "pa-kb"), ("vizzini", "vizzini-norepo"),
+    pairs = [("vizzini", "vizzini+filtered"), ("vizzini", "pa"), ("vizzini-lint-kb", "pa-kb"), ("vizzini", "vizzini-norepo"),
              ("vizzini-lint", "vizzini"), ("vizzini-lint-kb", "vizzini-lint"), ("pa-kb", "pa")]
     comparisons = []
     for a, b in pairs:

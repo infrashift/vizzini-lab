@@ -1,0 +1,25 @@
+{
+ "go": "go version go1.27.3 linux/amd64",
+ "tools": {
+  "vizzini": {
+   "commit": "38d995970a429c798d091ca99fb3b992cc90ca08",
+   "describe": "38d9959",
+   "source": "../vizzini-lab/../vizzini-pr-reviewer"
+  },
+  "mrman": {
+   "commit": "0669c13c10f4595ea8cc122ed5b72cf8d037e190",
+   "describe": "v0.1.9",
+   "source": "../vizzini-lab/../mrman"
+  },
+  "garmr": {
+   "commit": "bf96753b9123fc9ac667afed84eba1610d896c53",
+   "describe": "bf96753",
+   "source": "../vizzini-lab/../garmr-policy-agent"
+  },
+  "okfw": {
+   "commit": "557c304ed5616f4d633013697328f8d7980fc389",
+   "describe": "v2026.10.2-2-g557c304",
+   "source": "../vizzini-lab/../okf-wiki"
+  }
+ }
+}

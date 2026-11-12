@@ -10,8 +10,8 @@
    "defects": 51,
    "location_hits": 45,
    "location_recall": 0.882,
-   "judged_hits": 42,
-   "judged_recall": 0.824,
+   "judged_hits": 39,
+   "judged_recall": 0.765,
    "judged": 136,
    "pending": 0,
    "precision_strict": 0.581,
@@ -28,8 +28,8 @@
    "tokens_out": 82028,
    "cost_usd": 2.6864,
    "judged_recall_ci": [
-    0.638,
-    0.938
+    0.541,
+    0.895
    ],
    "precision_strict_ci": [
     0.421,
@@ -37,11 +37,11 @@
    ],
    "real": {
     "defects": 29,
-    "hits": 20,
-    "recall": 0.6896551724137931,
+    "hits": 17,
+    "recall": 0.5862068965517241,
     "recall_ci": [
-     0.516,
-     0.857
+     0.406,
+     0.769
     ],
     "precision_strict": 0.4954128440366973,
     "precision_strict_ci": [
@@ -61,8 +61,8 @@
    "defects": 51,
    "location_hits": 45,
    "location_recall": 0.882,
-   "judged_hits": 45,
-   "judged_recall": 0.882,
+   "judged_hits": 42,
+   "judged_recall": 0.824,
    "judged": 108,
    "pending": 0,
    "precision_strict": 0.593,
@@ -79,8 +79,8 @@
    "tokens_out": 84949,
    "cost_usd": 1.3724,
    "judged_recall_ci": [
-    0.743,
-    0.966
+    0.636,
+    0.931
    ],
    "precision_strict_ci": [
     0.432,
@@ -88,11 +88,11 @@
    ],
    "real": {
     "defects": 29,
-    "hits": 23,
-    "recall": 0.7931034482758621,
+    "hits": 20,
+    "recall": 0.6896551724137931,
     "recall_ci": [
-     0.636,
-     0.931
+     0.516,
+     0.862
     ],
     "precision_strict": 0.5058823529411764,
     "precision_strict_ci": [
@@ -112,8 +112,8 @@
    "defects": 51,
    "location_hits": 45,
    "location_recall": 0.882,
-   "judged_hits": 39,
-   "judged_recall": 0.765,
+   "judged_hits": 37,
+   "judged_recall": 0.725,
    "judged": 142,
    "pending": 0,
    "precision_strict": 0.507,
@@ -130,8 +130,8 @@
    "tokens_out": 85593,
    "cost_usd": 2.4863,
    "judged_recall_ci": [
-    0.562,
-    0.889
+    0.5,
+    0.861
    ],
    "precision_strict_ci": [
     0.353,
@@ -139,11 +139,11 @@
    ],
    "real": {
     "defects": 29,
-    "hits": 19,
-    "recall": 0.6551724137931034,
+    "hits": 17,
+    "recall": 0.5862068965517241,
     "recall_ci": [
-     0.455,
-     0.84
+     0.387,
+     0.786
     ],
     "precision_strict": 0.4369747899159664,
     "precision_strict_ci": [
@@ -163,13 +163,13 @@
    "defects": 51,
    "location_hits": 44,
    "location_recall": 0.863,
-   "judged_hits": 42,
-   "judged_recall": 0.824,
+   "judged_hits": 40,
+   "judged_recall": 0.784,
    "judged": 112,
    "pending": 0,
-   "precision_strict": 0.589,
-   "precision_lenient": 0.875,
-   "invalid": 14,
+   "precision_strict": 0.58,
+   "precision_lenient": 0.866,
+   "invalid": 15,
    "clean_cases": 5,
    "clean_findings": 11,
    "clean_invalid": 1,
@@ -181,27 +181,27 @@
    "tokens_out": 86836,
    "cost_usd": 1.2675,
    "judged_recall_ci": [
-    0.645,
-    0.932
+    0.579,
+    0.905
    ],
    "precision_strict_ci": [
-    0.43,
-    0.724
+    0.418,
+    0.717
    ],
    "real": {
     "defects": 29,
-    "hits": 21,
-    "recall": 0.7241379310344828,
+    "hits": 19,
+    "recall": 0.6551724137931034,
     "recall_ci": [
-     0.548,
-     0.893
+     0.464,
+     0.833
     ],
-    "precision_strict": 0.4943820224719101,
+    "precision_strict": 0.48314606741573035,
     "precision_strict_ci": [
-     0.362,
-     0.616
+     0.347,
+     0.606
     ],
-    "precision_lenient": 0.8426966292134831
+    "precision_lenient": 0.8314606741573034
    }
   },
   "vizzini-lint/claude-opus-5-5": {
@@ -214,8 +214,8 @@
    "defects": 51,
    "location_hits": 45,
    "location_recall": 0.882,
-   "judged_hits": 42,
-   "judged_recall": 0.824,
+   "judged_hits": 39,
+   "judged_recall": 0.765,
    "judged": 133,
    "pending": 0,
    "precision_strict": 0.534,
@@ -232,8 +232,8 @@
    "tokens_out": 80960,
    "cost_usd": 2.6733,
    "judged_recall_ci": [
-    0.632,
-    0.932
+    0.537,
+    0.897
    ],
    "precision_strict_ci": [
     0.376,
@@ -241,11 +241,11 @@
    ],
    "real": {
     "defects": 29,
-    "hits": 20,
-    "recall": 0.6896551724137931,
+    "hits": 17,
+    "recall": 0.5862068965517241,
     "recall_ci": [
-     0.5,
-     0.867
+     0.385,
+     0.774
     ],
     "precision_strict": 0.4537037037037037,
     "precision_strict_ci": [
@@ -265,8 +265,8 @@
    "defects": 51,
    "location_hits": 44,
    "location_recall": 0.863,
-   "judged_hits": 45,
-   "judged_recall": 0.882,
+   "judged_hits": 43,
+   "judged_recall": 0.843,
    "judged": 121,
    "pending": 0,
    "precision_strict": 0.579,
@@ -283,8 +283,8 @@
    "tokens_out": 87804,
    "cost_usd": 1.4051,
    "judged_recall_ci": [
-    0.743,
-    0.965
+    0.683,
+    0.939
    ],
    "precision_strict_ci": [
     0.435,
@@ -292,11 +292,11 @@
    ],
    "real": {
     "defects": 29,
-    "hits": 23,
-    "recall": 0.7931034482758621,
+    "hits": 21,
+    "recall": 0.7241379310344828,
     "recall_ci": [
-     0.643,
-     0.929
+     0.556,
+     0.879
     ],
     "precision_strict": 0.5,
     "precision_strict_ci": [
@@ -316,8 +316,8 @@
    "defects": 51,
    "location_hits": 43,
    "location_recall": 0.843,
-   "judged_hits": 42,
-   "judged_recall": 0.824,
+   "judged_hits": 39,
+   "judged_recall": 0.765,
    "judged": 129,
    "pending": 0,
    "precision_strict": 0.558,
@@ -334,8 +334,8 @@
    "tokens_out": 88060,
    "cost_usd": 3.2862,
    "judged_recall_ci": [
-    0.643,
-    0.935
+    0.541,
+    0.894
    ],
    "precision_strict_ci": [
     0.4,
@@ -343,11 +343,11 @@
    ],
    "real": {
     "defects": 29,
-    "hits": 20,
-    "recall": 0.6896551724137931,
+    "hits": 17,
+    "recall": 0.5862068965517241,
     "recall_ci": [
-     0.5,
-     0.862
+     0.4,
+     0.767
     ],
     "precision_strict": 0.47619047619047616,
     "precision_strict_ci": [
@@ -367,8 +367,8 @@
    "defects": 51,
    "location_hits": 45,
    "location_recall": 0.882,
-   "judged_hits": 45,
-   "judged_recall": 0.882,
+   "judged_hits": 43,
+   "judged_recall": 0.843,
    "judged": 110,
    "pending": 0,
    "precision_strict": 0.6,
@@ -385,8 +385,8 @@
    "tokens_out": 91134,
    "cost_usd": 1.6352,
    "judged_recall_ci": [
-    0.75,
-    0.966
+    0.676,
+    0.942
    ],
    "precision_strict_ci": [
     0.452,
@@ -394,11 +394,11 @@
    ],
    "real": {
     "defects": 29,
-    "hits": 23,
-    "recall": 0.7931034482758621,
+    "hits": 21,
+    "recall": 0.7241379310344828,
     "recall_ci": [
-     0.63,
-     0.931
+     0.536,
+     0.875
     ],
     "precision_strict": 0.5058823529411764,
     "precision_strict_ci": [
@@ -418,13 +418,13 @@
    "defects": 51,
    "location_hits": 39,
    "location_recall": 0.765,
-   "judged_hits": 37,
-   "judged_recall": 0.725,
+   "judged_hits": 35,
+   "judged_recall": 0.686,
    "judged": 104,
    "pending": 0,
-   "precision_strict": 0.769,
-   "precision_lenient": 0.856,
-   "invalid": 15,
+   "precision_strict": 0.76,
+   "precision_lenient": 0.846,
+   "invalid": 16,
    "clean_cases": 5,
    "clean_findings": 6,
    "clean_invalid": 2,
@@ -436,27 +436,27 @@
    "tokens_out": 117148,
    "cost_usd": 5.4295,
    "judged_recall_ci": [
-    0.571,
-    0.886
+    0.526,
+    0.843
    ],
    "precision_strict_ci": [
-    0.652,
-    0.877
+    0.635,
+    0.871
    ],
    "real": {
     "defects": 29,
-    "hits": 21,
-    "recall": 0.7241379310344828,
+    "hits": 19,
+    "recall": 0.6551724137931034,
     "recall_ci": [
-     0.552,
-     0.889
+     0.478,
+     0.833
     ],
-    "precision_strict": 0.7558139534883721,
+    "precision_strict": 0.7441860465116279,
     "precision_strict_ci": [
-     0.628,
-     0.871
+     0.606,
+     0.866
     ],
-    "precision_lenient": 0.8372093023255814
+    "precision_lenient": 0.8255813953488372
    }
   },
   "pa/claude-sonnet-5-5": {
@@ -469,8 +469,8 @@
    "defects": 51,
    "location_hits": 33,
    "location_recall": 0.647,
-   "judged_hits": 32,
-   "judged_recall": 0.627,
+   "judged_hits": 30,
+   "judged_recall": 0.588,
    "judged": 99,
    "pending": 0,
    "precision_strict": 0.667,
@@ -487,8 +487,8 @@
    "tokens_out": 106297,
    "cost_usd": 2.7288,
    "judged_recall_ci": [
-    0.508,
-    0.778
+    0.469,
+    0.717
    ],
    "precision_strict_ci": [
     0.505,
@@ -496,11 +496,11 @@
    ],
    "real": {
     "defects": 29,
-    "hits": 20,
-    "recall": 0.6896551724137931,
+    "hits": 18,
+    "recall": 0.6206896551724138,
     "recall_ci": [
-     0.5,
-     0.852
+     0.448,
+     0.778
     ],
     "precision_strict": 0.6265060240963856,
     "precision_strict_ci": [
@@ -520,13 +520,13 @@
    "defects": 51,
    "location_hits": 35,
    "location_recall": 0.686,
-   "judged_hits": 34,
-   "judged_recall": 0.667,
+   "judged_hits": 31,
+   "judged_recall": 0.608,
    "judged": 121,
    "pending": 0,
-   "precision_strict": 0.702,
-   "precision_lenient": 0.86,
-   "invalid": 17,
+   "precision_strict": 0.694,
+   "precision_lenient": 0.851,
+   "invalid": 18,
    "clean_cases": 5,
    "clean_findings": 11,
    "clean_invalid": 3,
@@ -538,27 +538,27 @@
    "tokens_out": 145813,
    "cost_usd": 8.6854,
    "judged_recall_ci": [
-    0.48,
-    0.868
+    0.417,
+    0.804
    ],
    "precision_strict_ci": [
-    0.586,
-    0.807
+    0.571,
+    0.803
    ],
    "real": {
     "defects": 29,
-    "hits": 20,
-    "recall": 0.6896551724137931,
+    "hits": 17,
+    "recall": 0.5862068965517241,
     "recall_ci": [
-     0.5,
-     0.862
+     0.4,
+     0.767
     ],
-    "precision_strict": 0.6796116504854369,
+    "precision_strict": 0.6699029126213593,
     "precision_strict_ci": [
-     0.553,
-     0.791
+     0.535,
+     0.789
     ],
-    "precision_lenient": 0.8446601941747572
+    "precision_lenient": 0.8349514563106796
    }
   },
   "pa-kb/claude-sonnet-5-5": {
@@ -571,8 +571,8 @@
    "defects": 51,
    "location_hits": 30,
    "location_recall": 0.588,
-   "judged_hits": 30,
-   "judged_recall": 0.588,
+   "judged_hits": 28,
+   "judged_recall": 0.549,
    "judged": 102,
    "pending": 0,
    "precision_strict": 0.667,
@@ -589,8 +589,8 @@
    "tokens_out": 132290,
    "cost_usd": 4.1338,
    "judged_recall_ci": [
-    0.466,
-    0.774
+    0.431,
+    0.718
    ],
    "precision_strict_ci": [
     0.515,
@@ -598,11 +598,11 @@
    ],
    "real": {
     "defects": 29,
-    "hits": 21,
-    "recall": 0.7241379310344828,
+    "hits": 19,
+    "recall": 0.6551724137931034,
     "recall_ci": [
-     0.552,
-     0.879
+     0.48,
+     0.815
     ],
     "precision_strict": 0.627906976744186,
     "precision_strict_ci": [
@@ -622,8 +622,8 @@
    "defects": 51,
    "location_hits": 28,
    "location_recall": 0.549,
-   "judged_hits": 25,
-   "judged_recall": 0.49,
+   "judged_hits": 24,
+   "judged_recall": 0.471,
    "judged": 55,
    "pending": 0,
    "precision_strict": 0.727,
@@ -640,8 +640,8 @@
    "tokens_out": 50276,
    "cost_usd": 2.2437,
    "judged_recall_ci": [
-    0.343,
-    0.642
+    0.319,
+    0.619
    ],
    "precision_strict_ci": [
     0.577,
@@ -649,11 +649,11 @@
    ],
    "real": {
     "defects": 29,
-    "hits": 14,
-    "recall": 0.4827586206896552,
+    "hits": 13,
+    "recall": 0.4482758620689655,
     "recall_ci": [
-     0.281,
-     0.679
+     0.258,
+     0.64
     ],
     "precision_strict": 0.6956521739130435,
     "precision_strict_ci": [
@@ -673,8 +673,8 @@
    "defects": 51,
    "location_hits": 28,
    "location_recall": 0.549,
-   "judged_hits": 26,
-   "judged_recall": 0.51,
+   "judged_hits": 25,
+   "judged_recall": 0.49,
    "judged": 49,
    "pending": 0,
    "precision_strict": 0.735,
@@ -691,8 +691,8 @@
    "tokens_out": 48238,
    "cost_usd": 1.1015,
    "judged_recall_ci": [
-    0.39,
-    0.694
+    0.378,
+    0.66
    ],
    "precision_strict_ci": [
     0.553,
@@ -700,11 +700,11 @@
    ],
    "real": {
     "defects": 29,
-    "hits": 19,
-    "recall": 0.6551724137931034,
+    "hits": 18,
+    "recall": 0.6206896551724138,
     "recall_ci": [
-     0.48,
-     0.821
+     0.448,
+     0.778
     ],
     "precision_strict": 0.7073170731707317,
     "precision_strict_ci": [
@@ -724,13 +724,13 @@
    "defects": 51,
    "location_hits": 30,
    "location_recall": 0.588,
-   "judged_hits": 26,
-   "judged_recall": 0.51,
+   "judged_hits": 24,
+   "judged_recall": 0.471,
    "judged": 49,
    "pending": 0,
-   "precision_strict": 0.816,
-   "precision_lenient": 0.857,
-   "invalid": 7,
+   "precision_strict": 0.796,
+   "precision_lenient": 0.837,
+   "invalid": 8,
    "clean_cases": 5,
    "clean_findings": 2,
    "clean_invalid": 1,
@@ -742,27 +742,27 @@
    "tokens_out": 66872,
    "cost_usd": 3.1858,
    "judged_recall_ci": [
-    0.392,
-    0.697
+    0.368,
+    0.634
    ],
    "precision_strict_ci": [
-    0.703,
-    0.923
+    0.667,
+    0.914
    ],
    "real": {
     "defects": 29,
-    "hits": 19,
-    "recall": 0.6551724137931034,
+    "hits": 17,
+    "recall": 0.5862068965517241,
     "recall_ci": [
-     0.48,
-     0.828
+     0.414,
+     0.769
     ],
-    "precision_strict": 0.825,
+    "precision_strict": 0.8,
     "precision_strict_ci": [
-     0.714,
-     0.927
+     0.667,
+     0.923
     ],
-    "precision_lenient": 0.85
+    "precision_lenient": 0.825
    }
   },
   "pa-improve/claude-sonnet-5-5": {
@@ -775,8 +775,8 @@
    "defects": 51,
    "location_hits": 29,
    "location_recall": 0.569,
-   "judged_hits": 27,
-   "judged_recall": 0.529,
+   "judged_hits": 24,
+   "judged_recall": 0.471,
    "judged": 50,
    "pending": 0,
    "precision_strict": 0.6,
@@ -793,8 +793,8 @@
    "tokens_out": 58059,
    "cost_usd": 1.6273,
    "judged_recall_ci": [
-    0.4,
-    0.694
+    0.366,
+    0.6
    ],
    "precision_strict_ci": [
     0.422,
@@ -802,11 +802,11 @@
    ],
    "real": {
     "defects": 29,
-    "hits": 18,
-    "recall": 0.6206896551724138,
+    "hits": 15,
+    "recall": 0.5172413793103449,
     "recall_ci": [
-     0.423,
-     0.793
+     0.355,
+     0.679
     ],
     "precision_strict": 0.5476190476190477,
     "precision_strict_ci": [
@@ -826,8 +826,8 @@
    "defects": 51,
    "location_hits": 31,
    "location_recall": 0.608,
-   "judged_hits": 29,
-   "judged_recall": 0.569,
+   "judged_hits": 27,
+   "judged_recall": 0.529,
    "judged": 66,
    "pending": 0,
    "precision_strict": 0.667,
@@ -844,8 +844,8 @@
    "tokens_out": 59905,
    "cost_usd": 3.2657,
    "judged_recall_ci": [
-    0.417,
-    0.739
+    0.372,
+    0.685
    ],
    "precision_strict_ci": [
     0.53,
@@ -853,11 +853,11 @@
    ],
    "real": {
     "defects": 29,
-    "hits": 17,
-    "recall": 0.5862068965517241,
+    "hits": 15,
+    "recall": 0.5172413793103449,
     "recall_ci": [
-     0.387,
-     0.767
+     0.333,
+     0.704
     ],
     "precision_strict": 0.631578947368421,
     "precision_strict_ci": [
@@ -928,13 +928,13 @@
    "defects": 51,
    "location_hits": 29,
    "location_recall": 0.569,
-   "judged_hits": 24,
-   "judged_recall": 0.471,
+   "judged_hits": 22,
+   "judged_recall": 0.431,
    "judged": 55,
    "pending": 0,
-   "precision_strict": 0.745,
-   "precision_lenient": 0.818,
-   "invalid": 10,
+   "precision_strict": 0.727,
+   "precision_lenient": 0.8,
+   "invalid": 11,
    "clean_cases": 5,
    "clean_findings": 5,
    "clean_invalid": 2,
@@ -946,27 +946,27 @@
    "tokens_out": 85908,
    "cost_usd": 5.4197,
    "judged_recall_ci": [
-    0.362,
-    0.641
+    0.333,
+    0.575
    ],
    "precision_strict_ci": [
-    0.63,
-    0.852
+    0.596,
+    0.844
    ],
    "real": {
     "defects": 29,
-    "hits": 17,
-    "recall": 0.5862068965517241,
+    "hits": 15,
+    "recall": 0.5172413793103449,
     "recall_ci": [
-     0.393,
-     0.767
+     0.344,
+     0.692
     ],
-    "precision_strict": 0.7391304347826086,
+    "precision_strict": 0.717391304347826,
     "precision_strict_ci": [
-     0.618,
-     0.843
+     0.579,
+     0.837
     ],
-    "precision_lenient": 0.8043478260869565
+    "precision_lenient": 0.782608695652174
    }
   },
   "pa-improve-kb/claude-sonnet-5-5": {
@@ -979,8 +979,8 @@
    "defects": 51,
    "location_hits": 28,
    "location_recall": 0.549,
-   "judged_hits": 26,
-   "judged_recall": 0.51,
+   "judged_hits": 23,
+   "judged_recall": 0.451,
    "judged": 55,
    "pending": 0,
    "precision_strict": 0.6,
@@ -997,8 +997,8 @@
    "tokens_out": 78253,
    "cost_usd": 2.5596,
    "judged_recall_ci": [
-    0.39,
-    0.69
+    0.348,
+    0.605
    ],
    "precision_strict_ci": [
     0.426,
@@ -1006,11 +1006,11 @@
    ],
    "real": {
     "defects": 29,
-    "hits": 19,
-    "recall": 0.6551724137931034,
+    "hits": 16,
+    "recall": 0.5517241379310345,
     "recall_ci": [
-     0.476,
-     0.821
+     0.379,
+     0.724
     ],
     "precision_strict": 0.5531914893617021,
     "precision_strict_ci": [
@@ -1027,10 +1027,10 @@
    "b": "pa",
    "model": "claude-opus-5-5",
    "metric": "judged recall",
-   "diff": 0.098,
+   "diff": 0.078,
    "ci": [
-    -0.091,
-    0.26
+    -0.114,
+    0.242
    ],
    "holds": false
   },
@@ -1039,10 +1039,10 @@
    "b": "pa",
    "model": "claude-opus-5-5",
    "metric": "strict precision",
-   "diff": -0.188,
+   "diff": -0.179,
    "ci": [
-    -0.311,
-    -0.079
+    -0.301,
+    -0.068
    ],
    "holds": true
   },
@@ -1051,10 +1051,10 @@
    "b": "pa",
    "model": "claude-sonnet-5-5",
    "metric": "judged recall",
-   "diff": 0.255,
+   "diff": 0.235,
    "ci": [
-    0.065,
-    0.391
+    0.029,
+    0.376
    ],
    "holds": true
   },
@@ -1077,8 +1077,8 @@
    "metric": "judged recall",
    "diff": 0.157,
    "ci": [
-    -0.086,
-    0.378
+    -0.073,
+    0.371
    ],
    "holds": false
   },
@@ -1087,10 +1087,10 @@
    "b": "pa-kb",
    "model": "claude-opus-5-5",
    "metric": "strict precision",
-   "diff": -0.144,
+   "diff": -0.136,
    "ci": [
-    -0.258,
-    -0.042
+    -0.251,
+    -0.03
    ],
    "holds": true
   },
@@ -1123,10 +1123,10 @@
    "b": "vizzini-norepo",
    "model": "claude-opus-5-5",
    "metric": "judged recall",
-   "diff": 0.059,
+   "diff": 0.039,
    "ci": [
-    -0.048,
-    0.156
+    -0.064,
+    0.128
    ],
    "holds": false
   },
@@ -1147,10 +1147,10 @@
    "b": "vizzini-norepo",
    "model": "claude-sonnet-5-5",
    "metric": "judged recall",
-   "diff": 0.059,
+   "diff": 0.039,
    "ci": [
-    -0.033,
-    0.189
+    -0.068,
+    0.17
    ],
    "holds": false
   },
@@ -1159,10 +1159,10 @@
    "b": "vizzini-norepo",
    "model": "claude-sonnet-5-5",
    "metric": "strict precision",
-   "diff": 0.003,
+   "diff": 0.012,
    "ci": [
-    -0.079,
-    0.078
+    -0.074,
+    0.094
    ],
    "holds": false
   },
@@ -1195,10 +1195,10 @@
    "b": "vizzini",
    "model": "claude-sonnet-5-5",
    "metric": "judged recall",
-   "diff": 0.0,
+   "diff": 0.02,
    "ci": [
-    -0.064,
-    0.061
+    -0.048,
+    0.103
    ],
    "holds": false
   },
@@ -1221,8 +1221,8 @@
    "metric": "judged recall",
    "diff": 0.0,
    "ci": [
-    -0.083,
-    0.087
+    -0.089,
+    0.081
    ],
    "holds": false
   },
@@ -1245,8 +1245,8 @@
    "metric": "judged recall",
    "diff": 0.0,
    "ci": [
-    -0.062,
-    0.06
+    -0.061,
+    0.065
    ],
    "holds": false
   },
@@ -1267,10 +1267,10 @@
    "b": "pa",
    "model": "claude-opus-5-5",
    "metric": "judged recall",
-   "diff": -0.059,
+   "diff": -0.078,
    "ci": [
-    -0.146,
-    0.038
+    -0.158,
+    0.0
    ],
    "holds": false
   },
@@ -1279,10 +1279,10 @@
    "b": "pa",
    "model": "claude-opus-5-5",
    "metric": "strict precision",
-   "diff": -0.067,
+   "diff": -0.065,
    "ci": [
-    -0.141,
-    -0.009
+    -0.138,
+    -0.008
    ],
    "holds": true
   },
@@ -1293,8 +1293,8 @@
    "metric": "judged recall",
    "diff": -0.039,
    "ci": [
-    -0.167,
-    0.103
+    -0.155,
+    0.091
    ],
    "holds": false
   },
@@ -1317,10 +1317,10 @@
    "b": "pa",
    "model": "claude-opus-5-5",
    "metric": "judged recall",
-   "diff": -0.034,
+   "diff": -0.069,
    "ci": [
-    -0.185,
-    0.111
+    -0.208,
+    0.062
    ],
    "holds": false
   },
@@ -1329,10 +1329,10 @@
    "b": "pa",
    "model": "claude-opus-5-5",
    "metric": "strict precision",
-   "diff": -0.26,
+   "diff": -0.249,
    "ci": [
-    -0.363,
-    -0.148
+    -0.358,
+    -0.134
    ],
    "holds": true
   },
@@ -1341,10 +1341,10 @@
    "b": "pa",
    "model": "claude-sonnet-5-5",
    "metric": "judged recall",
-   "diff": 0.103,
+   "diff": 0.069,
    "ci": [
-    -0.034,
-    0.265
+    -0.097,
+    0.219
    ],
    "holds": false
   },
@@ -1367,8 +1367,8 @@
    "metric": "judged recall",
    "diff": 0.0,
    "ci": [
-    -0.185,
-    0.2
+    -0.167,
+    0.172
    ],
    "holds": false
   },
@@ -1377,10 +1377,10 @@
    "b": "pa-kb",
    "model": "claude-opus-5-5",
    "metric": "strict precision",
-   "diff": -0.203,
+   "diff": -0.194,
    "ci": [
-    -0.309,
-    -0.096
+    -0.301,
+    -0.085
    ],
    "holds": true
   },
@@ -1413,10 +1413,10 @@
    "b": "vizzini-norepo",
    "model": "claude-opus-5-5",
    "metric": "judged recall",
-   "diff": 0.034,
+   "diff": 0.0,
    "ci": [
-    -0.115,
-    0.179
+    -0.133,
+    0.133
    ],
    "holds": false
   },
@@ -1437,10 +1437,10 @@
    "b": "vizzini-norepo",
    "model": "claude-sonnet-5-5",
    "metric": "judged recall",
-   "diff": 0.069,
+   "diff": 0.034,
    "ci": [
-    -0.074,
-    0.229
+    -0.129,
+    0.208
    ],
    "holds": false
   },
@@ -1449,10 +1449,10 @@
    "b": "vizzini-norepo",
    "model": "claude-sonnet-5-5",
    "metric": "strict precision",
-   "diff": 0.012,
+   "diff": 0.023,
    "ci": [
-    -0.092,
-    0.102
+    -0.081,
+    0.123
    ],
    "holds": false
   },
@@ -1485,10 +1485,10 @@
    "b": "vizzini",
    "model": "claude-sonnet-5-5",
    "metric": "judged recall",
-   "diff": 0.0,
+   "diff": 0.034,
    "ci": [
-    -0.091,
-    0.103
+    -0.071,
+    0.16
    ],
    "holds": false
   },
@@ -1511,8 +1511,8 @@
    "metric": "judged recall",
    "diff": 0.0,
    "ci": [
-    -0.138,
-    0.136
+    -0.129,
+    0.138
    ],
    "holds": false
   },
@@ -1535,7 +1535,7 @@
    "metric": "judged recall",
    "diff": 0.0,
    "ci": [
-    -0.103,
+    -0.1,
     0.094
    ],
    "holds": false
@@ -1557,10 +1557,10 @@
    "b": "pa",
    "model": "claude-opus-5-5",
    "metric": "judged recall",
-   "diff": -0.034,
+   "diff": -0.069,
    "ci": [
-    -0.161,
-    0.071
+    -0.179,
+    0.0
    ],
    "holds": false
   },
@@ -1569,10 +1569,10 @@
    "b": "pa",
    "model": "claude-opus-5-5",
    "metric": "strict precision",
-   "diff": -0.076,
+   "diff": -0.074,
    "ci": [
-    -0.154,
-    -0.011
+    -0.152,
+    -0.009
    ],
    "holds": true
   },
@@ -1583,8 +1583,8 @@
    "metric": "judged recall",
    "diff": 0.034,
    "ci": [
-    -0.115,
-    0.194
+    -0.077,
+    0.143
    ],
    "holds": false
   },
@@ -3087,7 +3087,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     },
     {
@@ -3174,7 +3174,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     },
     {
@@ -3261,7 +3261,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     },
     {
@@ -3348,7 +3348,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     },
     {
@@ -3435,7 +3435,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     },
     {
@@ -3539,7 +3539,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     },
     {
@@ -3643,7 +3643,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     },
     {
@@ -3716,7 +3716,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     },
     {
@@ -3789,7 +3789,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     },
     {
@@ -4157,7 +4157,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     },
     {
@@ -4303,7 +4303,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     },
     {
@@ -4420,7 +4420,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "invalid",
      "also": []
     }
    ],
@@ -4494,7 +4494,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "invalid",
      "also": []
     }
    ],
@@ -4674,7 +4674,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     },
     {
@@ -4688,7 +4688,7 @@
      "key": "aeffce92583853da",
      "loc": [],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     }
    ],
@@ -4803,7 +4803,7 @@
      "key": "759c31c7f0598540",
      "loc": [],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     }
    ],
@@ -13525,7 +13525,7 @@
      "key": "1a24038ca3331b13",
      "loc": [],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     },
     {
@@ -15307,7 +15307,7 @@
       "d2"
      ],
      "decoy": false,
-     "label": "defect:d2",
+     "label": "valid",
      "also": []
     }
    ],
@@ -15415,7 +15415,7 @@
       "d2"
      ],
      "decoy": false,
-     "label": "defect:d2",
+     "label": "valid",
      "also": []
     }
    ],
@@ -15929,7 +15929,7 @@
       "d2"
      ],
      "decoy": false,
-     "label": "defect:d2",
+     "label": "valid",
      "also": []
     }
    ],
@@ -16026,9 +16026,7 @@
      ],
      "decoy": false,
      "label": "defect:d1",
-     "also": [
-      "d2"
-     ]
+     "also": []
     },
     {
      "file": "net/proxymux/mux.go",
@@ -17987,9 +17985,7 @@
      ],
      "decoy": false,
      "label": "defect:d2",
-     "also": [
-      "d1"
-     ]
+     "also": []
     },
     {
      "file": "lib/internal/streams/readable.js",
@@ -18292,10 +18288,8 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
-     "also": [
-      "d2"
-     ]
+     "label": "defect:d2",
+     "also": []
     },
     {
      "file": "lib/internal/streams/readable.js",
@@ -18357,7 +18351,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     }
    ],
@@ -23195,7 +23189,7 @@
      "key": "996ddc8ee12a0a6a",
      "loc": [],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     },
     {
@@ -23562,7 +23556,7 @@
      "key": "35c52a5b30dabd0a",
      "loc": [],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     },
     {
@@ -27670,9 +27664,7 @@
      ],
      "decoy": false,
      "label": "defect:d1",
-     "also": [
-      "d2"
-     ]
+     "also": []
     },
     {
      "file": "packages/react-router/lib/rsc/browser.tsx",
@@ -27761,9 +27753,7 @@
      ],
      "decoy": false,
      "label": "defect:d1",
-     "also": [
-      "d2"
-     ]
+     "also": []
     },
     {
      "file": "packages/react-router/lib/rsc/server.rsc.ts",
@@ -27984,9 +27974,7 @@
      ],
      "decoy": false,
      "label": "defect:d1",
-     "also": [
-      "d2"
-     ]
+     "also": []
     }
    ],
    "notes": [],
@@ -28076,9 +28064,7 @@
      ],
      "decoy": false,
      "label": "defect:d1",
-     "also": [
-      "d2"
-     ]
+     "also": []
     },
     {
      "file": "packages/react-router/lib/rsc/browser.tsx",
@@ -28272,9 +28258,7 @@
      ],
      "decoy": false,
      "label": "defect:d1",
-     "also": [
-      "d2"
-     ]
+     "also": []
     },
     {
      "file": "packages/react-router/lib/rsc/browser.tsx",
@@ -28394,9 +28378,7 @@
      ],
      "decoy": false,
      "label": "defect:d1",
-     "also": [
-      "d2"
-     ]
+     "also": []
     },
     {
      "file": "packages/react-router/lib/server-runtime/server.ts",
@@ -30523,7 +30505,7 @@
      "key": "5033ab3befb33790",
      "loc": [],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     },
     {
@@ -30568,7 +30550,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     },
     {
@@ -30627,7 +30609,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     }
    ],
@@ -30656,7 +30638,7 @@
      "key": "004bd01184c083e5",
      "loc": [],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     }
    ],
@@ -30843,7 +30825,7 @@
      "key": "f6f54a24d984cd55",
      "loc": [],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     }
    ],
@@ -30872,7 +30854,7 @@
      "key": "73ba49157a15a4ad",
      "loc": [],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "invalid",
      "also": []
     }
    ],
@@ -30915,7 +30897,7 @@
      "key": "789ae0dfb2b83cea",
      "loc": [],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     },
     {
@@ -30958,7 +30940,7 @@
      "key": "0f1de705a2df2438",
      "loc": [],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     }
    ],
@@ -31074,7 +31056,7 @@
      "key": "195420ce774b8b42",
      "loc": [],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     }
    ],
@@ -31481,7 +31463,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     },
     {
@@ -31570,7 +31552,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     },
     {
@@ -31865,7 +31847,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "invalid",
      "also": []
     }
    ],
@@ -31924,7 +31906,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "invalid",
      "also": []
     }
    ],
@@ -32010,7 +31992,7 @@
      "key": "759c31c7f0598540",
      "loc": [],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     }
    ],
@@ -34836,7 +34818,7 @@
       "d2"
      ],
      "decoy": false,
-     "label": "defect:d2",
+     "label": "valid",
      "also": []
     }
    ],
@@ -34929,7 +34911,7 @@
       "d2"
      ],
      "decoy": false,
-     "label": "defect:d2",
+     "label": "valid",
      "also": []
     }
    ],
@@ -35022,7 +35004,7 @@
       "d2"
      ],
      "decoy": false,
-     "label": "defect:d2",
+     "label": "valid",
      "also": []
     }
    ],
@@ -35104,9 +35086,7 @@
      ],
      "decoy": false,
      "label": "defect:d1",
-     "also": [
-      "d2"
-     ]
+     "also": []
     },
     {
      "file": "net/proxymux/mux.go",
@@ -35796,10 +35776,8 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
-     "also": [
-      "d2"
-     ]
+     "label": "defect:d2",
+     "also": []
     },
     {
      "file": "lib/internal/streams/readable.js",
@@ -35846,7 +35824,7 @@
       "d1"
      ],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     }
    ],
@@ -38755,9 +38733,7 @@
      ],
      "decoy": false,
      "label": "defect:d1",
-     "also": [
-      "d2"
-     ]
+     "also": []
     },
     {
      "file": "packages/react-router/lib/dom/ssr/fog-of-war.ts",
@@ -38862,9 +38838,7 @@
      ],
      "decoy": false,
      "label": "defect:d1",
-     "also": [
-      "d2"
-     ]
+     "also": []
     },
     {
      "file": "packages/react-router/lib/server-runtime/server.ts",
@@ -39645,7 +39619,7 @@
      "key": "195420ce774b8b42",
      "loc": [],
      "decoy": false,
-     "label": "defect:d1",
+     "label": "valid",
      "also": []
     }
    ],
