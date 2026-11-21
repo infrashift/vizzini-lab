@@ -33,6 +33,9 @@ Every test plays the same onboarding, the one Vizzini's `deploy/ci/README.md` de
    - answer the command, and resolve the bot's thread on a file the push removed (GitHub and GitLab, mrman v0.1.6 on; on GitHub Actions resolving needs the `contents: write` opt-in).
 5. **Cleanup** in an exit trap.
 
+## Install
+Each job runs the template's `deploy/ci/install.sh`. From Vizzini v0.1.1 on, the templates pin `VIZZINI_VERSION` with `VIZZINI_REF`. The script then installs the released `vizzini-bot`, checked against the release's `SHA256SUMS` and the pinned commit, instead of building it. The checks read both pins from the template (Vizzini ISSUE-034).
+
 ## Per platform
 | | GitHub Actions | Azure Pipelines | GitLab CI |
 |---|---|---|---|
@@ -40,7 +43,7 @@ Every test plays the same onboarding, the one Vizzini's `deploy/ci/README.md` de
 | posting identity | `github-actions[bot]` (`GITHUB_TOKEN`) | `<Project> Build Service (<org>)` (`System.AccessToken`) | the bot user of a Reporter project access token |
 | executor | GitHub-hosted runner | self-hosted agent in podman ([ADR-0007](/decisions/adr-0007-azure-pipelines-runs-on-a-throwaway-self-hosted-podman-agent--01a1cf4af8d2.md)) | gitlab-runner, docker executor, in podman ([ADR-0008](/decisions/adr-0008-gitlab-ci-runs-on-a-throwaway-self-managed-gitlab-ce-in-podman--01a1cf4af8e3.md)) |
 | template changes | the stub | the stub; pool `Default` | the stub |
-| checks | 13 | 13 | 15 |
+| checks | 16 | 14 | 17 |
 
 ## What they found
 - **GitHub, first run:** garmr needs a newer Go than CI images ship with, so `install.sh` sets `GOTOOLCHAIN=auto` (Vizzini 517e434).

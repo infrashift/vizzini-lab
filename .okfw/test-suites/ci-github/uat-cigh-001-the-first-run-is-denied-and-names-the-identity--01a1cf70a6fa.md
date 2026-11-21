@@ -29,8 +29,9 @@ Make sure that the first run posts nothing and shows the identity to allow.
 | 1 | Find the section `== run 1: the policy lists no identity`. | The section shows `run <id>: failure`. |
 | 2 | Find the line `GITHUB_TOKEN posts as: github-actions[bot]`. | The line shows. |
 | 3 | Open `<run>/run1.log`. | The log has `mrman: authorization:` with `"decision":"deny"` and `MRM-002`. |
-| 4 | Search `<run>/run1.log` for `install: done`. | The log has `install: done` and `mrman version v0.1.5`. |
+| 4 | Search `<run>/run1.log` for `install: done`. | The log has `install: done` and `mrman version <MRMAN_VERSION>` (the template's pin). |
 | 5 | In the browser, open the PR. Open the *Checks* tab. | The first `vizzini-bot` attempt shows *Failure*. |
+| 6 | Search `<run>/run1.log` for `install: vizzini-bot`. | The log has `install: vizzini-bot <VIZZINI_VERSION> (vizzini_<version>_linux_<arch>)` and `vizzini-bot <VIZZINI_VERSION> (commit <VIZZINI_REF>,`: the released binary, built from the pinned commit (Vizzini ISSUE-034). |
 
 ## Pass criteria
 The case passes when each step gives its expected result.

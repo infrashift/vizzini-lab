@@ -31,6 +31,7 @@ Make sure that the first build posts nothing and shows the identity to allow.
 | 3 | Find the line `System.AccessToken posts as: <Project> Build Service (<org>)`. | The line shows. |
 | 4 | Open `<run>/build1.log`. | The log has `exited with code '3'` and `the grant policy denied posting`. |
 | 5 | Search `<run>/build1.log` for `MRM-002`. | The log has `"decision":"deny"` and `MRM-002`. |
+| 6 | Search `<run>/build1.log` for `install: vizzini-bot`. | The log has `install: vizzini-bot <VIZZINI_VERSION> (vizzini_<version>_linux_<arch>)` and `vizzini-bot <VIZZINI_VERSION> (commit <VIZZINI_REF>,`: the released binary, built from the pinned commit (Vizzini ISSUE-034). |
 
 ## Pass criteria
 The case passes when each step gives its expected result.

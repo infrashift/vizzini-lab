@@ -224,7 +224,7 @@ query($o: String!, $r: String!, $n: Int!) { repository(owner: $o, name: $r) { pu
 	>"$run/threads3.json"
 
 say "checks"
-python3 -I - "$run" "$identity" "${CI_GITHUB_PERMISSIONS-contents=write}" <<'EOF' | tee "$run/summary.md"
+TEMPLATE="$template" python3 -I - "$run" "$identity" "${CI_GITHUB_PERMISSIONS-contents=write}" <<'EOF' | tee "$run/summary.md"
 import json, os, re, sys
 run, identity, perms = sys.argv[1:]
 opted_in = "contents=write" in perms.replace(" ", "")
@@ -243,7 +243,18 @@ check(read("run1.conclusion").strip() == "failure", "the run failed")
 check("exit code 3" in log1, "vizzini-bot exited 3 (the grant policy denied posting)")
 check('"decision":"deny"' in log1 and "MRM-002" in log1, "denied by MRM-002 (identity not listed)")
 check(identity, f"the log names the identity GITHUB_TOKEN posts as ({identity})")
-check("install: done" in log1 and "mrman version v0.1.9" in log1, "install.sh built and verified the tools on the runner")
+check("install: done" in log1 and "mrman version v0.1.9" in log1, "install.sh installed and verified the tools on the runner")
+# The template pins VIZZINI_REF and, from Vizzini v0.1.1 on, VIZZINI_VERSION:
+# install.sh then installs the released vizzini-bot instead of building it.
+tpl = open(os.environ["TEMPLATE"]).read()
+vref = re.search(r"VIZZINI_REF: ([0-9a-f]{40})", tpl).group(1)
+vver = re.search(r"^\s*VIZZINI_VERSION: (\S+)", tpl, re.M)
+if vver:
+    vver = vver.group(1)
+    check(f"install: vizzini-bot {vver} (vizzini_{vver[1:]}_linux_" in log1 and f"vizzini-bot {vver} (commit {vref}," in log1,
+          f"install.sh installed the vizzini-bot {vver} release, checked against its SHA256SUMS and the pinned commit")
+else:
+    check(f"install: vizzini-bot from {vref[:7]}" in log1, "install.sh built vizzini-bot from the pinned commit")
 
 print("\n## run 2: the identity allowed on the base branch\n")
 log2 = read("run2.log")
