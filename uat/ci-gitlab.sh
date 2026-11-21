@@ -311,10 +311,11 @@ check("exit code 3" in log1 and "the grant policy denied posting" in log1,
 check('"decision":"deny"' in log1 and "MRM-002" in log1, "denied by MRM-002 (identity not listed)")
 check(identity and identity == read("bot-username").strip(),
       f"the log names the identity the project access token posts as ({identity}, its bot user)")
-check("install: done" in log1 and "mrman version v0.1.9" in log1, "install.sh installed and verified the tools in the job")
+tpl = open(os.environ["TEMPLATE"]).read()
+mver = re.search(r"^\s*MRMAN_VERSION: (\S+)", tpl, re.M).group(1)
+check("install: done" in log1 and f"mrman version {mver} (" in log1, f"install.sh installed and verified the tools in the job (mrman {mver}, the template's pin)")
 # The template pins VIZZINI_REF and, from Vizzini v0.1.1 on, VIZZINI_VERSION:
 # install.sh then installs the released vizzini-bot instead of building it.
-tpl = open(os.environ["TEMPLATE"]).read()
 vref = re.search(r"VIZZINI_REF: ([0-9a-f]{40})", tpl).group(1)
 vver = re.search(r"^\s*VIZZINI_VERSION: (\S+)", tpl, re.M)
 if vver:

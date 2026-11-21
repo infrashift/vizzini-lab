@@ -35,7 +35,7 @@ Each script removes what it made in an exit trap and prints each removal. After 
 - no agents in the self-hosted pools;
 - no active test PR.
 
-The REST calls are in `uat/ci-ado.sh`. If a run was killed, follow [cleanup](/runbooks/runbook-clean-up-after-an-interrupted-run--01a1cf4af83a.md).
+The REST calls are in `uat/ci-ado.sh`. Other projects can use the same organization at the same time: on 2026-11-21, macos-sandbox's ADO test (folder `\sbx-lab`, agent `sbx-lab-<stamp>`) ran next to ours. Count only what carries this run's stamp, and never remove another project's resources. If a run was killed, follow [cleanup](/runbooks/runbook-clean-up-after-an-interrupted-run--01a1cf4af83a.md).
 
 ## Record
 Copy the checklist to `results/YYYY-MM-DD-live-ci-<platform>.md`, with the run stamp, the template's Vizzini commit and the PR or MR number. Vizzini's `deploy/ci/README.md` and its ADR-0021 cite these runs; update them when the outcome changes.
