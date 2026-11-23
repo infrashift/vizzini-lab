@@ -19,7 +19,7 @@ This plan lists the UAT suites for vizzini-lab. A tester runs a suite, then does
 |---|---|---|---|---|---|
 | [TS-REV](/test-suites/review/ts-rev-live-review--01a1cf70a5fc.md) | Live review | `make uat-vizzini` | 11 | Yes (live models) | No |
 | [TS-FRG](/test-suites/forge/ts-frg-forge-and-mrman-attended--01a1cf70a603.md) | Forge and mrman (attended) | `make uat` | 6 | Yes (live models) | Yes |
-| [TS-BOT](/test-suites/bot/ts-bot-unattended-bot--01a1cf70a609.md) | Unattended bot | `make uat-bot-stub` | 9 | No with `uat-bot-stub`. Yes with `uat-bot`. | No |
+| [TS-BOT](/test-suites/bot/ts-bot-unattended-bot--01a1cf70a609.md) | Unattended bot | `make uat-bot-stub` | 11 | No with `uat-bot-stub`. Yes with `uat-bot`. | No |
 | [TS-CIGH](/test-suites/ci-github/ts-cigh-github-actions-template--01a1cf70a60f.md) | GitHub Actions template | `make uat-ci-github` | 4 | No (stubllm in the job) | No |
 | [TS-CIADO](/test-suites/ci-ado/ts-ciado-azure-pipelines-template--01a1cf70a616.md) | Azure Pipelines template | `make uat-ci-ado` | 4 | No (stubllm in the job) | No |
 | [TS-CIGL](/test-suites/ci-gitlab/ts-cigl-gitlab-ci-template--01a1cf70a61d.md) | GitLab CI template | `make uat-ci-gitlab` | 4 | No (stubllm in the job) | No |

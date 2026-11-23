@@ -14,4 +14,6 @@
 * [UAT-BOT-007: command-again: no command is answered twice](uat-bot-007-command-again-no-command-is-answered-twice--01a1cf70a6e2.md) - Make sure that the bot does not answer a command again.
 * [UAT-BOT-008: dismiss: a won't-fix thread gets one suppression rule](uat-bot-008-dismiss-a-wont-fix-thread-gets-one-suppression-rule--01a1cf70a6ea.md) - Make sure that the bot suggests a suppression rule when a person dismisses its thread.
 * [UAT-BOT-009: suppress: a merged rule suppresses the finding](uat-bot-009-suppress-a-merged-rule-suppresses-the-finding--01a1cf70a6f2.md) - Make sure that a rule on the base branch stops the finding from being posted again.
+* [UAT-BOT-010: quiet: a review that posts nothing records its head](uat-bot-010-quiet-a-review-that-posts-nothing-records-its-head--01a207015360.md) - Make sure that a review with nothing to post records its head in one resolved status comment.
+* [UAT-BOT-011: quiet again: the next quiet review edits the status comment](uat-bot-011-quiet-again-the-next-quiet-review-edits-the-status-comment--01a20701536d.md) - Make sure that the next quiet review starts from the recorded head and edits the same status comment.
 

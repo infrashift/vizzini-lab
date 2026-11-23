@@ -195,19 +195,19 @@ print(recs[-1]["input"]["identity"] if recs else "")' "$run/bot-deny/audit.jsonl
 policy() {
 	mkdir -p "$1"
 	python3 -I - "$committed/agent-submit.cue" "$1/agent-submit.cue" "$2" "$3" <<'EOF'
-import json, sys
+import json, re, sys
 src, dst, events, idents = sys.argv[1:]
 t = open(src).read()
-for old, new in (('_allowedIdentities: ["vizzini-bot"]', "_allowedIdentities: " + idents),
-                 ('_allowedEvents: ["comment", "resolve", "reply"]', "_allowedEvents: " + events)):
-    assert t.count(old) == 1, old
-    t = t.replace(old, new)
+for old, new in ((r'_allowedIdentities: \["vizzini-bot"\]', "_allowedIdentities: " + idents),
+                 (r'_allowedEvents: \[[^\]\n]*\]', "_allowedEvents: " + events)):
+    t, n = re.subn(old, lambda _: new, t)
+    assert n == 1, old
 open(dst, "w").write(t)
 EOF
 	"$bin/garmr" validate "$1" >/dev/null || die "garmr validate $1"
 }
 ident_json="$(python3 -I -c 'import json,sys; print(json.dumps([sys.argv[1]]))' "$identity")"
-policy "$run/policy-bot/mrman" '["comment", "resolve", "reply"]' "$ident_json"
+policy "$run/policy-bot/mrman" '["comment", "resolve", "reply", "edit"]' "$ident_json"
 policy "$run/policy-agent/mrman" '["reply"]' "$ident_json"
 bot r0 "$lint0" --grant-policy "$run/policy-bot/mrman"
 

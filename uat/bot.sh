@@ -39,6 +39,14 @@
 #          (.vizzini/suppressions.yaml on uat-base) and the bot runs with
 #          --full: the secret finding comes back suppressed, not posted, and
 #          no second suggestion is made.
+#   quiet-1  (--stub only; ADR-0028) a push that adds a file with nothing to
+#          find: the bot reviews it, posts nothing else, and records the head
+#          in a new pull-request-level status comment, whose thread it
+#          resolves so it cannot block the PR.
+#   quiet-2  another such push: the review starts from the status comment's
+#          head, and the bot edits that comment (event edit) instead of
+#          posting a second one; the thread stays resolved.
+#   quiet-idle  the same head again: already recorded, nothing written.
 #
 # The generated allow policy holds your forge display name; it stays in the
 # run directory under .cache (never committed), and logs show only its first
@@ -270,6 +278,22 @@ EOF
 	fi
 fi
 
+# Quiet reviews (ADR-0028): pushes with nothing to find. A model could find
+# something in any change, so only stubllm makes them quiet for certain.
+if ((stub)); then
+	for n in 1 2; do
+		say "push quiet change $n"
+		mkdir -p "$run/repo/docs"
+		printf '# Quiet change %s\n\nNothing to review here.\n' "$n" >"$run/repo/docs/quiet-$n.md"
+		git -C "$run/repo" add docs
+		git -C "$run/repo" -c user.name=vizzini-lab -c user.email=uat@example.invalid commit -qm "$fixture: quiet change $n"
+		git -C "$run/repo" rev-parse HEAD >"$run/quiet-$n.head"
+		"$root/uat/ado.sh" push "$run/repo" "$pr"
+		leg "quiet-$n" "$allow"
+	done
+	leg quiet-idle "$allow"
+fi
+
 # The command's model calls must be attributed like the review's (ADR-0015):
 # every command-mode request since the command leg started names its run
 # and this pull request.
@@ -477,6 +501,61 @@ if r:
     print("\n## command-again: nothing is answered twice\n")
     check(code == 0 and not result.get("answered"), f"no command answered again ({result.get('answered')})")
     check(not audit, "nothing was posted")
+
+STATUS = "<!-- vizzini:status -->"
+
+def status_threads(name):
+    """The bot's pull-request-level status comments: id, body, thread status."""
+    out = []
+    for t in json.load(open(os.path.join(run, name, "threads.json")))["value"]:
+        cs = [c for c in t.get("comments", []) if c.get("commentType") != "system"]
+        if cs and not t.get("threadContext") and STATUS in (cs[0].get("content") or ""):
+            out.append((str(t["id"]), cs[0].get("content") or "", t.get("status", "active")))
+    return out
+
+r = leg("quiet-1")
+if r:
+    code, audit, marked, findings, result = r
+    head1 = open(os.path.join(run, "quiet-1.head")).read().strip()
+    print("\n## quiet-1: a review that posts nothing records its head (ADR-0028)\n")
+    check(code == 0, f"bot exit 0, got {code}")
+    check(result.get("mode") == "incremental" and result.get("reviewed_files") == ["docs/quiet-1.md"],
+          f"only the new file was reviewed (mode {result.get('mode')}, files {result.get('reviewed_files')})")
+    check(result.get("posted") == 0 and not result.get("resolved") and not result.get("answered"),
+          f"nothing else was posted (posted {result.get('posted')}, resolved {result.get('resolved')})")
+    st = status_threads("quiet-1")
+    check(result.get("status") == "posted" and len(st) == 1,
+          f"one status comment was posted (status {result.get('status')!r}, {len(st)} on the PR)")
+    check(st and f"head={head1} " in st[0][1], "the status comment records the reviewed head")
+    check(audit and all(a["decision"] == "allow" for a in audit) and [a["input"]["event"] for a in audit] == ["comment", "resolve"],
+          f"posted, then resolved, under the policy ({[a['input']['event'] for a in audit]})")
+    check(st and st[0][2] == "fixed",
+          f"its thread is resolved, so it cannot block the PR (status {st[0][2] if st else None})")
+    status_id = st[0][0] if st else None
+
+r = leg("quiet-2")
+if r:
+    code, audit, marked, findings, result = r
+    head2 = open(os.path.join(run, "quiet-2.head")).read().strip()
+    print("\n## quiet-2: the next quiet review starts from that head and edits the comment\n")
+    check(code == 0, f"bot exit 0, got {code}")
+    check(result.get("mode") == "incremental" and result.get("since") == head1 and result.get("reviewed_files") == ["docs/quiet-2.md"],
+          f"the review started from the status comment's head (since {str(result.get('since'))[:12]}, files {result.get('reviewed_files')})")
+    st = status_threads("quiet-2")
+    check(result.get("status") == "edited" and len(st) == 1 and st[0][0] == status_id,
+          f"the same status comment was edited (status {result.get('status')!r}, {len(st)} on the PR)")
+    check(st and f"head={head1} " in st[0][1] and f"head={head2} " in st[0][1], "it records both reviewed heads")
+    check(st and st[0][2] == "fixed", f"the edit left the thread resolved (status {st[0][2] if st else None})")
+    check(audit and all(a["decision"] == "allow" for a in audit) and [a["input"]["event"] for a in audit] == ["edit"],
+          f"edited under the policy as event edit ({[a['input']['event'] for a in audit]})")
+
+r = leg("quiet-idle")
+if r:
+    code, audit, marked, findings, result = r
+    print("\n## quiet-idle: the recorded head again\n")
+    check(code == 0 and result.get("mode") == "unchanged", f"no review was needed (exit {code}, mode {result.get('mode')})")
+    check("status" not in result and not audit and len(status_threads("quiet-idle")) == 1,
+          f"nothing was written (status {result.get('status')!r}, {len(audit)} decisions)")
 
 print("\nresult: " + ("PASS" if ok else "FAIL"))
 sys.exit(0 if ok else 1)

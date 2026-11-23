@@ -19,10 +19,10 @@ description: "vizzini-bot on one Azure DevOps PR with no person: deny, allow, id
 - **Plan:** [UAT test plan](/test-suites/uat-test-plan--01a1cf70a5f6.md)
 
 ## Scope
-vizzini-bot posts, deduplicates, resolves, answers `/vizzini` commands and applies suppression rules, under a garmr policy.
+vizzini-bot posts, deduplicates, resolves, answers `/vizzini` commands, applies suppression rules and records the heads of quiet reviews, under a garmr policy.
 
 ## Remote changes
-One ADO PR on the scratch repository, with threads and replies. The PR stays open.
+One ADO PR on the scratch repository, with threads and replies. With `--stub`, two more commits on the PR branch and one resolved status comment. The PR stays open.
 
 ## Preconditions
 - The [first-time setup](/runbooks/runbook-first-time-setup--01a1cf4a8f24.md) is complete.
@@ -50,6 +50,8 @@ One ADO PR on the scratch repository, with threads and replies. The PR stays ope
 | [UAT-BOT-007](/test-suites/bot/uat-bot-007-command-again-no-command-is-answered-twice--01a1cf70a6e2.md) | command-again: no command is answered twice | Medium |
 | [UAT-BOT-008](/test-suites/bot/uat-bot-008-dismiss-a-wont-fix-thread-gets-one-suppression-rule--01a1cf70a6ea.md) | dismiss: a won't-fix thread gets one suppression rule | High |
 | [UAT-BOT-009](/test-suites/bot/uat-bot-009-suppress-a-merged-rule-suppresses-the-finding--01a1cf70a6f2.md) | suppress: a merged rule suppresses the finding | High |
+| [UAT-BOT-010](/test-suites/bot/uat-bot-010-quiet-a-review-that-posts-nothing-records-its-head--01a207015360.md) | quiet: a review that posts nothing records its head (`--stub` only) | High |
+| [UAT-BOT-011](/test-suites/bot/uat-bot-011-quiet-again-the-next-quiet-review-edits-the-status-comment--01a20701536d.md) | quiet again: the next quiet review edits the status comment (`--stub` only) | High |
 
 ## After the run
 Abandon the PR in the ADO web UI. The script does not abandon it.
