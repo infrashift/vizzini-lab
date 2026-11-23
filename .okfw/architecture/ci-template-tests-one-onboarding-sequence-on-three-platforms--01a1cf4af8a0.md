@@ -39,6 +39,7 @@ Each job runs the template's `deploy/ci/install.sh`. From Vizzini v0.1.1 on, the
 From Vizzini v0.1.3 on:
 - **garmr from its release:** the templates pin `GARMR_VERSION`, and `install.sh` downloads the garmr release, checked against its `SHA256SUMS` and `garmr version` (Vizzini ADR-0027). The jobs need no Go, so the templates set up none, and the GitLab job uses `buildpack-deps:bookworm-scm`. The tests add Go for the stub only ([ADR-0006](/decisions/adr-0006-ci-template-tests-run-stubllm-inside-the-job--01a1cf4af8c2.md)).
 - **Tools cache:** the templates set `VIZZINI_TOOLS_CACHE` to a directory that stays between jobs (Vizzini ADR-0026). The Azure test runs its three builds on one agent: build 1 fills the cache, and builds 2 and 3 must install all three tools from it. On GitLab, the docker executor keeps the builds volume between jobs, so jobs 2 and 3 also use the cache; the test does not check this. GitHub-hosted runners start empty every time.
+- **Sparse fetch of Vizzini:** from Vizzini `54b211a` on, the jobs fetch only the pinned commit, at depth 1 and without file contents, and check out only `deploy/ci` and `scripts` (Vizzini ISSUE-037). The tests build stubllm in that checkout; it needs only `scripts/` and the root `go.mod`.
 
 ## Per platform
 | | GitHub Actions | Azure Pipelines | GitLab CI |
