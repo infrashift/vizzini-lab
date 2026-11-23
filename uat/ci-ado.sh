@@ -149,6 +149,9 @@ import sys, yaml
 p = yaml.safe_load(open(sys.argv[1]))
 p["pool"] = {"name": "Default"}
 review = next(s for s in p["steps"] if s.get("displayName") == "Review")
+# From Vizzini v0.1.3 on, the template sets up no Go; stubllm needs it.
+p["steps"].insert(p["steps"].index(review), {"task": "GoTool@0", "inputs": {"version": "1.25.4"},
+                                             "displayName": "Set up Go for stubllm (vizzini-lab test only)"})
 review["bash"] = ("# vizzini-lab test only: stubllm, built from the pinned Vizzini clone, is the model.\n"
                   "(cd \"$AGENT_TEMPDIRECTORY/vizzini-src\" && go build -o \"$AGENT_TEMPDIRECTORY/stubllm\" ./scripts/e2e/stubllm)\n"
                   "\"$AGENT_TEMPDIRECTORY/stubllm\" -addr 127.0.0.1:18765 -finding-per-file >\"$AGENT_TEMPDIRECTORY/stubllm.log\" 2>&1 &\n"
@@ -348,12 +351,27 @@ if vver:
           f"install.sh installed the vizzini-bot {vver} release, checked against its SHA256SUMS and the pinned commit")
 else:
     check(f"install: vizzini-bot from {vref[:7]}" in log1, "install.sh built vizzini-bot from the pinned commit")
+# From Vizzini v0.1.3 on, the template pins GARMR_VERSION: install.sh then
+# downloads the garmr release instead of building it with Go.
+gver = re.search(r"^\s*GARMR_VERSION: (\S+)", tpl, re.M)
+if gver:
+    gver = gver.group(1)
+    check(f"install: garmr {gver} (garmr_{gver[1:]}_linux_" in log1 and re.search(rf"(^|\s)garmr {re.escape(gver)}\s*$", log1, re.M),
+          f"install.sh installed the garmr {gver} release, checked against its SHA256SUMS and its version")
 
 print("\n## build 2: the identity allowed on the base branch\n")
 log2 = read("build2.log")
 t2 = bot("threads2.json")
 check(read("build2.result").strip() == "succeeded", "the build succeeded")
 check('"decision":"allow"' in log2, "the base branch's policy allowed it")
+# From Vizzini v0.1.3 on, the template keeps the tools in the agent's tools
+# directory (VIZZINI_TOOLS_CACHE). Build 1 runs on a new agent, so it fills
+# the cache; builds 2 and 3 run on the same agent and must use it.
+from_cache = lambda log: [t for t in ("vizzini-bot", "garmr", "mrman") if re.search(rf"install: {t} \S+ from the cache \(", log)]
+caching = "VIZZINI_TOOLS_CACHE=" in tpl
+if caching:
+    check(not from_cache(log1) and from_cache(log2) == ["vizzini-bot", "garmr", "mrman"],
+          "build 1 filled the agent's tools cache; build 2 installed all three tools from it")
 check(t2, f"the findings were posted as threads with markers ({len(t2)})")
 check(all(cs[0]["author"]["displayName"] == identity for _, cs in t2), f"posted as {identity}")
 
@@ -366,6 +384,8 @@ thread = read("command-thread").strip()
 replies = [c for t, cs in t3 if str(t["id"]) == thread for c in cs if f"vizzini:reply-to={cid} " in (c.get("content") or "")]
 check(read("build3.result").strip() == "succeeded", "the build succeeded")
 check("reviewing 1 file(s) changed since" in log3, "an incremental review of the changed file only")
+if caching:
+    check(from_cache(log3) == ["vizzini-bot", "garmr", "mrman"], "build 3 installed all three tools from the agent's tools cache")
 check(len(fps) == len(set(fps)), f"no thread duplicated ({len(fps)} threads, {len(set(fps))} distinct)")
 check(len(replies) == 1 and replies[0]["author"]["displayName"] == identity,
       f"the /vizzini command was answered once in its thread, by {identity}")

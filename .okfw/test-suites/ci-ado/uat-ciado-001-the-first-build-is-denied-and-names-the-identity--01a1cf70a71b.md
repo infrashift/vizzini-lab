@@ -32,6 +32,7 @@ Make sure that the first build posts nothing and shows the identity to allow.
 | 4 | Open `<run>/build1.log`. | The log has `exited with code '3'` and `the grant policy denied posting`. |
 | 5 | Search `<run>/build1.log` for `MRM-002`. | The log has `"decision":"deny"` and `MRM-002`. |
 | 6 | Search `<run>/build1.log` for `install: vizzini-bot`. | The log has `install: vizzini-bot <VIZZINI_VERSION> (vizzini_<version>_linux_<arch>)` and `vizzini-bot <VIZZINI_VERSION> (commit <VIZZINI_REF>,`: the released binary, built from the pinned commit (Vizzini ISSUE-034). |
+| 7 | Search `<run>/build1.log` for `install: garmr`. | The log has `install: garmr <GARMR_VERSION> (garmr_<version>_linux_<arch>)` and the line `garmr <GARMR_VERSION>`: the garmr release, checked against its `SHA256SUMS` and its version (Vizzini ADR-0027) |
 
 ## Pass criteria
 The case passes when each step gives its expected result.

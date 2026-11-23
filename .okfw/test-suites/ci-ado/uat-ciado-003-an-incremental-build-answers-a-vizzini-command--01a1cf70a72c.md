@@ -30,6 +30,7 @@ Make sure that the build reviews only the changed file and answers the command o
 | 2 | Search `<run>/build3.log` for `reviewing 1 file(s) changed since`. | The log has the line. |
 | 3 | In the PR, open the thread on `calc/calc.go`. | The thread has `/vizzini explain What does this do?`. |
 | 4 | Examine the replies. | The build service replies one time. |
+| 5 | Search `<run>/build3.log` for `from the cache`. | The log has `from the cache` for `vizzini-bot`, `garmr` and `mrman`. |
 
 ## Pass criteria
 The case passes when each step gives its expected result.

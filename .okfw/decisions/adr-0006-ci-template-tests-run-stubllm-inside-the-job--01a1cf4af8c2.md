@@ -27,6 +27,7 @@ The model's judgment is already measured by `make uat` and `make uat-bot` ([ADR-
 
 ## Decision
 - Each test changes the template in one place: a step that builds Vizzini's `stubllm` from the pinned clone and starts it on `127.0.0.1:18765` with `-finding-per-file`, and points `VIZZINI_LITELLM_URL`, `VIZZINI_MODEL` and `VIZZINI_API_KEY` at it.
+- From Vizzini v0.1.3 on, the templates set up no Go (Vizzini ADR-0027), so the stub change also adds the Go that building `stubllm` needs: `actions/setup-go` (from Vizzini's `go.mod`) on GitHub, `GoTool@0` 1.25.4 on Azure, and on GitLab the go1.25.4 release from go.dev, checked against its published SHA-256. The template's own image and steps stay as they are.
 - The test records the exact change (`workflow.diff` or `pipeline.diff`) in the run directory.
 - Changes a platform forces are listed in the script's header and the run summary. Azure needed the self-hosted `Default` pool ([ADR-0007](/decisions/adr-0007-azure-pipelines-runs-on-a-throwaway-self-hosted-podman-agent--01a1cf4af8d2.md)). GitLab first needed a mrman host entry, which has since moved into the template.
 

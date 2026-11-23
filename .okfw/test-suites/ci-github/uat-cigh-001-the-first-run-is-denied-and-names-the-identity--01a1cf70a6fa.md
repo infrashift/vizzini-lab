@@ -32,6 +32,7 @@ Make sure that the first run posts nothing and shows the identity to allow.
 | 4 | Search `<run>/run1.log` for `install: done`. | The log has `install: done` and `mrman version <MRMAN_VERSION>` (the template's pin). |
 | 5 | In the browser, open the PR. Open the *Checks* tab. | The first `vizzini-bot` attempt shows *Failure*. |
 | 6 | Search `<run>/run1.log` for `install: vizzini-bot`. | The log has `install: vizzini-bot <VIZZINI_VERSION> (vizzini_<version>_linux_<arch>)` and `vizzini-bot <VIZZINI_VERSION> (commit <VIZZINI_REF>,`: the released binary, built from the pinned commit (Vizzini ISSUE-034). |
+| 7 | Search `<run>/run1.log` for `install: garmr`. | The log has `install: garmr <GARMR_VERSION> (garmr_<version>_linux_<arch>)` and the line `garmr <GARMR_VERSION>`: the garmr release, checked against its `SHA256SUMS` and its version (Vizzini ADR-0027) |
 
 ## Pass criteria
 The case passes when each step gives its expected result.

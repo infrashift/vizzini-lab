@@ -20,7 +20,7 @@ Every tool is built from a pin in `versions.env` ([ADR-0001](/decisions/adr-0001
 2. **Edit `versions.env`:** set `<TOOL>_SHA` to the commit or tag, and replace the comment above it with one line saying what the revision brings. A tag that was moved is followed: `build.sh` fetches with `--tags --force`.
 3. **Build:** run `make build`, or `uat/build.sh vizzini` for one tool. Check `.cache/bin/build-manifest.json`.
 4. **Re-run** the suites the change touches ([suite map](/architecture/suite-map-what-each-make-target-proves--01a1cf4af86d.md)). Start with the token-free ones: `make uat-stub`, then `make uat-bot-stub`.
-5. **Template pins:** `uat/ci-github.sh`, `uat/ci-ado.sh` and `uat/ci-gitlab.sh` read `MRMAN_VERSION`, `VIZZINI_REF` and `VIZZINI_VERSION` from the template in the pinned Vizzini clone. They check the installed `mrman version` and `vizzini-bot` strings against those pins, so a template bump needs no script edit. The template's `MRMAN_VERSION` is separate from this repository's `MRMAN_SHA`, which builds the mrman for the other suites.
+5. **Template pins:** `uat/ci-github.sh`, `uat/ci-ado.sh` and `uat/ci-gitlab.sh` read `MRMAN_VERSION`, `VIZZINI_REF`, `VIZZINI_VERSION` and `GARMR_VERSION` from the template in the pinned Vizzini clone. They check the installed `mrman version`, `vizzini-bot` and `garmr` strings against those pins, so a template bump needs no script edit. The template's `MRMAN_VERSION` is separate from this repository's `MRMAN_SHA`, which builds the mrman for the other suites. Likewise, the template's `GARMR_VERSION` is separate from `GARMR_SHA`.
 6. **Commit** as `chore: pin <tool> <rev>` with the runs that passed. Pushing needs confirmation (CLAUDE.md rule 6).
 
 ## Images

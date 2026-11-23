@@ -30,6 +30,7 @@ Make sure that the build posts threads when the base branch's policy lists the b
 | 2 | Open the URL in `<run>/pr-url` in the browser. | The PR opens. Its status is *Abandoned*. |
 | 3 | Find the thread on `calc/calc.go`. | The thread shows a finding. |
 | 4 | Examine the thread's author. | The author is `<Project> Build Service (<org>)`. |
+| 5 | Search `<run>/build1.log` and `<run>/build2.log` for `from the cache`. | `build1.log` has none: the agent is new. `build2.log` has `install: vizzini-bot … from the cache`, `install: garmr … from the cache` and `install: mrman … from the cache`: the agent's tools cache (`VIZZINI_TOOLS_CACHE`, Vizzini ADR-0026) |
 
 ## Pass criteria
 The case passes when each step gives its expected result.
