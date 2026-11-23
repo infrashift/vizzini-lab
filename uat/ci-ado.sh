@@ -46,11 +46,18 @@ die() { printf 'ci-ado: %s\n' "$*" >&2; exit 1; }
 [[ -f $template ]] || die "no $template: pin a Vizzini commit with deploy/ci (uat/build.sh vizzini)"
 
 ADO_REPO_URL="${ADO_REPO_URL:-$(sed -n 's/^ADO_REPO_URL=//p' "$cfg/ado.env" | tail -1)}"
-[[ $ADO_REPO_URL =~ ^https://dev\.azure\.com/([^/]+)/([^/]+)/_git/([^/]+)$ ]] || die "set ADO_REPO_URL"
-ORG="${BASH_REMATCH[1]}" PROJECT="${BASH_REMATCH[2]}" REPO="${BASH_REMATCH[3]}"
+# shellcheck source=uat/ado-url.sh
+source "$root/uat/ado-url.sh"
+ado_parse_url "$ADO_REPO_URL" || die "set ADO_REPO_URL ($ado_url_shapes)"
+# Identities: a separate host on Azure DevOps Services, the collection on
+# Azure DevOps Server. The build service is named after the organization or
+# the collection (the last segment of the collection path).
+identities="$ADO_COLLECTION_URL/_apis/identities"
+((ADO_SERVER)) || identities="https://vssps.dev.azure.com/$ORG/_apis/identities"
+build_service="$PROJECT Build Service (${ORG##*/})"
 VSTS_AGENT_INPUT_TOKEN="$(<"${ADO_PAT_FILE:-$cfg/ado.pat}")"
 export VSTS_AGENT_INPUT_TOKEN
-api_base="https://dev.azure.com/$ORG/$PROJECT/_apis"
+api_base="$ADO_COLLECTION_URL/$PROJECT/_apis"
 
 # api METHOD URL [JSON]: the body; fails on a non-2xx status. A failure to
 # connect (dev.azure.com resets the odd TLS handshake) is retried: the request
@@ -101,10 +108,10 @@ cleanup() {
 	fi
 	if [[ -n $ace_token ]]; then
 		if [[ -n $ace_before ]]; then
-			api POST "https://dev.azure.com/$ORG/_apis/AccessControlEntries/$git_ns?api-version=7.1" "$ace_before" >/dev/null &&
+			api POST "$ADO_COLLECTION_URL/_apis/AccessControlEntries/$git_ns?api-version=7.1" "$ace_before" >/dev/null &&
 				echo "   build service permission restored"
 		else
-			api DELETE "https://dev.azure.com/$ORG/_apis/AccessControlEntries/$git_ns?token=$(urlq "$ace_token")&descriptors=$(urlq "$ace_desc")&api-version=7.1" \
+			api DELETE "$ADO_COLLECTION_URL/_apis/AccessControlEntries/$git_ns?token=$(urlq "$ace_token")&descriptors=$(urlq "$ace_desc")&api-version=7.1" \
 				>/dev/null && echo "   build service permission removed"
 		fi
 	fi
@@ -128,15 +135,15 @@ cleanup() {
 # minutes), so delete it through the API, retrying, and say if it stays.
 agent_gone() {
 	local pool id try
-	pool="$(api GET "https://dev.azure.com/$ORG/_apis/distributedtask/pools?poolName=Default&api-version=7.1" | jq_ 'd["value"][0]["id"]')" || return 0
+	pool="$(api GET "$ADO_COLLECTION_URL/_apis/distributedtask/pools?poolName=Default&api-version=7.1" | jq_ 'd["value"][0]["id"]')" || return 0
 	for try in $(seq 30); do
-		id="$(api GET "https://dev.azure.com/$ORG/_apis/distributedtask/pools/$pool/agents?agentName=$(urlq "$agent")&api-version=7.1" |
+		id="$(api GET "$ADO_COLLECTION_URL/_apis/distributedtask/pools/$pool/agents?agentName=$(urlq "$agent")&api-version=7.1" |
 			jq_ 'd["value"][0]["id"] if d["value"] else ""')" || id="?"
 		if [[ -z $id ]]; then
 			echo "   agent $agent deregistered"
 			return 0
 		fi
-		[[ $id != "?" ]] && api DELETE "https://dev.azure.com/$ORG/_apis/distributedtask/pools/$pool/agents/$id?api-version=7.1" >/dev/null 2>&1 && continue
+		[[ $id != "?" ]] && api DELETE "$ADO_COLLECTION_URL/_apis/distributedtask/pools/$pool/agents/$id?api-version=7.1" >/dev/null 2>&1 && continue
 		sleep 30
 	done
 	echo "   AGENT $agent IS STILL REGISTERED in the Default pool: remove it in Organization settings > Agent pools" >&2
@@ -204,10 +211,10 @@ print(json.dumps({"isEnabled": True, "isBlocking": False, "type": {"id": "0609b9
 echo "   build validation policy $policy_id on $base"
 # The template's documented setup: the build service may contribute to pull
 # requests in this repository (PullRequestContribute, 16384).
-project_id="$(api GET "https://dev.azure.com/$ORG/_apis/projects/$PROJECT?api-version=7.1" | jq_ 'd["id"]')"
-ace_desc="$(api GET "https://vssps.dev.azure.com/$ORG/_apis/identities?searchFilter=General&filterValue=$(urlq "$PROJECT Build Service ($ORG)")&api-version=7.1" |
+project_id="$(api GET "$ADO_COLLECTION_URL/_apis/projects/$PROJECT?api-version=7.1" | jq_ 'd["id"]')"
+ace_desc="$(api GET "$identities?searchFilter=General&filterValue=$(urlq "$build_service")&api-version=7.1" |
 	jq_ 'd["value"][0]["descriptor"]')"
-ace_before="$(api GET "https://dev.azure.com/$ORG/_apis/accesscontrollists/$git_ns?token=repoV2/$project_id/$repo_id&api-version=7.1" |
+ace_before="$(api GET "$ADO_COLLECTION_URL/_apis/accesscontrollists/$git_ns?token=repoV2/$project_id/$repo_id&api-version=7.1" |
 	python3 -I -c '
 import json, sys
 token, desc = sys.argv[1:]
@@ -216,16 +223,16 @@ for acl in json.load(sys.stdin)["value"]:
     if ace:
         print(json.dumps({"token": token, "merge": False, "accessControlEntries": [ace]}))' "repoV2/$project_id/$repo_id" "$ace_desc")"
 ace_token="repoV2/$project_id/$repo_id"
-api POST "https://dev.azure.com/$ORG/_apis/AccessControlEntries/$git_ns?api-version=7.1" "$(python3 -I -c '
+api POST "$ADO_COLLECTION_URL/_apis/AccessControlEntries/$git_ns?api-version=7.1" "$(python3 -I -c '
 import json, sys
 print(json.dumps({"token": sys.argv[1], "merge": True,
   "accessControlEntries": [{"descriptor": sys.argv[2], "allow": 16384, "deny": 0}]}))' "$ace_token" "$ace_desc")" >/dev/null
-echo "   $PROJECT Build Service ($ORG): Contribute to pull requests on $REPO"
+echo "   $build_service: Contribute to pull requests on $REPO"
 podman image exists "$image" || {
 	echo "   building $image (ci/ado-agent)"
 	podman build -q -t "$image" "$root/ci/ado-agent" >/dev/null
 }
-podman run -d --name "$agent" -e AZP_URL="https://dev.azure.com/$ORG" -e AZP_POOL=Default -e AZP_AGENT="$agent" \
+podman run -d --name "$agent" -e AZP_URL="$ADO_COLLECTION_URL" -e AZP_POOL=Default -e AZP_AGENT="$agent" \
 	-e VSTS_AGENT_INPUT_TOKEN "$image" >/dev/null
 for _ in $(seq 60); do podman logs "$agent" 2>&1 | grep -q 'Listening for Jobs' && break; sleep 3; done
 podman logs "$agent" 2>&1 | grep -q 'Listening for Jobs' || { podman logs "$agent" 2>&1 | tail -20; die "the agent did not come up"; }

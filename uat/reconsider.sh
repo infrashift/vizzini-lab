@@ -53,10 +53,12 @@ for b in vizzini-bot mrman garmr stubllm; do [[ -x $bin/$b ]] || die "$bin/$b mi
 "$root/litellm/litellm.sh" status >/dev/null || die "LiteLLM is not running: litellm/litellm.sh up"
 
 ADO_REPO_URL="${ADO_REPO_URL:-$(sed -n 's/^ADO_REPO_URL=//p' "$cfg/ado.env" | tail -1)}"
-[[ $ADO_REPO_URL =~ ^https://dev\.azure\.com/([^/]+)/([^/]+)/_git/([^/]+)$ ]] || die "set ADO_REPO_URL"
-ORG="${BASH_REMATCH[1]}" PROJECT="${BASH_REMATCH[2]}" REPO="${BASH_REMATCH[3]}"
-repo_key="dev.azure.com/$ORG/$PROJECT/$REPO"
-api_base="https://dev.azure.com/$ORG/$PROJECT/_apis/git/repositories/$REPO"
+# shellcheck source=uat/ado-url.sh
+source "$root/uat/ado-url.sh"
+ado_parse_url "$ADO_REPO_URL" || die "set ADO_REPO_URL ($ado_url_shapes)"
+ado_require_mrman_host || die "list the server in mrman's config"
+repo_key="$REPO_KEY"
+api_base="$ADO_COLLECTION_URL/$PROJECT/_apis/git/repositories/$REPO"
 pat_file="${ADO_PAT_FILE:-$cfg/ado.pat}"
 
 # api METHOD URL [JSON], retried as uat/ado.sh retries (ADR-0011): only what

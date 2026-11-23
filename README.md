@@ -39,6 +39,12 @@ make uat          # attended: it pauses for you to grant mrman's submit (see bel
 make ado-down     # abandon the UAT's PRs and delete its branches
 ```
 
+On Azure DevOps Server (2022.1 or later), use the repository's own URL, for
+example `https://tfs.example.com/tfs/DefaultCollection/PROJECT/_git/REPO`.
+The collection path takes the organization's place (Vizzini ADR-0029). Also
+list the server in mrman's config: `make ado-check` prints the entry to add.
+The UAT uses the pinned mrman; Server URLs need mrman v0.1.11 or later.
+
 The PAT needs **Code (Read & Write)**. For each model the UAT pushes the fixture as `uat/<model>-<stamp>`, opens a PR into `uat-base`, and checks that mrman sees every Vizzini finding. It then pauses and asks you to run `mrman pr <url> --vizzini-report ... --auto` yourself. mrman only grants submit to an interactive session, and the UAT will not fake one ([ADR-0002](.okfw/decisions/)). While your TUI is open, the harness posts the findings as comment threads and checks them over the ADO REST API.
 
 ### Unattended: vizzini-bot under a garmr policy

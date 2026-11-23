@@ -2,6 +2,7 @@
 # ado.sh: the UAT's pull requests on Azure DevOps.
 #
 #   ado.sh check                 verify the PAT and repository are reachable
+#                                (on Azure DevOps Server, also mrman's config)
 #   ado.sh base REPO_DIR NAME    force-push REPO_DIR's uat-base branch as
 #                                uat/NAME/base (NAME: the fixture)
 #   ado.sh up REPO_DIR LABEL NAME
@@ -19,7 +20,8 @@
 #                                first branch pushed it is the default branch)
 #
 # Configuration (nothing secret is ever passed on a command line):
-#   ADO_REPO_URL   https://dev.azure.com/ORG/PROJECT/_git/REPO
+#   ADO_REPO_URL   https://dev.azure.com/ORG/PROJECT/_git/REPO, or on Azure
+#                  DevOps Server https://SERVER/tfs/COLLECTION/PROJECT/_git/REPO
 #                  (or a line ADO_REPO_URL=... in ~/.config/vizzini-lab/ado.env)
 #   ADO_PAT_FILE   file holding a PAT with Code (Read & Write)
 #                  (default ~/.config/vizzini-lab/ado.pat, must be mode 0600)
@@ -28,6 +30,9 @@
 #
 # Commits say [skip ci], so pipelines on the repository build nothing.
 set -euo pipefail
+
+# shellcheck source=uat/ado-url.sh
+source "$(dirname "$0")/ado-url.sh"
 
 TITLE_PREFIX="vizzini-lab"
 cfg="${XDG_CONFIG_HOME:-$HOME/.config}/vizzini-lab"
@@ -40,8 +45,7 @@ load_config() {
 	fi
 	[[ -n ${ADO_REPO_URL:-} ]] || die "set ADO_REPO_URL (or put ADO_REPO_URL=... in $cfg/ado.env)"
 	ADO_REPO_URL="${ADO_REPO_URL%/}"
-	[[ $ADO_REPO_URL =~ ^https://dev\.azure\.com/[^/]+/[^/]+/_git/[^/]+$ ]] ||
-		die "ADO_REPO_URL must look like https://dev.azure.com/ORG/PROJECT/_git/REPO"
+	ado_parse_url "$ADO_REPO_URL" || die "ADO_REPO_URL must look like $ado_url_shapes"
 	if [[ -z ${AZURE_DEVOPS_EXT_PAT:-} ]]; then
 		local f="${ADO_PAT_FILE:-$cfg/ado.pat}"
 		[[ -s $f ]] || die "no PAT: create $f (mode 0600) in your own terminal:
@@ -50,12 +54,7 @@ load_config() {
 		AZURE_DEVOPS_EXT_PAT="$(<"$f")"
 	fi
 	export AZURE_DEVOPS_EXT_PAT ADO_REPO_URL
-	local rest="${ADO_REPO_URL#https://dev.azure.com/}"
-	ORG="${rest%%/*}"
-	rest="${rest#*/}"
-	PROJECT="${rest%%/_git/*}"
-	REPO="${rest#*/_git/}"
-	ADO_API="https://dev.azure.com/$ORG/$(quote "$PROJECT")/_apis/git/repositories/$(quote "$REPO")"
+	ADO_API="$ADO_COLLECTION_URL/$(quote "$PROJECT")/_apis/git/repositories/$(quote "$REPO")"
 }
 
 quote() { python3 -I -c 'import sys,urllib.parse;print(urllib.parse.quote(sys.argv[1],safe=""))' "$1"; }
@@ -105,6 +104,7 @@ cmd_check() {
 	local r
 	r="$(api GET "$ADO_API?api-version=7.1")" || die "cannot read $ADO_REPO_URL with this PAT"
 	echo "ado: $(json '"%s/%s (default branch %s)" % (d["project"]["name"], d["name"], d.get("defaultBranch", "none: empty repository"))' <<<"$r")"
+	ado_require_mrman_host || die "list the server in mrman's config"
 }
 
 cmd_base() {
@@ -153,7 +153,7 @@ cmd_threads() {
 
 cmd_whoami() {
 	# shellcheck disable=SC2016 # "$value" is an ADO JSON key, not a shell variable
-	api GET "https://dev.azure.com/$ORG/_apis/connectionData" |
+	api GET "$ADO_COLLECTION_URL/_apis/connectionData" |
 		json '((d.get("authenticatedUser") or {}).get("properties", {}).get("Account", {}).get("$value")) or d["authenticatedUser"]["providerDisplayName"]'
 }
 

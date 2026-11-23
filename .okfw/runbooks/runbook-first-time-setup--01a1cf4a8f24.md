@@ -35,6 +35,8 @@ Create each one **in your own terminal**, never through an agent. [Credential ha
    read -rs P && install -m600 /dev/null ~/.config/vizzini-lab/ado.pat && printf %s "$P" > ~/.config/vizzini-lab/ado.pat && unset P
    make ado-check
    ```
+   On Azure DevOps Server (2022.1 or later), set `ADO_REPO_URL` to the repository's own URL, for example `https://tfs.example.com/tfs/DefaultCollection/PROJECT/_git/REPO`. The collection path takes the organization's place. `make ado-check` also checks that mrman's config lists the server, and prints the `[[forge.hosts]]` entry to add when it does not. The pinned mrman must be v0.1.11 or later.
+
    *Code (Read & Write)* is enough for `make uat` and `make uat-bot`. `make uat-ci-ado` also creates a pipeline and a branch policy, changes a repository permission and registers an agent; it has only been run with a full-access PAT.
 
 The GitLab test needs no secret of yours: every token it uses is made for the run ([ADR-0008](/decisions/adr-0008-gitlab-ci-runs-on-a-throwaway-self-managed-gitlab-ce-in-podman--01a1cf4af8e3.md)).
