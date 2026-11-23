@@ -1,12 +1,12 @@
 ---
-id: "01a1cf4a-f8b1-7c9e-b8ba-85f3c324ec61"
+x-okfw-id: "01a1cf4a-f8b1-7c9e-b8ba-85f3c324ec61"
 title: "Credential handling"
 type: "Architecture"
 tags:
   - "architecture"
   - "security"
-created: "2026-11-12T04:25:59-06:00"
-timestamp: "2026-11-12T04:25:59-06:00"
+x-okfw-created: "2026-11-12T04:25:59-06:00"
+x-okfw-timestamp: "2026-11-12T04:25:59-06:00"
 description: "Where every secret the UAT uses lives, how each reaches the tool that needs it without a command line or a log, and what identity data is redacted."
 ---
 

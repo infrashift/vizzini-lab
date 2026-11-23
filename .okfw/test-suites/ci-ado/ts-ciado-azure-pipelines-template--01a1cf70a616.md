@@ -1,13 +1,13 @@
 ---
-id: "01a1cf70-a616-74b7-8c14-eeba2e620399"
+x-okfw-id: "01a1cf70-a616-74b7-8c14-eeba2e620399"
 title: "TS-CIADO: Azure Pipelines template"
 type: "Test Suite"
 tags:
   - "uat"
   - "test-suite"
   - "ts-ciado"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Vizzini's Azure Pipelines template as PR build validation on a throwaway self-hosted agent: denied, allowed with the build service permission, then incremental with a /vizzini command."
 ---
 

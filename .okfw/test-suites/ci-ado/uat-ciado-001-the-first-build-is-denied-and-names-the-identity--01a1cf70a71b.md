@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a71b-7e03-a658-a7f958c4a200"
+x-okfw-id: "01a1cf70-a71b-7e03-a658-a7f958c4a200"
 title: "UAT-CIADO-001: The first build is denied and names the identity"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-ciado"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that the first build posts nothing and shows the identity to allow."
 ---
 

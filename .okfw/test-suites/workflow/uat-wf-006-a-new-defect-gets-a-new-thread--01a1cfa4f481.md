@@ -1,5 +1,5 @@
 ---
-id: "01a1cfa4-f481-7cad-a7d6-fc796d5f9dcc"
+x-okfw-id: "01a1cfa4-f481-7cad-a7d6-fc796d5f9dcc"
 title: "UAT-WF-006: A new defect gets a new thread"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-wf"
   - "medium"
-created: "2026-11-12T06:04:16-06:00"
-timestamp: "2026-11-12T06:04:16-06:00"
+x-okfw-created: "2026-11-12T06:04:16-06:00"
+x-okfw-timestamp: "2026-11-12T06:04:16-06:00"
 description: "Make sure that a defect added in a later push gets its own thread."
 ---
 

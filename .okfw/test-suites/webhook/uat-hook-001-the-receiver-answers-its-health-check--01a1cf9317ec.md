@@ -1,5 +1,5 @@
 ---
-id: "01a1cf93-17ec-7d3d-8ca9-08c0735adb7e"
+x-okfw-id: "01a1cf93-17ec-7d3d-8ca9-08c0735adb7e"
 title: "UAT-HOOK-001: The receiver answers its health check"
 type: "Test Case"
 tags:
@@ -8,8 +8,8 @@ tags:
   - "ts-hook"
   - "medium"
   - "experimental"
-created: "2026-11-12T05:44:46-06:00"
-timestamp: "2026-11-12T05:44:46-06:00"
+x-okfw-created: "2026-11-12T05:44:46-06:00"
+x-okfw-timestamp: "2026-11-12T05:44:46-06:00"
 description: "Make sure that the receiver starts and gives its health."
 ---
 

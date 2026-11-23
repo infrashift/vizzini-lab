@@ -1,5 +1,5 @@
 ---
-id: "01a1d0fc-a7cd-7730-b0b8-ed3264f146ff"
+x-okfw-id: "01a1d0fc-a7cd-7730-b0b8-ed3264f146ff"
 title: "UAT-WF-020: Reconsider with a live model"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-wf"
   - "high"
-created: "2026-11-12T12:19:41-06:00"
-timestamp: "2026-11-12T12:19:41-06:00"
+x-okfw-created: "2026-11-12T12:19:41-06:00"
+x-okfw-timestamp: "2026-11-12T12:19:41-06:00"
 description: "Make sure that a live model answers /vizzini reconsider with a real argument, and that the bot acts on each verdict."
 ---
 

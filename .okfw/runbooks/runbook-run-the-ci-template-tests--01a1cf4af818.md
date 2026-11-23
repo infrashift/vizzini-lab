@@ -1,12 +1,12 @@
 ---
-id: "01a1cf4a-f818-77d8-b894-356f795324dc"
+x-okfw-id: "01a1cf4a-f818-77d8-b894-356f795324dc"
 title: "Runbook: run the CI template tests"
 type: "Runbook"
 tags:
   - "runbook"
   - "ci"
-created: "2026-11-12T04:25:59-06:00"
-timestamp: "2026-11-12T04:25:59-06:00"
+x-okfw-created: "2026-11-12T04:25:59-06:00"
+x-okfw-timestamp: "2026-11-12T04:25:59-06:00"
 description: "Run Vizzini's GitHub Actions, Azure Pipelines and GitLab CI templates live with make uat-ci-github, uat-ci-ado and uat-ci-gitlab, and confirm each platform is left clean."
 ---
 

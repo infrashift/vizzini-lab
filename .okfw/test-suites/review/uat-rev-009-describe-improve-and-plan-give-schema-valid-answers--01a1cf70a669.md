@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a669-775c-a6d4-075bb376f2ae"
+x-okfw-id: "01a1cf70-a669-775c-a6d4-075bb376f2ae"
 title: "UAT-REV-009: describe, improve and plan give schema-valid answers"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-rev"
   - "medium"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that the other Vizzini modes give answers that agree with the schema."
 ---
 

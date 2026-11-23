@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a73e-7ca8-8b00-be571c2510bf"
+x-okfw-id: "01a1cf70-a73e-7ca8-8b00-be571c2510bf"
 title: "UAT-CIGL-001: The first job is denied and names the bot user"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-cigl"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that the first job posts nothing and shows the token's bot user."
 ---
 

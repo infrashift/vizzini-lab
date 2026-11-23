@@ -1,12 +1,12 @@
 ---
-id: "01a1cf4a-8f24-7c5f-895d-a0c4e0520cf9"
+x-okfw-id: "01a1cf4a-8f24-7c5f-895d-a0c4e0520cf9"
 title: "Runbook: first-time setup"
 type: "Runbook"
 tags:
   - "runbook"
   - "setup"
-created: "2026-11-12T04:25:32-06:00"
-timestamp: "2026-11-12T04:25:32-06:00"
+x-okfw-created: "2026-11-12T04:25:32-06:00"
+x-okfw-timestamp: "2026-11-12T04:25:32-06:00"
 description: "Everything a machine needs before any vizzini-lab suite runs: tools, the two secrets, the ADO repository, gh, the podman socket, and a first build."
 ---
 

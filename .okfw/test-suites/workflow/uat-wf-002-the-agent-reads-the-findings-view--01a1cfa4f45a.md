@@ -1,5 +1,5 @@
 ---
-id: "01a1cfa4-f45a-7c7e-92e4-abcc5738d8de"
+x-okfw-id: "01a1cfa4-f45a-7c7e-92e4-abcc5738d8de"
 title: "UAT-WF-002: The agent reads the findings view"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-wf"
   - "high"
-created: "2026-11-12T06:04:16-06:00"
-timestamp: "2026-11-12T06:04:16-06:00"
+x-okfw-created: "2026-11-12T06:04:16-06:00"
+x-okfw-timestamp: "2026-11-12T06:04:16-06:00"
 description: "Make sure that an agent gets each finding as structured fields."
 ---
 

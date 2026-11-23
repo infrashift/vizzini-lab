@@ -1,13 +1,13 @@
 ---
-id: "01a1cf4a-f88f-7b26-9890-38585d3a1da3"
+x-okfw-id: "01a1cf4a-f88f-7b26-9890-38585d3a1da3"
 title: "LiteLLM proxy with Postgres spend logs"
 type: "Architecture"
 tags:
   - "architecture"
   - "litellm"
   - "cost"
-created: "2026-11-12T04:25:59-06:00"
-timestamp: "2026-11-12T04:25:59-06:00"
+x-okfw-created: "2026-11-12T04:25:59-06:00"
+x-okfw-timestamp: "2026-11-12T04:25:59-06:00"
 description: "How the UAT reaches Claude: a podman pod running LiteLLM and Postgres on 127.0.0.1, keyed by podman secrets, recording spend per request without prompts."
 ---
 

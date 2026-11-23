@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a6ea-7561-aa20-c2b3100c9057"
+x-okfw-id: "01a1cf70-a6ea-7561-aa20-c2b3100c9057"
 title: "UAT-BOT-008: dismiss: a won't-fix thread gets one suppression rule"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-bot"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that the bot suggests a suppression rule when a person dismisses its thread."
 ---
 

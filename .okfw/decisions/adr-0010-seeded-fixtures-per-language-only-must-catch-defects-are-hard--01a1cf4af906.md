@@ -1,13 +1,13 @@
 ---
-id: "01a1cf4a-f906-7031-a84c-a8bce62aeb9e"
+x-okfw-id: "01a1cf4a-f906-7031-a84c-a8bce62aeb9e"
 title: "ADR-0010: Seeded fixtures per language; only must-catch defects are hard"
 type: "ADR"
 tags:
   - "adr"
   - "fixtures"
   - "scoring"
-created: "2026-11-12T04:25:59-06:00"
-timestamp: "2026-11-12T04:25:59-06:00"
+x-okfw-created: "2026-11-12T04:25:59-06:00"
+x-okfw-timestamp: "2026-11-12T04:25:59-06:00"
 description: "Each language gets a seeded fixture with ground truth; the run fails only on harness invariants and must-catch defects, while recall, categories and severities are reported as metrics."
 ---
 

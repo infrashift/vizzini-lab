@@ -1,5 +1,5 @@
 ---
-id: "01a20701-536d-78ab-89cc-932cf85f0148"
+x-okfw-id: "01a20701-536d-78ab-89cc-932cf85f0148"
 title: "UAT-BOT-011: quiet again: the next quiet review edits the status comment"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-bot"
   - "high"
-created: "2026-11-23T00:04:17-06:00"
-timestamp: "2026-11-23T00:04:17-06:00"
+x-okfw-created: "2026-11-23T00:04:17-06:00"
+x-okfw-timestamp: "2026-11-23T00:04:17-06:00"
 description: "Make sure that the next quiet review starts from the recorded head and edits the same status comment."
 ---
 

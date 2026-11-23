@@ -1,5 +1,5 @@
 ---
-id: "01a20701-5360-7d1b-a7ab-d099b65a937c"
+x-okfw-id: "01a20701-5360-7d1b-a7ab-d099b65a937c"
 title: "UAT-BOT-010: quiet: a review that posts nothing records its head"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-bot"
   - "high"
-created: "2026-11-23T00:04:17-06:00"
-timestamp: "2026-11-23T00:04:17-06:00"
+x-okfw-created: "2026-11-23T00:04:17-06:00"
+x-okfw-timestamp: "2026-11-23T00:04:17-06:00"
 description: "Make sure that a review with nothing to post records its head in one resolved status comment."
 ---
 

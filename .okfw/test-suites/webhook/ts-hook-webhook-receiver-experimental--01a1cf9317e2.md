@@ -1,5 +1,5 @@
 ---
-id: "01a1cf93-17e2-7ad7-a1b4-a0dc9b311d08"
+x-okfw-id: "01a1cf93-17e2-7ad7-a1b4-a0dc9b311d08"
 title: "TS-HOOK: Webhook receiver (experimental)"
 type: "Test Suite"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-suite"
   - "ts-hook"
   - "experimental"
-created: "2026-11-12T05:44:46-06:00"
-timestamp: "2026-11-12T05:44:46-06:00"
+x-okfw-created: "2026-11-12T05:44:46-06:00"
+x-okfw-timestamp: "2026-11-12T05:44:46-06:00"
 description: "vizzini-webhook, the experimental receiver that answers /vizzini commands as they are written: health, authentication, filtering, an answer with no push, coalescing, commands only, policy denial, log hygiene and shutdown."
 ---
 

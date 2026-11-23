@@ -1,5 +1,5 @@
 ---
-id: "01a1cfa4-f4b4-79a5-a155-adb0e947e237"
+x-okfw-id: "01a1cfa4-f4b4-79a5-a155-adb0e947e237"
 title: "UAT-WF-011: The agent cannot resolve under its own policy"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-wf"
   - "high"
-created: "2026-11-12T06:04:16-06:00"
-timestamp: "2026-11-12T06:04:16-06:00"
+x-okfw-created: "2026-11-12T06:04:16-06:00"
+x-okfw-timestamp: "2026-11-12T06:04:16-06:00"
 description: "Make sure that the agent's policy (reply only) stops a resolve."
 ---
 

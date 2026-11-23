@@ -1,13 +1,13 @@
 ---
-id: "01a1cf70-a60f-7bd5-9590-349327efd491"
+x-okfw-id: "01a1cf70-a60f-7bd5-9590-349327efd491"
 title: "TS-CIGH: GitHub Actions template"
 type: "Test Suite"
 tags:
   - "uat"
   - "test-suite"
   - "ts-cigh"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Vizzini's GitHub Actions template on a throwaway PR in infrashift/vizzini-lab: the denied first run, the allowed identity, and the incremental second commit."
 ---
 

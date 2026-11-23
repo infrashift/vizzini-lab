@@ -1,13 +1,13 @@
 ---
-id: "01a1cf70-a5fc-7a20-b0d4-62b882440694"
+x-okfw-id: "01a1cf70-a5fc-7a20-b0d4-62b882440694"
 title: "TS-REV: Live review"
 type: "Test Suite"
 tags:
   - "uat"
   - "test-suite"
   - "ts-rev"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Live Claude reviews of the seeded C# and TypeScript fixtures and the real-world commits: report validity, must-catch defects, knowledge, lint, garmr and the other modes."
 ---
 

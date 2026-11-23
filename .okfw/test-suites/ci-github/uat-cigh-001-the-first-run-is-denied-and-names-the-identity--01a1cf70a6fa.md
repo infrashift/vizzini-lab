@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a6fa-7a54-9242-5e9247519c23"
+x-okfw-id: "01a1cf70-a6fa-7a54-9242-5e9247519c23"
 title: "UAT-CIGH-001: The first run is denied and names the identity"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-cigh"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that the first run posts nothing and shows the identity to allow."
 ---
 

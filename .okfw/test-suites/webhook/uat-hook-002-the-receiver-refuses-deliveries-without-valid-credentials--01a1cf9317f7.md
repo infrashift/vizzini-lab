@@ -1,5 +1,5 @@
 ---
-id: "01a1cf93-17f7-743b-81a3-104852041d09"
+x-okfw-id: "01a1cf93-17f7-743b-81a3-104852041d09"
 title: "UAT-HOOK-002: The receiver refuses deliveries without valid credentials"
 type: "Test Case"
 tags:
@@ -8,8 +8,8 @@ tags:
   - "ts-hook"
   - "high"
   - "experimental"
-created: "2026-11-12T05:44:46-06:00"
-timestamp: "2026-11-12T05:44:46-06:00"
+x-okfw-created: "2026-11-12T05:44:46-06:00"
+x-okfw-timestamp: "2026-11-12T05:44:46-06:00"
 description: "Make sure that only a delivery with the configured basic-auth credentials gets in."
 ---
 

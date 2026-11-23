@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a6d9-7e01-95c6-92f1cd663e09"
+x-okfw-id: "01a1cf70-a6d9-7e01-95c6-92f1cd663e09"
 title: "UAT-BOT-006: command: the bot answers /vizzini commands in the thread"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-bot"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that the bot answers a valid command and gives usage for a malformed command."
 ---
 

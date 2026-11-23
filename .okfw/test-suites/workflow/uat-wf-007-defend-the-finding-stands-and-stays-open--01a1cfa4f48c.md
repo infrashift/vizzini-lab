@@ -1,5 +1,5 @@
 ---
-id: "01a1cfa4-f48c-764f-99b2-4d819e2b431e"
+x-okfw-id: "01a1cfa4-f48c-764f-99b2-4d819e2b431e"
 title: "UAT-WF-007: Defend: the finding stands and stays open"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-wf"
   - "high"
-created: "2026-11-12T06:04:16-06:00"
-timestamp: "2026-11-12T06:04:16-06:00"
+x-okfw-created: "2026-11-12T06:04:16-06:00"
+x-okfw-timestamp: "2026-11-12T06:04:16-06:00"
 description: "Make sure that an argument alone does not close a finding, and that the bot answers the dispute once."
 ---
 

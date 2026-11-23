@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a63c-72d3-b0e9-4f6dc13bc8ee"
+x-okfw-id: "01a1cf70-a63c-72d3-b0e9-4f6dc13bc8ee"
 title: "UAT-REV-004: The must-catch TypeScript defects are caught"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-rev"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that each model finds the four must-catch defects in the TypeScript fixture."
 ---
 

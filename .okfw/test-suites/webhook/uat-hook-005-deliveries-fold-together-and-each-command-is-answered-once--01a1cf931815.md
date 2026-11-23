@@ -1,5 +1,5 @@
 ---
-id: "01a1cf93-1815-76df-8a37-c7bf0352d12e"
+x-okfw-id: "01a1cf93-1815-76df-8a37-c7bf0352d12e"
 title: "UAT-HOOK-005: Deliveries fold together and each command is answered once"
 type: "Test Case"
 tags:
@@ -8,8 +8,8 @@ tags:
   - "ts-hook"
   - "high"
   - "experimental"
-created: "2026-11-12T05:44:46-06:00"
-timestamp: "2026-11-12T05:44:46-06:00"
+x-okfw-created: "2026-11-12T05:44:46-06:00"
+x-okfw-timestamp: "2026-11-12T05:44:46-06:00"
 description: "Make sure that repeated deliveries do not give repeated answers."
 ---
 

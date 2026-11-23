@@ -1,5 +1,5 @@
 ---
-id: "01a1cfa4-f4aa-7a00-85c9-c6e9aa116b3b"
+x-okfw-id: "01a1cfa4-f4aa-7a00-85c9-c6e9aa116b3b"
 title: "UAT-WF-010: The merged rule suppresses the finding"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-wf"
   - "high"
-created: "2026-11-12T06:04:16-06:00"
-timestamp: "2026-11-12T06:04:16-06:00"
+x-okfw-created: "2026-11-12T06:04:16-06:00"
+x-okfw-timestamp: "2026-11-12T06:04:16-06:00"
 description: "Make sure that the rule takes effect only from the base branch, and stops the finding."
 ---
 

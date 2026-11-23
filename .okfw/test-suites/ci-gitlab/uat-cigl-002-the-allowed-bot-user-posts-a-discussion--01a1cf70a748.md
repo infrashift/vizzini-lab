@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a748-7d61-9ad6-eb21c4614bb9"
+x-okfw-id: "01a1cf70-a748-7d61-9ad6-eb21c4614bb9"
 title: "UAT-CIGL-002: The allowed bot user posts a discussion"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-cigl"
   - "high"
-created: "2026-11-12T05:07:09-06:00"
-timestamp: "2026-11-12T05:07:09-06:00"
+x-okfw-created: "2026-11-12T05:07:09-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:09-06:00"
 description: "Make sure that a Reporter project access token can post a discussion when the policy lists its bot user."
 ---
 

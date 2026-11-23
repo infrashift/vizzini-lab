@@ -1,13 +1,13 @@
 ---
-id: "01a1caeb-8cd0-7a8c-9bfb-0af6fcccd648"
+x-okfw-id: "01a1caeb-8cd0-7a8c-9bfb-0af6fcccd648"
 title: "ADR-0001: A dedicated UAT repo that builds every tool from a pinned SHA"
 type: "ADR"
 tags:
   - "adr"
   - "build"
   - "reproducibility"
-created: "2026-11-11T08:03:17-06:00"
-timestamp: "2026-11-11T08:03:17-06:00"
+x-okfw-created: "2026-11-11T08:03:17-06:00"
+x-okfw-timestamp: "2026-11-11T08:03:17-06:00"
 description: "The UAT lives in its own repository and builds Vizzini, mrman, garmr and okfw from pinned commits, never from installed binaries or working trees."
 ---
 

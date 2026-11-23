@@ -1,5 +1,5 @@
 ---
-id: "01a1cfa4-f4c9-71b9-8cde-031a87303d68"
+x-okfw-id: "01a1cfa4-f4c9-71b9-8cde-031a87303d68"
 title: "UAT-WF-013: The agent cannot grant itself"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-wf"
   - "high"
-created: "2026-11-12T06:04:16-06:00"
-timestamp: "2026-11-12T06:04:16-06:00"
+x-okfw-created: "2026-11-12T06:04:16-06:00"
+x-okfw-timestamp: "2026-11-12T06:04:16-06:00"
 description: "Make sure that mrman's interactive grant needs a person."
 ---
 

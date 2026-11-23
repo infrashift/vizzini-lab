@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a70b-71ff-98ce-06d114138728"
+x-okfw-id: "01a1cf70-a70b-71ff-98ce-06d114138728"
 title: "UAT-CIGH-003: A second commit is reviewed incrementally"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-cigh"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that the job reviews only the changed file and posts no duplicate."
 ---
 

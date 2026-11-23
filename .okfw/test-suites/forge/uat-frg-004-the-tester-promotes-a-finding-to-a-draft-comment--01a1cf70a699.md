@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a699-7248-94a9-09f8f4301190"
+x-okfw-id: "01a1cf70-a699-7248-94a9-09f8f4301190"
 title: "UAT-FRG-004: The tester promotes a finding to a draft comment"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-frg"
   - "medium"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that a person can turn a Vizzini finding into a review comment."
 ---
 

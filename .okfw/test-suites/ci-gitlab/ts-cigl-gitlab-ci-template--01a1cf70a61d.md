@@ -1,13 +1,13 @@
 ---
-id: "01a1cf70-a61d-73d9-bc50-dce95a7e5454"
+x-okfw-id: "01a1cf70-a61d-73d9-bc50-dce95a7e5454"
 title: "TS-CIGL: GitLab CI template"
 type: "Test Suite"
 tags:
   - "uat"
   - "test-suite"
   - "ts-cigl"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Vizzini's GitLab CI template on a throwaway self-managed GitLab CE in podman: denied, allowed for a Reporter token's bot user, then incremental with a /vizzini command answered and a removed file's discussion resolved."
 ---
 

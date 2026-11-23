@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a6b9-7a08-a7a5-d95d6aaf508e"
+x-okfw-id: "01a1cf70-a6b9-7a08-a7a5-d95d6aaf508e"
 title: "UAT-BOT-002: allow: a policy that lists the identity posts one thread per finding"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-bot"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that the bot posts when the policy lists the forge-verified identity."
 ---
 

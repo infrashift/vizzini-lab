@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a64e-7bdc-b3f7-dc79befc328a"
+x-okfw-id: "01a1cf70-a64e-7bdc-b3f7-dc79befc328a"
 title: "UAT-REV-006: Only the relevant knowledge reaches the model"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-rev"
   - "medium"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that Vizzini gives the model the relevant ADRs and no other OKF document."
 ---
 

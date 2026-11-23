@@ -1,5 +1,5 @@
 ---
-id: "01a1cf93-1834-7d3d-9690-120e17bfef0d"
+x-okfw-id: "01a1cf93-1834-7d3d-9690-120e17bfef0d"
 title: "UAT-HOOK-008: The logs hold no secret and no identity"
 type: "Test Case"
 tags:
@@ -8,8 +8,8 @@ tags:
   - "ts-hook"
   - "high"
   - "experimental"
-created: "2026-11-12T05:44:46-06:00"
-timestamp: "2026-11-12T05:44:46-06:00"
+x-okfw-created: "2026-11-12T05:44:46-06:00"
+x-okfw-timestamp: "2026-11-12T05:44:46-06:00"
 description: "Make sure that the receiver does not write a token, the password or a person's identity to its logs."
 ---
 

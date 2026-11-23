@@ -1,12 +1,12 @@
 ---
-id: "01a1cf4a-f86d-7a3f-a87d-b07f173ad73c"
+x-okfw-id: "01a1cf4a-f86d-7a3f-a87d-b07f173ad73c"
 title: "Suite map: what each make target proves"
 type: "Architecture"
 tags:
   - "architecture"
   - "overview"
-created: "2026-11-12T04:25:59-06:00"
-timestamp: "2026-11-12T04:25:59-06:00"
+x-okfw-created: "2026-11-12T04:25:59-06:00"
+x-okfw-timestamp: "2026-11-12T04:25:59-06:00"
 description: "The vizzini-lab suites, what each one exercises, what it needs, and what it touches outside this machine."
 ---
 

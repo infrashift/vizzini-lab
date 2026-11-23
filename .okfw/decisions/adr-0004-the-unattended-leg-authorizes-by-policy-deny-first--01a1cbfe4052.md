@@ -1,5 +1,5 @@
 ---
-id: "01a1cbfe-4052-760d-86cf-2678527ec882"
+x-okfw-id: "01a1cbfe-4052-760d-86cf-2678527ec882"
 title: "ADR-0004: The unattended leg authorizes by policy, deny first"
 type: "ADR"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "mrman"
   - "security"
   - "automation"
-created: "2026-11-11T13:03:19-06:00"
-timestamp: "2026-11-11T13:03:19-06:00"
+x-okfw-created: "2026-11-11T13:03:19-06:00"
+x-okfw-timestamp: "2026-11-11T13:03:19-06:00"
 description: "uat/bot.sh proves vizzini-bot posts with no person only under a garmr policy: the committed default must deny the PAT's identity, then a run-local copy listing the identity mrman verified with the forge must allow."
 ---
 

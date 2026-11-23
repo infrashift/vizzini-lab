@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a678-7d4a-9d52-175348051cf9"
+x-okfw-id: "01a1cf70-a678-7d4a-9d52-175348051cf9"
 title: "UAT-REV-011: The run summary compares the models"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-rev"
   - "low"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that the run records the model comparison. The values are metrics. They do not fail the run."
 ---
 

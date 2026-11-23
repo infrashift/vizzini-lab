@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a689-763f-8465-141a35e2caef"
+x-okfw-id: "01a1cf70-a689-763f-8465-141a35e2caef"
 title: "UAT-FRG-002: mrman opens the PR headlessly with every finding"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-frg"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that mrman reads the Vizzini report and carries each finding and the risk score."
 ---
 

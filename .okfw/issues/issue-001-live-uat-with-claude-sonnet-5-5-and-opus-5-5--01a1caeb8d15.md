@@ -1,5 +1,5 @@
 ---
-id: "01a1caeb-8d15-7d35-a43a-48f18a171ef0"
+x-okfw-id: "01a1caeb-8d15-7d35-a43a-48f18a171ef0"
 title: "ISSUE-001: Live UAT with Claude Sonnet 5.5 and Opus 5.5"
 type: "issue"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "closed"
   - "uat"
   - "live"
-created: "2026-11-11T08:03:17-06:00"
-timestamp: "2026-11-11T08:03:17-06:00"
+x-okfw-created: "2026-11-11T08:03:17-06:00"
+x-okfw-timestamp: "2026-11-11T08:03:17-06:00"
 description: "Run the full UAT against both models through LiteLLM and an Azure DevOps project, and record the comparison."
 ---
 

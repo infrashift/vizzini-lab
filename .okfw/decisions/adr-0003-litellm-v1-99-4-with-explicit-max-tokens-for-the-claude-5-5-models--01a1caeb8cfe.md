@@ -1,13 +1,13 @@
 ---
-id: "01a1caeb-8cfe-7c8b-832c-dc4fc9b2d445"
+x-okfw-id: "01a1caeb-8cfe-7c8b-832c-dc4fc9b2d445"
 title: "ADR-0003: LiteLLM v1.99.4 with explicit max_tokens for the Claude 5.5 models"
 type: "ADR"
 tags:
   - "adr"
   - "litellm"
   - "llm"
-created: "2026-11-11T08:03:17-06:00"
-timestamp: "2026-11-11T08:03:17-06:00"
+x-okfw-created: "2026-11-11T08:03:17-06:00"
+x-okfw-timestamp: "2026-11-11T08:03:17-06:00"
 description: "The proxy config pins max_tokens per model and sets drop_params, because Vizzini sends neither and LiteLLM's fallback would truncate reviews."
 ---
 

@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a72c-7cee-bd59-4c03a3d3a11f"
+x-okfw-id: "01a1cf70-a72c-7cee-bd59-4c03a3d3a11f"
 title: "UAT-CIADO-003: An incremental build answers a /vizzini command"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-ciado"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that the build reviews only the changed file and answers the command once."
 ---
 

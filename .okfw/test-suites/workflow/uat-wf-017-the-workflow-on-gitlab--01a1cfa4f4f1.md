@@ -1,5 +1,5 @@
 ---
-id: "01a1cfa4-f4f1-7a9a-8387-4ec62d4d4dfd"
+x-okfw-id: "01a1cfa4-f4f1-7a9a-8387-4ec62d4d4dfd"
 title: "UAT-WF-017: The workflow on GitLab"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-wf"
   - "medium"
-created: "2026-11-12T06:04:16-06:00"
-timestamp: "2026-11-12T06:04:16-06:00"
+x-okfw-created: "2026-11-12T06:04:16-06:00"
+x-okfw-timestamp: "2026-11-12T06:04:16-06:00"
 description: "Make sure that reply, resolve and the findings view work on a GitLab MR."
 ---
 

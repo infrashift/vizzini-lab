@@ -1,12 +1,12 @@
 ---
-id: "01a1cf4a-f83a-7428-b3f1-0a4d15d8f731"
+x-okfw-id: "01a1cf4a-f83a-7428-b3f1-0a4d15d8f731"
 title: "Runbook: clean up after an interrupted run"
 type: "Runbook"
 tags:
   - "runbook"
   - "cleanup"
-created: "2026-11-12T04:25:59-06:00"
-timestamp: "2026-11-12T04:25:59-06:00"
+x-okfw-created: "2026-11-12T04:25:59-06:00"
+x-okfw-timestamp: "2026-11-12T04:25:59-06:00"
 description: "What each suite leaves behind when it is killed mid-run, and how to remove it from Azure DevOps, GitHub, podman and LiteLLM without touching anything else."
 ---
 

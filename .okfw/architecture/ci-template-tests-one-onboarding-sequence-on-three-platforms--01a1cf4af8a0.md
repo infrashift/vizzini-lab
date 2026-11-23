@@ -1,12 +1,12 @@
 ---
-id: "01a1cf4a-f8a0-7d22-9812-f0023c5ed617"
+x-okfw-id: "01a1cf4a-f8a0-7d22-9812-f0023c5ed617"
 title: "CI template tests: one onboarding sequence on three platforms"
 type: "Architecture"
 tags:
   - "architecture"
   - "ci"
-created: "2026-11-12T04:25:59-06:00"
-timestamp: "2026-11-12T04:25:59-06:00"
+x-okfw-created: "2026-11-12T04:25:59-06:00"
+x-okfw-timestamp: "2026-11-12T04:25:59-06:00"
 description: "How uat/ci-github.sh, uat/ci-ado.sh and uat/ci-gitlab.sh play the same deny, allow, incremental sequence through Vizzini's CI templates on throwaway infrastructure."
 ---
 

@@ -1,5 +1,5 @@
 ---
-id: "01a1cfa4-f4e7-7802-8d45-2819f62ba25c"
+x-okfw-id: "01a1cfa4-f4e7-7802-8d45-2819f62ba25c"
 title: "UAT-WF-016: The workflow on GitHub"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-wf"
   - "medium"
-created: "2026-11-12T06:04:16-06:00"
-timestamp: "2026-11-12T06:04:16-06:00"
+x-okfw-created: "2026-11-12T06:04:16-06:00"
+x-okfw-timestamp: "2026-11-12T06:04:16-06:00"
 description: "Make sure that reply, resolve and the findings view work on a GitHub PR."
 ---
 

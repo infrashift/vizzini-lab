@@ -1,12 +1,12 @@
 ---
-id: "01a1d134-1164-717d-acbb-ab2aebf970a8"
+x-okfw-id: "01a1d134-1164-717d-acbb-ab2aebf970a8"
 title: "ADR-0013: The benchmark compares at equal inputs and judges every finding blind"
 type: "ADR"
 tags:
   - "adr"
   - "benchmark"
-created: "2026-11-12T13:20:12-06:00"
-timestamp: "2026-11-12T13:20:12-06:00"
+x-okfw-created: "2026-11-12T13:20:12-06:00"
+x-okfw-timestamp: "2026-11-12T13:20:12-06:00"
 description: "uat/bench.sh runs Vizzini and PR-Agent on the same diffs through the same proxy and models, with default configurations and no lint or knowledge inputs; every finding gets one blind verdict, so precision and judged recall are reproducible."
 ---
 

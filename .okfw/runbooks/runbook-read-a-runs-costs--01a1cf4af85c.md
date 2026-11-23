@@ -1,13 +1,13 @@
 ---
-id: "01a1cf4a-f85c-7526-838f-493111ae6f74"
+x-okfw-id: "01a1cf4a-f85c-7526-838f-493111ae6f74"
 title: "Runbook: read a run's costs"
 type: "Runbook"
 tags:
   - "runbook"
   - "cost"
   - "litellm"
-created: "2026-11-12T04:25:59-06:00"
-timestamp: "2026-11-12T04:25:59-06:00"
+x-okfw-created: "2026-11-12T04:25:59-06:00"
+x-okfw-timestamp: "2026-11-12T04:25:59-06:00"
 description: "Produce and read a run's cost report from LiteLLM's spend logs with uat/costs.sh and litellm.sh psql."
 ---
 

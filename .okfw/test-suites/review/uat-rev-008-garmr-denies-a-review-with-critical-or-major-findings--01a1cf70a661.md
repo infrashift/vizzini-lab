@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a661-7879-b6e2-a573f78ca11a"
+x-okfw-id: "01a1cf70-a661-7879-b6e2-a573f78ca11a"
 title: "UAT-REV-008: garmr denies a review with Critical or Major findings"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-rev"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that garmr evaluates each review and denies a review with blocking findings."
 ---
 

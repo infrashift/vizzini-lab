@@ -1,5 +1,5 @@
 ---
-id: "01a1cfa4-f4d3-71a9-bcb4-dca8ca0d2394"
+x-okfw-id: "01a1cfa4-f4d3-71a9-bcb4-dca8ca0d2394"
 title: "UAT-WF-014: With its own account, the agent cannot resolve the bot's threads"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-wf"
   - "high"
-created: "2026-11-12T06:04:16-06:00"
-timestamp: "2026-11-12T06:04:16-06:00"
+x-okfw-created: "2026-11-12T06:04:16-06:00"
+x-okfw-timestamp: "2026-11-12T06:04:16-06:00"
 description: "Make sure that mrman's own-thread rule holds even when the agent's policy allows resolve."
 ---
 

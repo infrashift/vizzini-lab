@@ -1,12 +1,12 @@
 ---
-id: "01a1cf4a-f87e-7bd5-8594-84a12b826c4d"
+x-okfw-id: "01a1cf4a-f87e-7bd5-8594-84a12b826c4d"
 title: "Run artifacts and the .cache layout"
 type: "Architecture"
 tags:
   - "architecture"
   - "build"
-created: "2026-11-12T04:25:59-06:00"
-timestamp: "2026-11-12T04:25:59-06:00"
+x-okfw-created: "2026-11-12T04:25:59-06:00"
+x-okfw-timestamp: "2026-11-12T04:25:59-06:00"
 description: "Where builds, tool clones, runs, evidence and local state live under .cache, and which of them are committed to results/."
 ---
 

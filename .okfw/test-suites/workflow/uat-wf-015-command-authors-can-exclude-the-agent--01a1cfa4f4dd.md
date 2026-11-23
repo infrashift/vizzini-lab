@@ -1,5 +1,5 @@
 ---
-id: "01a1cfa4-f4dd-737b-8163-a2b9a59be7eb"
+x-okfw-id: "01a1cfa4-f4dd-737b-8163-a2b9a59be7eb"
 title: "UAT-WF-015: --command-authors can exclude the agent"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-wf"
   - "medium"
-created: "2026-11-12T06:04:16-06:00"
-timestamp: "2026-11-12T06:04:16-06:00"
+x-okfw-created: "2026-11-12T06:04:16-06:00"
+x-okfw-timestamp: "2026-11-12T06:04:16-06:00"
 description: "Make sure that a team can stop an agent from running `/vizzini` commands."
 ---
 

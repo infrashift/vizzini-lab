@@ -1,12 +1,12 @@
 ---
-id: "01a1caeb-8cb9-7491-b359-6d26b3148510"
+x-okfw-id: "01a1caeb-8cb9-7491-b359-6d26b3148510"
 title: "UAT flow: one C# PR through Vizzini, garmr, okf-wiki and mrman"
 type: "Architecture"
 tags:
   - "architecture"
   - "overview"
-created: "2026-11-11T08:03:17-06:00"
-timestamp: "2026-11-11T08:03:17-06:00"
+x-okfw-created: "2026-11-11T08:03:17-06:00"
+x-okfw-timestamp: "2026-11-11T08:03:17-06:00"
 description: "What the UAT runs, in order, and which tool each step proves."
 ---
 

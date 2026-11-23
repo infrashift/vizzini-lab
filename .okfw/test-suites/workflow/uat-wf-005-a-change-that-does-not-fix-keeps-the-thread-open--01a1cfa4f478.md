@@ -1,5 +1,5 @@
 ---
-id: "01a1cfa4-f478-732e-8b0e-90878694f666"
+x-okfw-id: "01a1cfa4-f478-732e-8b0e-90878694f666"
 title: "UAT-WF-005: A change that does not fix keeps the thread open"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-wf"
   - "high"
-created: "2026-11-12T06:04:16-06:00"
-timestamp: "2026-11-12T06:04:16-06:00"
+x-okfw-created: "2026-11-12T06:04:16-06:00"
+x-okfw-timestamp: "2026-11-12T06:04:16-06:00"
 description: "Make sure that a moved but unfixed defect keeps its thread, with no duplicate."
 ---
 

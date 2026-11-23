@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a702-7b5b-84c4-5aaa222c02fa"
+x-okfw-id: "01a1cf70-a702-7b5b-84c4-5aaa222c02fa"
 title: "UAT-CIGH-002: The allowed identity posts review comments"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-cigh"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that the job posts when the base branch's policy lists `github-actions[bot]`."
 ---
 

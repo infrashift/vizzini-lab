@@ -1,5 +1,5 @@
 ---
-id: "01a1cf93-1801-7661-918d-92bb903d440c"
+x-okfw-id: "01a1cf93-1801-7661-918d-92bb903d440c"
 title: "UAT-HOOK-003: The receiver ignores events it must not act on"
 type: "Test Case"
 tags:
@@ -8,8 +8,8 @@ tags:
   - "ts-hook"
   - "high"
   - "experimental"
-created: "2026-11-12T05:44:46-06:00"
-timestamp: "2026-11-12T05:44:46-06:00"
+x-okfw-created: "2026-11-12T05:44:46-06:00"
+x-okfw-timestamp: "2026-11-12T05:44:46-06:00"
 description: "Make sure that the receiver acts only on qualifying `/vizzini` comments."
 ---
 

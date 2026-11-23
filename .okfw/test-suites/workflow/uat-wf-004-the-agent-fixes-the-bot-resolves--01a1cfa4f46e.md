@@ -1,5 +1,5 @@
 ---
-id: "01a1cfa4-f46e-7b64-b135-86a3e2f44039"
+x-okfw-id: "01a1cfa4-f46e-7b64-b135-86a3e2f44039"
 title: "UAT-WF-004: The agent fixes; the bot resolves"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-wf"
   - "high"
-created: "2026-11-12T06:04:16-06:00"
-timestamp: "2026-11-12T06:04:16-06:00"
+x-okfw-created: "2026-11-12T06:04:16-06:00"
+x-okfw-timestamp: "2026-11-12T06:04:16-06:00"
 description: "Make sure that an agent can fix from the findings view, and that only the bot closes the thread."
 ---
 

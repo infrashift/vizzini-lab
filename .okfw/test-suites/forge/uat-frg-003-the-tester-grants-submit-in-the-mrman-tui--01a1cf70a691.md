@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a691-7270-902a-3d059681df44"
+x-okfw-id: "01a1cf70-a691-7270-902a-3d059681df44"
 title: "UAT-FRG-003: The tester grants submit in the mrman TUI"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-frg"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that a person, not the harness, grants mrman's submit."
 ---
 

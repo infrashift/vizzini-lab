@@ -1,12 +1,12 @@
 ---
-id: "01a1cf4a-f8c2-7226-853f-8c8ba8ad97c6"
+x-okfw-id: "01a1cf4a-f8c2-7226-853f-8c8ba8ad97c6"
 title: "ADR-0006: CI template tests run stubllm inside the job"
 type: "ADR"
 tags:
   - "adr"
   - "ci"
-created: "2026-11-12T04:25:59-06:00"
-timestamp: "2026-11-12T04:25:59-06:00"
+x-okfw-created: "2026-11-12T04:25:59-06:00"
+x-okfw-timestamp: "2026-11-12T04:25:59-06:00"
 description: "The CI template tests replace the model with Vizzini's stubllm started inside the job, because hosted runners cannot reach the local LiteLLM and the template's wiring, not model quality, is under test."
 ---
 

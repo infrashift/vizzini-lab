@@ -1,13 +1,13 @@
 ---
-id: "01a1cf4a-f807-7c02-9d58-27170e3cc396"
+x-okfw-id: "01a1cf4a-f807-7c02-9d58-27170e3cc396"
 title: "Runbook: run the unattended bot test"
 type: "Runbook"
 tags:
   - "runbook"
   - "bot"
   - "automation"
-created: "2026-11-12T04:25:59-06:00"
-timestamp: "2026-11-12T04:25:59-06:00"
+x-okfw-created: "2026-11-12T04:25:59-06:00"
+x-okfw-timestamp: "2026-11-12T04:25:59-06:00"
 description: "Run uat/bot.sh, live or against stubllm, and read its nine legs on an Azure DevOps PR."
 ---
 

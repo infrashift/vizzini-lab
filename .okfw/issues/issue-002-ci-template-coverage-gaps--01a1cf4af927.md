@@ -1,13 +1,13 @@
 ---
-id: "01a1cf4a-f927-7bb0-91d1-e9991252d0c0"
+x-okfw-id: "01a1cf4a-f927-7bb0-91d1-e9991252d0c0"
 title: "ISSUE-002: CI template coverage gaps"
 type: "issue"
 tags:
   - "issue"
   - "open"
   - "ci"
-created: "2026-11-12T04:25:59-06:00"
-timestamp: "2026-11-12T04:25:59-06:00"
+x-okfw-created: "2026-11-12T04:25:59-06:00"
+x-okfw-timestamp: "2026-11-12T04:25:59-06:00"
 description: "What the CI template tests do not yet cover: gitlab.com itself, thread replies and resolution on GitHub and GitLab, and runs that post nothing recording their head."
 ---
 

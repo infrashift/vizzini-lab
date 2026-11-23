@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a6e2-71ef-86f5-04f66e0992f1"
+x-okfw-id: "01a1cf70-a6e2-71ef-86f5-04f66e0992f1"
 title: "UAT-BOT-007: command-again: no command is answered twice"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-bot"
   - "medium"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that the bot does not answer a command again."
 ---
 

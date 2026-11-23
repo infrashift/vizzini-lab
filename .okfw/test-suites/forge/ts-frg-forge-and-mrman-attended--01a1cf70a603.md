@@ -1,13 +1,13 @@
 ---
-id: "01a1cf70-a603-70f1-82e9-06b021c9b281"
+x-okfw-id: "01a1cf70-a603-70f1-82e9-06b021c9b281"
 title: "TS-FRG: Forge and mrman (attended)"
 type: "Test Suite"
 tags:
   - "uat"
   - "test-suite"
   - "ts-frg"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "The attended forge leg of make uat: an Azure DevOps PR per model, mrman's headless session, the tester's submit grant in the TUI, and the posted threads."
 ---
 

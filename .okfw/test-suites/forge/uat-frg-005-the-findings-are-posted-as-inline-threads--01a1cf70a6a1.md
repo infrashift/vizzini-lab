@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a6a1-7089-b009-1de4533ae4fd"
+x-okfw-id: "01a1cf70-a6a1-7089-b009-1de4533ae4fd"
 title: "UAT-FRG-005: The findings are posted as inline threads"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-frg"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that each finding becomes an inline thread on the PR."
 ---
 

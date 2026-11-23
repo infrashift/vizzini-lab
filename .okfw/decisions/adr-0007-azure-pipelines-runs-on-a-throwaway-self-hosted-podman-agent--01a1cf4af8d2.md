@@ -1,13 +1,13 @@
 ---
-id: "01a1cf4a-f8d2-7644-aff0-77fb3dc248ca"
+x-okfw-id: "01a1cf4a-f8d2-7644-aff0-77fb3dc248ca"
 title: "ADR-0007: Azure Pipelines runs on a throwaway self-hosted podman agent"
 type: "ADR"
 tags:
   - "adr"
   - "ci"
   - "azure-devops"
-created: "2026-11-12T04:25:59-06:00"
-timestamp: "2026-11-12T04:25:59-06:00"
+x-okfw-created: "2026-11-12T04:25:59-06:00"
+x-okfw-timestamp: "2026-11-12T04:25:59-06:00"
 description: "uat/ci-ado.sh runs the Azure Pipelines template on a self-hosted agent started in podman for the run, because the organization has no hosted parallelism, and grants and restores the build service's permission around it."
 ---
 

@@ -1,5 +1,5 @@
 ---
-id: "01a1cfa4-f4bf-70d4-a8cc-2d446ac7f24a"
+x-okfw-id: "01a1cfa4-f4bf-70d4-a8cc-2d446ac7f24a"
 title: "UAT-WF-012: The agent cannot approve"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-wf"
   - "high"
-created: "2026-11-12T06:04:16-06:00"
-timestamp: "2026-11-12T06:04:16-06:00"
+x-okfw-created: "2026-11-12T06:04:16-06:00"
+x-okfw-timestamp: "2026-11-12T06:04:16-06:00"
 description: "Make sure that the agent cannot approve the PR."
 ---
 

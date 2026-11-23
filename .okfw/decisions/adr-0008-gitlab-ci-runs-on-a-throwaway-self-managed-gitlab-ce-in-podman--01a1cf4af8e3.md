@@ -1,13 +1,13 @@
 ---
-id: "01a1cf4a-f8e3-791b-ab46-d4c4facfaa07"
+x-okfw-id: "01a1cf4a-f8e3-791b-ab46-d4c4facfaa07"
 title: "ADR-0008: GitLab CI runs on a throwaway self-managed GitLab CE in podman"
 type: "ADR"
 tags:
   - "adr"
   - "ci"
   - "gitlab"
-created: "2026-11-12T04:25:59-06:00"
-timestamp: "2026-11-12T04:25:59-06:00"
+x-okfw-created: "2026-11-12T04:25:59-06:00"
+x-okfw-timestamp: "2026-11-12T04:25:59-06:00"
 description: "uat/ci-gitlab.sh tests the GitLab template on a GitLab CE and gitlab-runner started in podman for the run, which needs no account or token and covers the self-managed path, at the cost of not covering gitlab.com."
 ---
 

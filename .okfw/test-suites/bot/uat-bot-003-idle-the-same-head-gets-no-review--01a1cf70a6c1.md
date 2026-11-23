@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a6c1-7b2d-8d33-21c485842889"
+x-okfw-id: "01a1cf70-a6c1-7b2d-8d33-21c485842889"
 title: "UAT-BOT-003: idle: the same head gets no review"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-bot"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that the bot does not review again when nothing changed."
 ---
 

@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a6a9-71ce-9737-8afce0940f88"
+x-okfw-id: "01a1cf70-a6a9-71ce-9737-8afce0940f88"
 title: "UAT-FRG-006: Cleanup removes the PRs and branches"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-frg"
   - "medium"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that the forge leg leaves no open PR."
 ---
 

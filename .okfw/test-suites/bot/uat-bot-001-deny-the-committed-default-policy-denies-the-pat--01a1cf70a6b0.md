@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a6b0-7cba-80b1-9c8996f15749"
+x-okfw-id: "01a1cf70-a6b0-7cba-80b1-9c8996f15749"
 title: "UAT-BOT-001: deny: the committed default policy denies the PAT"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-bot"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that the bot posts nothing when the policy does not list its identity."
 ---
 

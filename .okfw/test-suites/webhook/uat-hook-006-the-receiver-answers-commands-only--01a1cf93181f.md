@@ -1,5 +1,5 @@
 ---
-id: "01a1cf93-181f-7d41-93b3-a93a32ccb154"
+x-okfw-id: "01a1cf93-181f-7d41-93b3-a93a32ccb154"
 title: "UAT-HOOK-006: The receiver answers commands only"
 type: "Test Case"
 tags:
@@ -8,8 +8,8 @@ tags:
   - "ts-hook"
   - "high"
   - "experimental"
-created: "2026-11-12T05:44:46-06:00"
-timestamp: "2026-11-12T05:44:46-06:00"
+x-okfw-created: "2026-11-12T05:44:46-06:00"
+x-okfw-timestamp: "2026-11-12T05:44:46-06:00"
 description: "Make sure that a comment event does not start a review, a new finding or a resolution."
 ---
 

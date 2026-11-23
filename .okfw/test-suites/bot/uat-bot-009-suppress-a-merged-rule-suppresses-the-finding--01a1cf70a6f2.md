@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a6f2-76b7-bc2c-375524293d1e"
+x-okfw-id: "01a1cf70-a6f2-76b7-bc2c-375524293d1e"
 title: "UAT-BOT-009: suppress: a merged rule suppresses the finding"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-bot"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that a rule on the base branch stops the finding from being posted again."
 ---
 

@@ -1,5 +1,5 @@
 ---
-id: "01a1cf93-182a-7389-b5a3-85977dd32e0e"
+x-okfw-id: "01a1cf93-182a-7389-b5a3-85977dd32e0e"
 title: "UAT-HOOK-007: A denied reply posts nothing and names the identity to allow"
 type: "Test Case"
 tags:
@@ -8,8 +8,8 @@ tags:
   - "ts-hook"
   - "high"
   - "experimental"
-created: "2026-11-12T05:44:46-06:00"
-timestamp: "2026-11-12T05:44:46-06:00"
+x-okfw-created: "2026-11-12T05:44:46-06:00"
+x-okfw-timestamp: "2026-11-12T05:44:46-06:00"
 description: "Make sure that the base branch's grant policy controls the receiver, and that a denial tells the admin what to change."
 ---
 

@@ -1,5 +1,5 @@
 ---
-id: "01a1cfa4-f450-7dca-b052-2f63463a815f"
+x-okfw-id: "01a1cfa4-f450-7dca-b052-2f63463a815f"
 title: "UAT-WF-001: The review posts one thread for each finding"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-wf"
   - "high"
-created: "2026-11-12T06:04:16-06:00"
-timestamp: "2026-11-12T06:04:16-06:00"
+x-okfw-created: "2026-11-12T06:04:16-06:00"
+x-okfw-timestamp: "2026-11-12T06:04:16-06:00"
 description: "Make sure that the bot posts each planted finding as its own thread."
 ---
 

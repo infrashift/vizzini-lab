@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a680-7e0b-80f2-ff3610043198"
+x-okfw-id: "01a1cf70-a680-7e0b-80f2-ff3610043198"
 title: "UAT-FRG-001: A PR opens on Azure DevOps for each model"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-frg"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that the run opens a real ADO PR for the fixture."
 ---
 

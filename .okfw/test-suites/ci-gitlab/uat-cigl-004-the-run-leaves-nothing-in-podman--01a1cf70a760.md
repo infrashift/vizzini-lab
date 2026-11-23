@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a760-7817-b509-7893659f602f"
+x-okfw-id: "01a1cf70-a760-7817-b509-7893659f602f"
 title: "UAT-CIGL-004: The run leaves nothing in podman"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-cigl"
   - "medium"
-created: "2026-11-12T05:07:09-06:00"
-timestamp: "2026-11-12T05:07:09-06:00"
+x-okfw-created: "2026-11-12T05:07:09-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:09-06:00"
 description: "Make sure that the test removes its containers, volumes and network."
 ---
 

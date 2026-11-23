@@ -1,12 +1,12 @@
 ---
-id: "01a1cf4a-f84b-7319-8f80-f2c05e649f78"
+x-okfw-id: "01a1cf4a-f84b-7319-8f80-f2c05e649f78"
 title: "Runbook: troubleshooting"
 type: "Runbook"
 tags:
   - "runbook"
   - "troubleshooting"
-created: "2026-11-12T04:25:59-06:00"
-timestamp: "2026-11-12T04:25:59-06:00"
+x-okfw-created: "2026-11-12T04:25:59-06:00"
+x-okfw-timestamp: "2026-11-12T04:25:59-06:00"
 description: "Known failures in the vizzini-lab suites, what each one means, and the fix."
 ---
 

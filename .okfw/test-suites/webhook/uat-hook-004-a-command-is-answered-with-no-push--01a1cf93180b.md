@@ -1,5 +1,5 @@
 ---
-id: "01a1cf93-180b-7a23-8276-bcb8f61d4640"
+x-okfw-id: "01a1cf93-180b-7a23-8276-bcb8f61d4640"
 title: "UAT-HOOK-004: A command is answered with no push"
 type: "Test Case"
 tags:
@@ -8,8 +8,8 @@ tags:
   - "ts-hook"
   - "high"
   - "experimental"
-created: "2026-11-12T05:44:46-06:00"
-timestamp: "2026-11-12T05:44:46-06:00"
+x-okfw-created: "2026-11-12T05:44:46-06:00"
+x-okfw-timestamp: "2026-11-12T05:44:46-06:00"
 description: "Make sure that a `/vizzini` command gets an answer in its thread soon after the delivery, and that no push is necessary."
 ---
 

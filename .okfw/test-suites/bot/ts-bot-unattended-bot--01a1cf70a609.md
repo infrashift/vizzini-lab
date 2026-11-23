@@ -1,13 +1,13 @@
 ---
-id: "01a1cf70-a609-7638-9686-91011641532c"
+x-okfw-id: "01a1cf70-a609-7638-9686-91011641532c"
 title: "TS-BOT: Unattended bot"
 type: "Test Suite"
 tags:
   - "uat"
   - "test-suite"
   - "ts-bot"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "vizzini-bot on one Azure DevOps PR with no person: deny, allow, idle, rerun, fix, command, command-again, dismiss and suppress."
 ---
 

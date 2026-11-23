@@ -1,13 +1,13 @@
 ---
-id: "01a1cf4a-f828-7ebd-a6ab-7316c8ca4f5c"
+x-okfw-id: "01a1cf4a-f828-7ebd-a6ab-7316c8ca4f5c"
 title: "Runbook: bump a tool pin"
 type: "Runbook"
 tags:
   - "runbook"
   - "build"
   - "pins"
-created: "2026-11-12T04:25:59-06:00"
-timestamp: "2026-11-12T04:25:59-06:00"
+x-okfw-created: "2026-11-12T04:25:59-06:00"
+x-okfw-timestamp: "2026-11-12T04:25:59-06:00"
 description: "Move versions.env to a new Vizzini, mrman, garmr or okfw revision, rebuild, re-run the suites the change touches, and record the result."
 ---
 

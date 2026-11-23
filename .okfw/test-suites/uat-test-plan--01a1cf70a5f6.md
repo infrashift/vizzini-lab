@@ -1,12 +1,12 @@
 ---
-id: "01a1cf70-a5f6-7318-afbd-0fe8571c851b"
+x-okfw-id: "01a1cf70-a5f6-7318-afbd-0fe8571c851b"
 title: "UAT test plan"
 type: "Test Plan"
 tags:
   - "uat"
   - "test-plan"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "The vizzini-lab test plan: the six test suites, how a tester runs each one, how to record a result, and the entry and exit criteria."
 ---
 

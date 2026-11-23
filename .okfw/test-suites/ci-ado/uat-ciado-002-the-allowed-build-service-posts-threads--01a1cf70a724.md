@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a724-75d1-a6d3-124fd7cdf7f9"
+x-okfw-id: "01a1cf70-a724-75d1-a6d3-124fd7cdf7f9"
 title: "UAT-CIADO-002: The allowed build service posts threads"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-ciado"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that the build posts threads when the base branch's policy lists the build service."
 ---
 

@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a62c-7372-b2c9-a7a9420fbdc1"
+x-okfw-id: "01a1cf70-a62c-7372-b2c9-a7a9420fbdc1"
 title: "UAT-REV-002: Each review report is valid and anchored to the diff"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-rev"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that each review gives a valid report and that each finding is on a changed line."
 ---
 

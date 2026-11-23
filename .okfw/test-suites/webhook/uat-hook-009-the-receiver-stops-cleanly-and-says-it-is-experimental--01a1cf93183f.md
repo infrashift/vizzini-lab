@@ -1,5 +1,5 @@
 ---
-id: "01a1cf93-183f-789c-aac5-455c878e8e8d"
+x-okfw-id: "01a1cf93-183f-789c-aac5-455c878e8e8d"
 title: "UAT-HOOK-009: The receiver stops cleanly and says it is experimental"
 type: "Test Case"
 tags:
@@ -8,8 +8,8 @@ tags:
   - "ts-hook"
   - "medium"
   - "experimental"
-created: "2026-11-12T05:44:46-06:00"
-timestamp: "2026-11-12T05:44:46-06:00"
+x-okfw-created: "2026-11-12T05:44:46-06:00"
+x-okfw-timestamp: "2026-11-12T05:44:46-06:00"
 description: "Make sure that a stop does not lose a running job and that the receiver shows its status."
 ---
 

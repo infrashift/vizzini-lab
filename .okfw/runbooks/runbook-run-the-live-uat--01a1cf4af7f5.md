@@ -1,13 +1,13 @@
 ---
-id: "01a1cf4a-f7f5-78b4-be40-cfdff0785206"
+x-okfw-id: "01a1cf4a-f7f5-78b4-be40-cfdff0785206"
 title: "Runbook: run the live UAT"
 type: "Runbook"
 tags:
   - "runbook"
   - "live"
   - "forge"
-created: "2026-11-12T04:25:59-06:00"
-timestamp: "2026-11-12T04:25:59-06:00"
+x-okfw-created: "2026-11-12T04:25:59-06:00"
+x-okfw-timestamp: "2026-11-12T04:25:59-06:00"
 description: "Run make uat end to end with live Claude models, the attended mrman grant and the Azure DevOps leg, then record the result."
 ---
 

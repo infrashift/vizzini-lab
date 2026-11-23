@@ -1,5 +1,5 @@
 ---
-id: "01a1cfa4-f496-7807-be81-54a275029a97"
+x-okfw-id: "01a1cfa4-f496-7807-be81-54a275029a97"
 title: "UAT-WF-008: Withdraw: the bot resolves its own thread"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-wf"
   - "high"
-created: "2026-11-12T06:04:16-06:00"
-timestamp: "2026-11-12T06:04:16-06:00"
+x-okfw-created: "2026-11-12T06:04:16-06:00"
+x-okfw-timestamp: "2026-11-12T06:04:16-06:00"
 description: "Make sure that the bot can withdraw its finding, and does not post it again."
 ---
 

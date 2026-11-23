@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a624-7a47-8601-cacf5a5d241e"
+x-okfw-id: "01a1cf70-a624-7a47-8601-cacf5a5d241e"
 title: "UAT-REV-001: The proxy answers in JSON mode for each model"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-rev"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that LiteLLM reaches each model and returns JSON."
 ---
 

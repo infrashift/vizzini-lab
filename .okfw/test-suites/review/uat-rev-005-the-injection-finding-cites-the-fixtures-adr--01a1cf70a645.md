@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a645-7524-8247-d06a8f669cd7"
+x-okfw-id: "01a1cf70-a645-7524-8247-d06a8f669cd7"
 title: "UAT-REV-005: The injection finding cites the fixture's ADR"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-rev"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that the review grounds the injection finding in the fixture's knowledge base."
 ---
 

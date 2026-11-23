@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a735-7ced-b4c9-01c6407c53ac"
+x-okfw-id: "01a1cf70-a735-7ced-b4c9-01c6407c53ac"
 title: "UAT-CIADO-004: The organization is clean after the run"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-ciado"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that the test removes the permission and everything else it made."
 ---
 

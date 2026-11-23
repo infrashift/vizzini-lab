@@ -1,5 +1,5 @@
 ---
-id: "01a1cf93-184a-751e-9840-865a42cf3ded"
+x-okfw-id: "01a1cf93-184a-751e-9840-865a42cf3ded"
 title: "UAT-HOOK-010: Azure DevOps delivers to a deployed receiver (manual)"
 type: "Test Case"
 tags:
@@ -8,8 +8,8 @@ tags:
   - "ts-hook"
   - "medium"
   - "experimental"
-created: "2026-11-12T05:44:46-06:00"
-timestamp: "2026-11-12T05:44:46-06:00"
+x-okfw-created: "2026-11-12T05:44:46-06:00"
+x-okfw-timestamp: "2026-11-12T05:44:46-06:00"
 description: "Make sure that a real ADO service hook reaches a receiver that an admin deployed with the runbook."
 ---
 

@@ -1,13 +1,13 @@
 ---
-id: "01a1cfa4-f447-7300-aa60-11948d6d91ef"
+x-okfw-id: "01a1cfa4-f447-7300-aa60-11948d6d91ef"
 title: "TS-WF: Full review workflow"
 type: "Test Suite"
 tags:
   - "uat"
   - "test-suite"
   - "ts-wf"
-created: "2026-11-12T06:04:16-06:00"
-timestamp: "2026-11-12T06:04:16-06:00"
+x-okfw-created: "2026-11-12T06:04:16-06:00"
+x-okfw-timestamp: "2026-11-12T06:04:16-06:00"
 description: "The whole review workflow on one Azure DevOps PR: Vizzini reviews; a person or a developer agent fixes, defends or disputes; a person settles what stays in dispute; and the agent cannot resolve, approve or grant itself."
 ---
 

@@ -1,13 +1,13 @@
 ---
-id: "01a1caeb-8ce7-7987-be8d-6371fc2e55ce"
+x-okfw-id: "01a1caeb-8ce7-7987-be8d-6371fc2e55ce"
 title: "ADR-0002: The mrman submit grant stays a human step"
 type: "ADR"
 tags:
   - "adr"
   - "mrman"
   - "security"
-created: "2026-11-11T08:03:17-06:00"
-timestamp: "2026-11-11T08:03:17-06:00"
+x-okfw-created: "2026-11-11T08:03:17-06:00"
+x-okfw-timestamp: "2026-11-11T08:03:17-06:00"
 description: "The UAT never fakes a terminal to grant mrman's --auto submit; it pauses and a person runs the TUI with --auto."
 ---
 

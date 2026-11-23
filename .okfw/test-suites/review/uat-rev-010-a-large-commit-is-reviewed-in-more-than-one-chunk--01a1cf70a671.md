@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a671-70c3-b272-68b69576e3c5"
+x-okfw-id: "01a1cf70-a671-70c3-b272-68b69576e3c5"
 title: "UAT-REV-010: A large commit is reviewed in more than one chunk"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-rev"
   - "medium"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that Vizzini splits a large real-world diff into chunks."
 ---
 

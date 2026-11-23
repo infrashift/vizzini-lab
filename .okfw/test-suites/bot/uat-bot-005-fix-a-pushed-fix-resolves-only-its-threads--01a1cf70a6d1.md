@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a6d1-7a41-ab24-8bf4f7870bce"
+x-okfw-id: "01a1cf70-a6d1-7a41-ab24-8bf4f7870bce"
 title: "UAT-BOT-005: fix: a pushed fix resolves only its threads"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-bot"
   - "high"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that the bot resolves the thread of a fixed defect and keeps the other threads."
 ---
 

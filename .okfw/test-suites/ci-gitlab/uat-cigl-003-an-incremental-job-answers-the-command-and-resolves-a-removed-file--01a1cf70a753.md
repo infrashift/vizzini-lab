@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a753-7db6-9822-0d1ed65a4ab4"
+x-okfw-id: "01a1cf70-a753-7db6-9822-0d1ed65a4ab4"
 title: "UAT-CIGL-003: An incremental job answers the command and resolves a removed file's finding"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-cigl"
   - "high"
-created: "2026-11-12T05:07:09-06:00"
-timestamp: "2026-11-12T07:42:33-06:00"
+x-okfw-created: "2026-11-12T05:07:09-06:00"
+x-okfw-timestamp: "2026-11-12T07:42:33-06:00"
 description: "Make sure that the job reviews only the changed file, answers the /vizzini command, and resolves the bot's discussion on a file the push removed."
 ---
 

@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a658-753c-8faf-48f7e4af818d"
+x-okfw-id: "01a1cf70-a658-753c-8faf-48f7e4af818d"
 title: "UAT-REV-007: Only the changed-line lint diagnostics are injected"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-rev"
   - "medium"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that Vizzini gives the model only the linter diagnostics on changed lines."
 ---
 

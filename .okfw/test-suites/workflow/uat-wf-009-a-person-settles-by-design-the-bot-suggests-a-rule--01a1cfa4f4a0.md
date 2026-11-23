@@ -1,5 +1,5 @@
 ---
-id: "01a1cfa4-f4a0-7b9b-9b9e-e5e898180efb"
+x-okfw-id: "01a1cfa4-f4a0-7b9b-9b9e-e5e898180efb"
 title: "UAT-WF-009: A person settles by design; the bot suggests a rule"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-wf"
   - "high"
-created: "2026-11-12T06:04:16-06:00"
-timestamp: "2026-11-12T06:04:16-06:00"
+x-okfw-created: "2026-11-12T06:04:16-06:00"
+x-okfw-timestamp: "2026-11-12T06:04:16-06:00"
 description: "Make sure that a person's decision ends the dispute and gives one suggested rule."
 ---
 

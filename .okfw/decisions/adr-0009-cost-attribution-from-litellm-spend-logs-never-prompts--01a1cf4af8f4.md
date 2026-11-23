@@ -1,13 +1,13 @@
 ---
-id: "01a1cf4a-f8f4-7cab-9365-32f421421255"
+x-okfw-id: "01a1cf4a-f8f4-7cab-9365-32f421421255"
 title: "ADR-0009: Cost attribution from LiteLLM spend logs, never prompts"
 type: "ADR"
 tags:
   - "adr"
   - "cost"
   - "privacy"
-created: "2026-11-12T04:25:59-06:00"
-timestamp: "2026-11-12T04:25:59-06:00"
+x-okfw-created: "2026-11-12T04:25:59-06:00"
+x-okfw-timestamp: "2026-11-12T04:25:59-06:00"
 description: "Every live run's cost is read from LiteLLM's Postgres spend logs keyed by Vizzini's request metadata; prompts and diffs are never stored there, and the requester identity is redacted in logs."
 ---
 

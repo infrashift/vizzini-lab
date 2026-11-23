@@ -1,12 +1,12 @@
 ---
-id: "01a1cf4a-f917-717c-8a42-f086ce3bab30"
+x-okfw-id: "01a1cf4a-f917-717c-8a42-f086ce3bab30"
 title: "ADR-0011: Retry only what cannot have been applied"
 type: "ADR"
 tags:
   - "adr"
   - "reliability"
-created: "2026-11-12T04:25:59-06:00"
-timestamp: "2026-11-12T04:25:59-06:00"
+x-okfw-created: "2026-11-12T04:25:59-06:00"
+x-okfw-timestamp: "2026-11-12T04:25:59-06:00"
 description: "Network retries in the harness are limited to failures that happen before a request reaches the server, or to calls whose failure proves nothing was posted, so a retry can never post twice."
 ---
 

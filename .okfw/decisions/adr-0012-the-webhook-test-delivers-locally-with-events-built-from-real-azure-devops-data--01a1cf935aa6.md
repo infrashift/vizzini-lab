@@ -1,13 +1,13 @@
 ---
-id: "01a1cf93-5aa6-7100-9ffe-5df5b3809a1e"
+x-okfw-id: "01a1cf93-5aa6-7100-9ffe-5df5b3809a1e"
 title: "ADR-0012: The webhook test delivers locally, with events built from real Azure DevOps data"
 type: "ADR"
 tags:
   - "adr"
   - "webhook"
   - "experimental"
-created: "2026-11-12T05:45:03-06:00"
-timestamp: "2026-11-12T05:45:03-06:00"
+x-okfw-created: "2026-11-12T05:45:03-06:00"
+x-okfw-timestamp: "2026-11-12T05:45:03-06:00"
 description: "uat/webhook.sh runs vizzini-webhook on 127.0.0.1 and posts to it events in the exact service-hook shape, built from the real comment and PR, because Azure DevOps delivers only to public HTTPS endpoints; a delivery by ADO itself stays a manual case."
 ---
 

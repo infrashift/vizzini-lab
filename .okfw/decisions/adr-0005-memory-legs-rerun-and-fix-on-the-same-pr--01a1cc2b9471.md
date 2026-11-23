@@ -1,13 +1,13 @@
 ---
-id: "01a1cc2b-9471-76bb-a28b-37597502dfa4"
+x-okfw-id: "01a1cc2b-9471-76bb-a28b-37597502dfa4"
 title: "ADR-0005: Memory legs rerun and fix on the same PR"
 type: "ADR"
 tags:
   - "adr"
   - "automation"
   - "mrman"
-created: "2026-11-11T13:52:50-06:00"
-timestamp: "2026-11-11T13:52:50-06:00"
+x-okfw-created: "2026-11-11T13:52:50-06:00"
+x-okfw-timestamp: "2026-11-11T13:52:50-06:00"
 description: "uat/bot.sh proves thread memory on one live PR: a same-head rerun duplicates and resolves nothing, and after a pushed fix only the threads on the changed lines whose finding is gone are resolved."
 ---
 

@@ -1,5 +1,5 @@
 ---
-id: "01a1cf70-a713-7967-be2d-6869d810c86d"
+x-okfw-id: "01a1cf70-a713-7967-be2d-6869d810c86d"
 title: "UAT-CIGH-004: The run leaves no PR or branch"
 type: "Test Case"
 tags:
@@ -7,8 +7,8 @@ tags:
   - "test-case"
   - "ts-cigh"
   - "medium"
-created: "2026-11-12T05:07:08-06:00"
-timestamp: "2026-11-12T05:07:08-06:00"
+x-okfw-created: "2026-11-12T05:07:08-06:00"
+x-okfw-timestamp: "2026-11-12T05:07:08-06:00"
 description: "Make sure that the test removes what it made on GitHub."
 ---
 
